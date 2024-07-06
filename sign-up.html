@@ -7,12 +7,14 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
     <script defer src="./FontAwesome/JS/all.js"></script>
-    
-    <link rel="stylesheet" href="style.css">
+
+    <link rel="stylesheet" href="style-sign-up.css">
     <title>Placement Portal @ DBCE</title>
 </head>
+
 <body>
     <div id="wrapper">
+
         <header>
             <div class="header-container">
                 <div class="left-part">
@@ -20,23 +22,32 @@
                     <h2>Placement Portal - Don Bosco College of Engineering</h2>
                 </div>
                 <ul class="right-part">
-                    <li>Contact Us</li>
+                    <li><a href="./index.html">Home</a></li>
                     <li>Sign in</li>
-                    <li>Sign up</li>
+                    <li>Contact Us</li>
                 </ul>
             </div>
         </header>
 
         <main>
             <div class="main-container">
-                <div class="main-left-part">
-                    <h3>Welcome to Don Bosco <br> College of Engineering <br> Placement <br> Portal</h3>
-                    <div class="button-container">
-                        <a href="./sign-up.html"><button class="sign-up">Sign up</button></a>
-                        <a href=""><button class="sign-in">Sign in</button></a>
-                    </div>
+                <img src="./Assets/college-university-students.png" alt="">
+                <div class="main-right-container">
+                    <h2>Welcome !<br/>Sign up</h2>
+                    <form action="">
+                        <label for="email">Email</label><br>
+                        <input class="user-input" placeholder="example@dbcegoa.ac.in" type="email" id="email" required><br><br>
+
+                        <label for="password">Password</label><br>
+                        <input class="user-input" placeholder="password" type="password" id="password" required><br><br>
+
+                        <div class="checkbox-container">
+                            <input type="checkbox" name="remember-me" id="remember-me">
+                            <label for="remember-me">Remember me</label>
+                        </div><br>
+                        <button>Sign up</button>
+                    </form>
                 </div>
-                <img src="./Assets/interview-image.jpg" alt="">
             </div>
         </main>
 
@@ -56,6 +67,6 @@
                 </div>
             </div>
         </footer>
+
     </div>
 </body>
-</html>

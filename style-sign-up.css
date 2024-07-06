@@ -8,11 +8,13 @@
 :root {
     --primary-blue : #0C07E4;
     --primary-grey : #d9d9d9;
+    --secondary-grey : #969696;
 }
 
 #wrapper {
     position: relative;
 }
+
 
 /* Header */
 
@@ -54,77 +56,80 @@ header {
     cursor: pointer;
 }
 
-
 /* Main content */
-main {
-    padding-top: 30px;
-}
-
 .main-container {
     max-width: 1200px;
     margin: 0 auto;
-    position: relative;
-    min-height:700px;
-}
-
-.main-left-part {
     display: flex;
-    flex-direction: column;
+    margin-top: 50px;
+    align-items: center;
     gap: 50px;
+    position: relative;
 }
 
-.main-left-part > h3 {
-    font-size: 70px;
-    font-weight: 700;
-    z-index: 1;
+
+main {
+    margin-bottom:100px;
 }
 
 .main-container > img {
-    width: 900px;
-    position: absolute;
-    right: -70px;
-    bottom: 40px;
+    width: 630px;
+    user-select: none;
+    z-index: 1;
 }
 
-.button-container {
+.main-right-container h2{
+    margin-bottom: 15px;
+    font-size: 35px;
+    font-weight: 700;
+}
+
+.user-input {
+    border: 1px solid var(--secondary-grey);
+    width: 350px;
+    padding: 10px;
+    border-radius: 5px;
+    margin-top: 5px;
+    outline: none;
+}
+
+.user-input:focus {
+    border: 1px solid var(--primary-blue);
+}
+
+.checkbox-container {
     display: flex;
-    gap: 25px;
+    align-items: center;
+    gap: 10px;
+}
+#remember-me {
+    width: 15px;
+    height: 15px; 
 }
 
-button {
-    width: 140px;
-    padding-block: 10px;
-    border-radius: 10px;
-    border: none;
-    font-weight: 600;
-    font-size: 18px;
-    cursor: pointer;
-}
-
-.sign-up {
-    background-color: var(--primary-blue);
-}
-.sign-in {
-    background-color: var(--primary-grey);
-}
-
-.sign-up {
+form > button {
+    border: 1px solid var(--primary-blue);
+    width: 350px;
+    padding: 10px;
+    border-radius: 5px;
     color: white;
+    background-color: var(--primary-blue);
+    font-weight: 600;
+    font-size: 15px;
 }
 
-.sign-in {
-    color: black;
-}
 
+/* Footer */
 
-/* Footer Section */
 footer {
+    z-index: 1;
     padding: 20px;
     background-color: var(--primary-grey);
     margin-top: -40px;
 }
 
 .footer-container {
+    z-index: 1;
     max-width: 1200px;
     margin: 0 auto;
     display: flex;
@@ -143,4 +148,12 @@ footer {
 
 a {
     all: unset;
+}
+
+footer {
+    z-index: 20;
+}
+
+.blob1, .blob2, .blob3 {
+    z-index: -2; 
 }

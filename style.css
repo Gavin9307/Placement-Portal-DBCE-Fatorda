@@ -198,8 +198,12 @@ a {
 
 .right-column .forgotpassword{
     margin: 10px  ;
-
+    cursor: pointer;
 }
+.forgotpassword > a:hover{
+    text-decoration:underline;
+}
+
 .checkbox{
     margin:10px;
 }

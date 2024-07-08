@@ -103,6 +103,7 @@ main {
     border-radius: 5px;
     margin-top: 5px;
     outline: none;
+    resize: none;
 }
 
 .user-input-message:focus {
@@ -163,8 +164,4 @@ a {
 
 footer {
     z-index: 20;
-}
-
-.blob1, .blob2, .blob3 {
-    z-index: -2; 
 }

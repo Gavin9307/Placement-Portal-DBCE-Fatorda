@@ -34,6 +34,6 @@ header {
     gap: 35px;
 }
 
-.right-part > li {
+.right-part > a {
     cursor: pointer;
 }

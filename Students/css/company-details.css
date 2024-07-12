@@ -24,6 +24,7 @@
 .side-bar-container {
     width: 25%;
     background-color: var(--primary-blue);
+    padding-bottom: 50px;
 }
 
 .fixed-container {
@@ -63,11 +64,6 @@
     color: var(--primary-blue);
 }
 
-#performance {
-    color: var(--primary-blue);
-    background-color: var(--primary-white);
-}
-
 
 .bottom-container {
     margin-top: 50px;
@@ -87,56 +83,74 @@
     color: var(--primary-white);
     background-color: var(--primary-blue);
 }
-.main-container{
+
+#companies {
+    color: var(--primary-blue);
+    background-color: var(--primary-white);
+}
+
+.main-container {
     width: 75%;
     padding: 25px;
     margin-bottom: 50px;
 }
-.main-container-header{
-    margin:10px  ;
+.main-container-heading > a {
+    cursor: pointer;
 }
 .sections {
+    position: relative;
     margin-top: 30px;
+    box-shadow: 5px 10px 12.3px 5px rgba(0, 0, 0, .25);
+    padding: 20px;
+    margin-bottom: 50px;
 }
 
-.section-1{
+.company-container > img {
+    height: 100px;
+}
+
+.company-container {
     display: flex;
-    gap:35px;
-    height:30vh
-    
+    justify-content: space-between;
+    align-items: center;
 }
-.subsection-1{
-    position: relative;
-    margin: 10px;
-    box-shadow: 5px 10px 12.3px 5px rgba(0, 0, 0, .25);
-    padding: 20px;
+
+
+.more-details > p {
+    margin-bottom: 10px;
 }
-.subsection-2{
-    position: relative;
-    margin: 10px;
-    box-shadow: 5px 10px 12.3px 5px rgba(0, 0, 0, .25);
-    padding: 20px;
+
+
+.more-details {
+    margin-block: 20px;
 }
-.section-2{
-    position: relative;
-    margin: 10px;
-    box-shadow: 5px 10px 12.3px 5px rgba(0, 0, 0, .25);
-    padding: 20px;
+
+.students-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
-.section-1 .subsection-1{
-    display:flex;
-    flex-direction: row;
-    width:45%;
-    gap:10px;
+.students-logo-container > img {
+    height: 50px;
+    width: 50px;
+    border-radius: 50%;
 }
-.section-1 .subsection-2{
-    width:45%;
-    display:flex;
-    flex-direction:row ;
+
+.students-logo-container {
+    display: flex;
+    align-items: center;
+    gap: 20px;
 }
-.section-2{
-    margin-top:50px;
-    width:95%;
-    display:flex; 
-    height:200px;
+
+.students-review {
+    margin-top: 10px;
+    margin-bottom: 30px;
+}
+
+.students-message {
+    margin-top: 10px;
+}
+
+.checked {
+    color:orange;
 }

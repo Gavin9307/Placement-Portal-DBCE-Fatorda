@@ -9,6 +9,7 @@
     --primary-blue : #0C07E4;
     --primary-grey : #d9d9d9;
     --primary-white : white;
+    --secondary-grey : #969696;
 }
 
 #wrapper {
@@ -84,7 +85,7 @@
     background-color: var(--primary-blue);
 }
 
-#jobopportunities {
+#myapplications {
     color: var(--primary-blue);
     background-color: var(--primary-white);
 }
@@ -105,14 +106,22 @@
     margin-bottom: 50px;
 }
 
+.sections > h3 {
+    margin-bottom:20px;
+}
+
+form {
+    margin-block:20px;
+}
+
 .company-logo-container > img {
-    height: 50px;
+    height: 100px;
 }
 
 .company-logo-container {
     display: flex;
     align-items: center;
-    gap: 20px;
+    justify-content: space-between;
 }
 
 .company-container {
@@ -143,3 +152,37 @@
     right: 25px;
     bottom: 20px;
 } 
+
+
+form label{
+    display: block;
+    margin-bottom: 10px;
+}
+
+form textarea {
+    border: 1px solid var(--secondary-grey);
+    width: 100%;
+    height:200px;
+    padding: 10px;
+    border-radius: 5px;
+    margin-top: 5px;
+    outline: none;
+    resize: none;
+}
+
+form textarea:focus {
+    border: 1px solid var(--primary-blue);
+}
+
+.rating-container{
+    margin-left: 10px;  
+    display: inline-block;
+    margin-bottom: 30px;
+}
+
+.rating-container > span {
+    cursor: pointer;
+}
+.checked {
+    color:orange;
+}

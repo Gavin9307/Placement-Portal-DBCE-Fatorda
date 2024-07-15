@@ -9,6 +9,7 @@
     --primary-blue : #0C07E4;
     --primary-grey : #d9d9d9;
     --primary-white : white;
+    --secondary-grey : #969696;
 }
 
 #wrapper {
@@ -84,11 +85,6 @@
     background-color: var(--primary-blue);
 }
 
-#jobopportunities {
-    color: var(--primary-blue);
-    background-color: var(--primary-white);
-}
-
 .main-container {
     width: 75%;
     padding: 25px;
@@ -105,26 +101,29 @@
     margin-bottom: 50px;
 }
 
-.company-logo-container > img {
-    height: 50px;
-}
-
-.company-logo-container {
+.profile-image {
     display: flex;
     align-items: center;
-    gap: 20px;
+    flex-direction: column;
+}
+.profile-image > img {
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
 }
 
-.company-container {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.position {
-    margin-top: 20px;
-    margin-bottom: 30px;
-}
+.change-picture {
+    margin-top: 10px;
+    padding-block: 5px;
+    padding-inline: 25px;
+    border-radius: 5px;
+    border: none;
+    font-weight: 600;
+    font-size: 18px;
+    cursor: pointer;
+    background-color: var(--primary-blue);
+    color: var(--primary-white);
+} 
 
 .sections  button {
     margin-top: 10px;
@@ -143,3 +142,45 @@
     right: 25px;
     bottom: 20px;
 } 
+
+
+/* Styling Form */
+form {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    
+}
+
+form h3 {
+    margin-bottom: -10px;
+}
+
+.form-adjust {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+}
+
+.form-adjust > div {
+    width: 95%;
+}
+
+.form-adjust input {
+    width: 100%;
+    padding: 10px;
+    border-radius: 5px;
+    margin-top: 5px;
+    outline: none;
+    border: 1px solid var(--secondary-grey);
+}
+
+.form-adjust input:focus {
+    border: 1px solid var(--primary-blue);
+}
+
+.cgpa {
+    width: 49%;
+    margin-bottom: 30px;
+}

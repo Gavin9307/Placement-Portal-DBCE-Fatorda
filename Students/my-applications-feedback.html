@@ -10,10 +10,11 @@
         href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
         rel="stylesheet">
     <script defer src="../FontAwesome/JS/all.js"></script>
-    <link rel="stylesheet" href="./css/job-opportunities.css">
+    <link rel="stylesheet" href="./css/my-applications-feedback.css">
     <link rel="stylesheet" href="./css/header.css">
     <link rel="stylesheet" href="./css/footer.css">
-    <title>Job Opportunities</title>
+    <title>My Applications</title>
+    
 </head>
 
 <body>
@@ -49,9 +50,9 @@
                     </div>
 
                     <div class="bottom-container">
-                        <a href="./performance-and-metrics.html"><button>Performance</button></a>
-                        <a href="./my-applications.html"><button>My Application</button></a>
-                        <a href="./job-opportunities.html"><button id="jobopportunities">Job Opportunities</button></a>
+                        <a href="./performance-and-metrics.html"><button id="performance">Performance</button></a>
+                        <a href="./my-applications.html"><button id="myapplications">My Application</button></a>
+                        <a href="./job-opportunities.html"><button>Job Opportunities</button></a>
                         <a href="./companies.html"><button>Company Information</button></a>
                         <a href="./notifications.html"><button>Notifications</button></a>
                     </div>
@@ -60,30 +61,28 @@
 
             <div class="main-container">
                 <h2 class="main-container-heading"><a href="./dashboard.html"><i class="fa-solid fa-arrow-left fa-lg" style="color: #000000;"></i></a>
-                    Job Opportunities</h2>
+                    My Applications</h2>
 
                 <div class="sections">
-                    <div class="company-container">
                         <div class="company-logo-container">
-                            <img src="../Assets/profile.jpg" alt="">
-                            <p>Google</p>
+                            <h3>Company Feedback</h3>
+                            <img src="../Assets/oneshield.png" alt="">
                         </div>
-                        <p><strong>Due Date:</strong> 12/12/2003</p>
-                    </div>
-                    <p class="position"><strong>Position:</strong> Associate Developer</p>
-                    <a href="./my-applications-details.html"><button>View More</button></a>
-                </div>
-
-                <div class="sections">
-                    <div class="company-container">
-                        <div class="company-logo-container">
-                            <img src="../Assets/profile.jpg" alt="">
-                            <p>Google</p>
-                        </div>
-                        <p><strong>Apply Date:</strong> 12/12/2003</p>
-                    </div>
-                    <p class="position"><strong>Position:</strong> Associate Developer</p>
-                    <a href="./my-applications-details.html"><button>View More</button></a>
+                        <form action="">
+                            <label for="message"><strong>Message:</strong></label>
+                            <textarea class="user-input-message" placeholder="Enter your message" required></textarea><br><br>
+    
+                            <button>Submit</button>
+                            <strong>Ratings:</strong> 
+                            <span class="rating-container">
+                                <span class="fa fa-star checked fa-xl"></span>
+                                <span class="fa fa-star checked fa-xl"></span>
+                                <span class="fa fa-star checked fa-xl"></span>
+                                <span class="fa fa-star checked fa-xl"></span>
+                                <span class="fa fa-star fa-xl"></span>
+                            </span>
+                            <button>Submit</button>
+                        </form>
                 </div>
             </div>
         </div>

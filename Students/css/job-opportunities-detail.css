@@ -136,10 +136,22 @@
     font-weight: 600;
     font-size: 18px;
     cursor: pointer;
+    
+} 
+
+.not-interested {
+    background-color: var(--primary-grey);
+}
+
+.interested {
     background-color: var(--primary-blue);
     color: var(--primary-white);
+}
 
-    position: absolute;
-    right: 25px;
-    bottom: 20px;
-} 
+.interest-button-container {
+    width: 100%;
+    display: flex;
+    margin-top: 10px;
+    justify-content: flex-end;
+    gap: 20px;
+}

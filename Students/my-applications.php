@@ -10,12 +10,11 @@
         href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
         rel="stylesheet">
     <script defer src="../FontAwesome/JS/all.js"></script>
-    <link rel="stylesheet" href="./css/notifications.css">
+    <link rel="stylesheet" href="./css/my-applications.css">
     <link rel="stylesheet" href="./css/header.css">
     <link rel="stylesheet" href="./css/footer.css">
-    <title>Notifications</title>
+    <title>My Applications</title>
 </head>
-
 <body>
     <div id="wrapper">
         <header>
@@ -25,7 +24,7 @@
                     <h2>Placement Portal - Don Bosco College of Engineering</h2>
                 </div>
                 <ul class="right-part">
-                    <a href="./dashboard.html"><li>Dashboard</li></a>
+                    <a href="./dashboard.php"><li>Dashboard</li></a>
                     <li>Contact Us</li>
                     <div class="notifications">
                         <div class="dot">.</div><i class="fa-solid fa-bell"></i>
@@ -49,37 +48,41 @@
                     </div>
 
                     <div class="bottom-container">
-                        <a href="./performance-and-metrics.html"><button>Performance</button></a>
-                        <a href="./my-applications.html"><button>My Application</button></a>
-                        <a href="./job-opportunities.html"><button>Job Opportunities</button></a>
-                        <a href="./companies.html"><button>Company Information</button></a>
-                        <a href="./notifications.html"><button id="notifications">Notifications</button></a>
+                        <a href="./performance-and-metrics.php"><button id="performance">Performance</button></a>
+                        <a href="./my-applications.php"><button id="myapplications">My Application</button></a>
+                        <a href="./job-opportunities.php"><button>Job Opportunities</button></a>
+                        <a href="./companies.php"><button>Company Information</button></a>
+                        <a href="./notifications.php"><button>Notifications</button></a>
                     </div>
                 </div>
             </div>
 
             <div class="main-container">
                 <h2 class="main-container-heading"><a href="./dashboard.html"><i class="fa-solid fa-arrow-left fa-lg" style="color: #000000;"></i></a>
-                    Notifications</h2>
+                    My Applications</h2>
 
                 <div class="sections">
                     <div class="company-container">
-                        <p><strong>Date:</strong> 12/12/2003</p>
-                        <p><strong>Time:</strong> 6:24pm</p>
+                        <div class="company-logo-container">
+                            <img src="../Assets/profile.jpg" alt="">
+                            <p>Google</p>
+                        </div>
+                        <p><strong>Apply Date:</strong> 12/12/2003</p>
                     </div>
-                    <p class="subject"><strong>Subject:</strong> Round 1 for Google Location updated</p>
-                    <p class= "message"><strong>Message:</strong> Lorem ipsum dolor sit amet consectetur. Tellus mauris blandit sagittis ligula sollicitudin elit. Quam integer ac scelerisque amet fermentum fringilla lacus urna. Iaculis sit quam</p>
-                    <a href=""><button>Dismiss</button></a>
+                    <p class="position"><strong>Position:</strong> Associate Developer</p>
+                    <a href="./my-applications-details.php"><button>View More</button></a>
                 </div>
 
                 <div class="sections">
                     <div class="company-container">
-                        <p><strong>Date:</strong> 12/12/2003</p>
-                        <p><strong>Time:</strong> 6:24pm</p>
+                        <div class="company-logo-container">
+                            <img src="../Assets/profile.jpg" alt="">
+                            <p>Google</p>
+                        </div>
+                        <p><strong>Apply Date:</strong> 12/12/2003</p>
                     </div>
-                    <p class="subject"><strong>Subject:</strong> Round 1 for Google Location updated</p>
-                    <p class= "message"><strong>Message:</strong> Lorem ipsum dolor sit amet consectetur. Tellus mauris blandit sagittis ligula sollicitudin elit. Quam integer ac scelerisque amet fermentum fringilla lacus urna. Iaculis sit quam</p>
-                    <a href=""><button>Dismiss</button></a>
+                    <p class="position"><strong>Position:</strong> Associate Developer</p>
+                    <a href="./my-applications-details.php"><button>View More</button></a>
                 </div>
             </div>
         </div>

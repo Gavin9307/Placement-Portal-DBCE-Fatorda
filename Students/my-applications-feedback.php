@@ -10,10 +10,11 @@
         href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
         rel="stylesheet">
     <script defer src="../FontAwesome/JS/all.js"></script>
-    <link rel="stylesheet" href="./css/performance-and-metrics.css">
+    <link rel="stylesheet" href="./css/my-applications-feedback.css">
     <link rel="stylesheet" href="./css/header.css">
     <link rel="stylesheet" href="./css/footer.css">
-    <title>Performance and Metrics</title>
+    <title>My Applications</title>
+    
 </head>
 
 <body>
@@ -21,21 +22,20 @@
         <header>
             <div class="header-container">
                 <div class="left-part">
-                    <img src="" alt="">
-                    <h2>Placement portal - Don Bosco College of Engineering </h2>
+                    <img src="../Assets/dbce-logo.jpeg" alt="" class="logo">
+                    <h2>Placement Portal - Don Bosco College of Engineering</h2>
                 </div>
-                <div>
-                    <ul class="right-part">
-                        <li><a href="">Home</a></li>
-                        <div class="notifications">
-                            <div class="dot">.</div><i class="fa-solid fa-bell"></i>
-                        </div>
-                        <li class="profile-container">
-                            <span>Gavin</span>
-                            <img src="../Assets/profile.jpg" alt="">
-                        </li>
-                    </ul>
-                </div>
+                <ul class="right-part">
+                    <a href="./dashboard.php"><li>Dashboard</li></a>
+                    <li>Contact Us</li>
+                    <div class="notifications">
+                        <div class="dot">.</div><i class="fa-solid fa-bell"></i>
+                    </div>
+                    <li class="profile-container">
+                        <span>Gavin</span>
+                        <img src="../Assets/profile.jpg" alt="">
+                    </li>
+                </ul>
             </div>
         </header>
 
@@ -50,37 +50,43 @@
                     </div>
 
                     <div class="bottom-container">
-                        <a href="./performance-and-metrics.html"><button id="performance">Performance</button></a>
-                        <a href="./my-applications.html"><button>My Application</button></a>
-                        <a href="./job-opportunities.html"><button>Job Opportunities</button></a>
-                        <a href="./companies.html"><button>Company Information</button></a>
-                        <a href="./notifications.html"><button>Notifications</button></a>
+                        <a href="./performance-and-metrics.php"><button id="performance">Performance</button></a>
+                        <a href="./my-applications.php"><button id="myapplications">My Application</button></a>
+                        <a href="./job-opportunities.php"><button>Job Opportunities</button></a>
+                        <a href="./companies.php"><button>Company Information</button></a>
+                        <a href="./notifications.php"><button>Notifications</button></a>
                     </div>
                 </div>
             </div>
 
             <div class="main-container">
-                <h2 class="main-container-heading"><a href="./dashboard.html"><i class="fa-solid fa-arrow-left fa-lg" style="color: #000000;"></i></a>
-                    Performance and Metrics</h2>
+                <h2 class="main-container-heading"><a href="./dashboard.php"><i class="fa-solid fa-arrow-left fa-lg" style="color: #000000;"></i></a>
+                    My Applications</h2>
+
                 <div class="sections">
-                    <div class="section-1">
-                        <div class="subsection-1">
-                            <h3>Stats:</h3><br>
-                            <p>Total Applications:</p><br>
-                            <p>Interviews Attended:</p><br>
-                            <P>Rejections:</P><br>
+                        <div class="company-logo-container">
+                            <h3>Company Feedback</h3>
+                            <img src="../Assets/oneshield.png" alt="">
                         </div>
-                        <div class="subsection-2">
-                            <p> sfisjsj</p>
-                        </div>
-                    </div>
-                    <div class="section-2">
-                        <p>ueryhuwh</p>
-                    </div>
+                        <form action="">
+                            <label for="message"><strong>Message:</strong></label>
+                            <textarea class="user-input-message" placeholder="Enter your message" required></textarea><br><br>
+    
+                            <button>Submit</button>
+                            <strong>Ratings:</strong> 
+                            <span class="rating-container">
+                                <span class="fa fa-star checked fa-xl"></span>
+                                <span class="fa fa-star checked fa-xl"></span>
+                                <span class="fa fa-star checked fa-xl"></span>
+                                <span class="fa fa-star checked fa-xl"></span>
+                                <span class="fa fa-star fa-xl"></span>
+                            </span>
+                            <button>Submit</button>
+                        </form>
                 </div>
             </div>
-
         </div>
+
         <footer>
             <div class="footer-container">
                 <div class="left-footer-part">
@@ -103,7 +109,6 @@
             </div>
         </footer>
     </div>
-
 
 </body>
 

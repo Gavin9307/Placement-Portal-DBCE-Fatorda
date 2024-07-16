@@ -49,17 +49,17 @@
                     </div>
 
                     <div class="bottom-container">
-                        <a href="./performance-and-metrics.html"><button>Performance</button></a>
-                        <a href="./my-applications.html"><button >My Application</button></a>
-                        <a href="./job-opportunities.html"><button>Job Opportunities</button></a>
-                        <a href="./companies.html"><button>Company Information</button></a>
-                        <a href="./notifications.html"><button>Notifications</button></a>
+                        <a href="./performance-and-metrics.php"><button>Performance</button></a>
+                        <a href="./my-applications.php"><button >My Application</button></a>
+                        <a href="./job-opportunities.php"><button>Job Opportunities</button></a>
+                        <a href="./companies.php"><button>Company Information</button></a>
+                        <a href="./notifications.php"><button>Notifications</button></a>
                     </div>
                 </div>
             </div>
 
             <div class="main-container">
-                <h2 class="main-container-heading"><a href="./dashboard.html"><i class="fa-solid fa-arrow-left fa-lg" style="color: #000000;"></i></a>
+                <h2 class="main-container-heading"><a href="./dashboard.php"><i class="fa-solid fa-arrow-left fa-lg" style="color: #000000;"></i></a>
                     Edit Profile : </h2>
 
                 <div class="profile-image">

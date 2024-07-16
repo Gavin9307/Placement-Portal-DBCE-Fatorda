@@ -10,11 +10,10 @@
         href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
         rel="stylesheet">
     <script defer src="../FontAwesome/JS/all.js"></script>
-    <link rel="stylesheet" href="./css/my-applications-feedback.css">
+    <link rel="stylesheet" href="./css/job-opportunities-detail.css">
     <link rel="stylesheet" href="./css/header.css">
     <link rel="stylesheet" href="./css/footer.css">
-    <title>My Applications</title>
-    
+    <title>Job Opportunities</title>
 </head>
 
 <body>
@@ -26,7 +25,7 @@
                     <h2>Placement Portal - Don Bosco College of Engineering</h2>
                 </div>
                 <ul class="right-part">
-                    <a href="./dashboard.html"><li>Dashboard</li></a>
+                    <a href="./dashboard.php"><li>Dashboard</li></a>
                     <li>Contact Us</li>
                     <div class="notifications">
                         <div class="dot">.</div><i class="fa-solid fa-bell"></i>
@@ -50,39 +49,64 @@
                     </div>
 
                     <div class="bottom-container">
-                        <a href="./performance-and-metrics.html"><button id="performance">Performance</button></a>
-                        <a href="./my-applications.html"><button id="myapplications">My Application</button></a>
-                        <a href="./job-opportunities.html"><button>Job Opportunities</button></a>
-                        <a href="./companies.html"><button>Company Information</button></a>
-                        <a href="./notifications.html"><button>Notifications</button></a>
+                        <a href="./performance-and-metrics.php"><button>Performance</button></a>
+                        <a href="./my-applications.php"><button>My Application</button></a>
+                        <a href="./job-opportunities.php"><button id="jobopportunities">Job Opportunities</button></a>
+                        <a href="./companies.php"><button>Company Information</button></a>
+                        <a href="./notifications.php"><button>Notifications</button></a>
                     </div>
                 </div>
-            </div>
-
+            </dphp
             <div class="main-container">
-                <h2 class="main-container-heading"><a href="./dashboard.html"><i class="fa-solid fa-arrow-left fa-lg" style="color: #000000;"></i></a>
-                    My Applications</h2>
+                <h2 class="main-container-heading"><a href="./dashboard.php"><i class="fa-solid fa-arrow-left fa-lg" style="color: #000000;"></i></a>
+                    Job Opportunities</h2>
 
                 <div class="sections">
+                    <div class="company-container">
                         <div class="company-logo-container">
-                            <h3>Company Feedback</h3>
-                            <img src="../Assets/oneshield.png" alt="">
+                            <img src="../Assets/profile.jpg" alt="">
+                            <p>Google</p>
                         </div>
-                        <form action="">
-                            <label for="message"><strong>Message:</strong></label>
-                            <textarea class="user-input-message" placeholder="Enter your message" required></textarea><br><br>
-    
-                            <button>Submit</button>
-                            <strong>Ratings:</strong> 
-                            <span class="rating-container">
-                                <span class="fa fa-star checked fa-xl"></span>
-                                <span class="fa fa-star checked fa-xl"></span>
-                                <span class="fa fa-star checked fa-xl"></span>
-                                <span class="fa fa-star checked fa-xl"></span>
-                                <span class="fa fa-star fa-xl"></span>
-                            </span>
-                            <button>Submit</button>
-                        </form>
+                        <p><strong>Due Date:</strong> 12/12/2003</p>
+                    </div>
+                    <p class="position"><strong>Position:</strong> Associate Developer</p>
+                    <p class=""><strong>Details:</strong><p style="white-space: pre;">Job Description: 
+Software Engineer Campus: Role
+As Software Engineer, you will implement solutions for a variety of projects in a highly collaborative and 
+fast-paced environment. You will work closely with product and marketing managers, user interaction 
+designers, and other software engineers to develop new product offerings and improve existing ones. 
+
+Job Responsibilities
+• Prepare Technical and Design documents.
+• Code/Configure while strictly following the guidelines.
+• Unit Test Implementation Changes.
+• Peer Review requirements and design artifacts, as well as code and configuration.
+• Integration test in Development/Integration regions.
+• Communicate with managers and peers on assigned work.
+• Follow defined processes and procedures. 
+• Adapt/Learn/Use any other technologies as required. 
+
+Desired Technical Skills
+• Analytical, Design, and Programming Skills.
+• Good understanding of Data Structures and Algorithms.
+• Object-Oriented Programming concepts.
+• RDBMS concepts, writing and debugging SQL queries.
+• Familiarity with Design Patterns.
+• Basic understanding of Operating systems.
+
+Desired Business Skills
+• Exceptional logic and analytical skills.
+• Excellent verbal and written communication skills in the English language.
+• Good documentation skills.
+
+Education
+• Successful completion of your course of study.
+</p></p>
+                    
+<div class="interest-button-container">
+    <a href="./my-applications-details.php"><button class="interested">Interested</button></a>
+    <a href="./my-applications-details.php"><button class="not-interested">Not Interested</button></a>
+</div>
                 </div>
             </div>
         </div>

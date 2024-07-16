@@ -45,21 +45,21 @@
                         <img src="../Assets/profile.jpg" alt="">
                         <p>Gavin Da Costa</p>
                         <p>2114018@dbcegoa.ac.in</p>
-                        <a href=""><button>Update Profile</button></a>
+                        <a href="./my-profile.php"><button>Update Profile</button></a>
                     </div>
 
                     <div class="bottom-container">
-                        <a href="./performance-and-metrics.html"><button id="performance">Performance</button></a>
-                        <a href="./my-applications.html"><button>My Application</button></a>
-                        <a href="./job-opportunities.html"><button>Job Opportunities</button></a>
-                        <a href="./companies.html"><button id="companies">Company Information</button></a>
-                        <a href="./notifications.html"><button>Notifications</button></a>
+                        <a href="./performance-and-metrics.php"><button id="performance">Performance</button></a>
+                        <a href="./my-applications.php"><button>My Application</button></a>
+                        <a href="./job-opportunities.php"><button>Job Opportunities</button></a>
+                        <a href="./companies.php"><button id="companies">Company Information</button></a>
+                        <a href="./notifications.php"><button>Notifications</button></a>
                     </div>
-                </div>h
+                </div>
             </div>
 
             <div class="main-container">
-                <h2 class="main-container-heading"><a href="./dashboard.html"><i class="fa-solid fa-arrow-left fa-lg" style="color: #000000;"></i></a>
+                <h2 class="main-container-heading"><a href="./dashboard.php"><i class="fa-solid fa-arrow-left fa-lg" style="color: #000000;"></i></a>
                     Companies</h2>
 
                 <div class="sections">
@@ -70,31 +70,31 @@
                         </form>
                     </div>
                     <div class="company-grid">
-                        <a href="./company-details.html">
+                        <a href="./company-details.php">
                             <div class="company-card">
                                 <img src="../Assets/oneshield.png" alt="">
                                 <p>OneShield</p>
                             </div>
                         </a>
-                        <a href="./company-details.html">
+                        <a href="./company-details.php">
                             <div class="company-card">
                                 <img src="../Assets/oneshield.png" alt="">
                                 <p>OneShield</p>
                             </div>
                         </a>
-                        <a href="./company-details.html">
+                        <a href="./company-details.php">
                             <div class="company-card">
                                 <img src="../Assets/oneshield.png" alt="">
                                 <p>OneShield</p>
                             </div>
                         </a>
-                        <a href="./company-details.html">
+                        <a href="./company-details.php">
                             <div class="company-card">
                                 <img src="../Assets/oneshield.png" alt="">
                                 <p>OneShield</p>
                             </div>
                         </a>
-                        <a href="./company-details.html">
+                        <a href="./company-details.php">
                             <div class="company-card">
                                 <img src="../Assets/oneshield.png" alt="">
                                 <p>OneShield</p>

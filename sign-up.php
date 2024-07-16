@@ -72,13 +72,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_GET["add_student"])) {
                     <h2>Placement Portal - Don Bosco College of Engineering</h2>
                 </div>
                 <ul class="right-part">
-                    <a href="./index.html">
+                    <a href="./index.php">
                         <li>Home</li>
                     </a>
-                    <a href="./sign-in.html">
+                    <a href="./sign-in.php">
                         <li>Sign in</li>
                     </a>
-                    <a href="./student-support.html">
+                    <a href="./student-support.phpang">
                         <li>Contact Us</li>
                     </a>
                 </ul>

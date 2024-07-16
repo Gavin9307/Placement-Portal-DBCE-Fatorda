@@ -25,7 +25,7 @@
                     <h2>Placement Portal - Don Bosco College of Engineering</h2>
                 </div>
                 <ul class="right-part">
-                    <a href="./dashboard.html"><li>Dashboard</li></a>
+                    <a href="./dashboard.php"><li>Dashboard</li></a>
                     <li>Contact Us</li>
                     <div class="notifications">
                         <div class="dot">.</div><i class="fa-solid fa-bell"></i>
@@ -49,17 +49,17 @@
                     </div>
 
                     <div class="bottom-container">
-                        <a href="./performance-and-metrics.html"><button id="performance">Performance</button></a>
-                        <a href="./my-applications.html"><button id="myapplications">My Application</button></a>
-                        <a href="./job-opportunities.html"><button>Job Opportunities</button></a>
-                        <a href="./companies.html"><button>Company Information</button></a>
-                        <a href="./notifications.html"><button>Notifications</button></a>
+                        <a href="./performance-and-metrics.php"><button id="performance">Performance</button></a>
+                        <a href="./my-applications.php"><button id="myapplications">My Application</button></a>
+                        <a href="./job-opportunities.php"><button>Job Opportunities</button></a>
+                        <a href="./companies.php"><button>Company Information</button></a>
+                        <a href="./notifications.php"><button>Notifications</button></a>
                     </div>
                 </div>
             </div>
 
             <div class="main-container">
-                <h2 class="main-container-heading"><a href="./dashboard.html"><i class="fa-solid fa-arrow-left fa-lg" style="color: #000000;"></i></a>
+                <h2 class="main-container-heading"><a href="./dashboard.php"><i class="fa-solid fa-arrow-left fa-lg" style="color: #000000;"></i></a>
                     My Applications</h2>
 
                 <div class="sections">
@@ -75,7 +75,7 @@
                         <p><strong>Position:</strong> Associate Developer</p>
                     </div>
                     
-                    <a href="./my-applications-feedback.html"><button>Give Feedback</button></a>
+                    <a href="./my-applications-feedback.php"><button>Give Feedback</button></a>
                     
                     <!-- Round Details Start Here -->
                     <br><hr><br>

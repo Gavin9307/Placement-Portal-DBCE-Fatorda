@@ -23,7 +23,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_GET["login"])) {
     } else if (empty($usertype)) {
         $error = "User type is required.";
     } else {
-        $table = "";
+        $Table = "";
         switch ($usertype) {
             case "stu":
                 $Table = "student";

@@ -1,14 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+    <?php include 'head.php' ?>
+
     <link rel="stylesheet" href="style-forgotpassword.css">
-    <link rel="stylesheet" href="header.css">
-    <link rel="stylesheet" href="footer.css">
     <title>Forgot Password</title>
 </head>
 <body>
@@ -49,22 +44,7 @@
     </div>
       
     </main>
-        <footer>
-            <div class="footer-container">
-                <div class="left-footer-part">
-                    <h4>Address</h4>
-                    <p>Don Bosco College of Engineering, Fatorda, Margao, Goa - 403602<br>Tel No.: (0832) 2744111/2744112<br>E-mail : dbcefatorda@dbcegoa.ac.in</p>
-                </div>
-                <div class="right-footer-part">
-                    <h4>Follow us</h4>
-                    <div class="social-icons-list">
-                        <i class="ico fa-brands fa-square-facebook fa-3x"></i>
-                        <i class="ico fa-brands fa-square-instagram fa-3x"></i>
-                        <i class="ico fa-brands fa-linkedin fa-3x"></i>
-                    </div>
-                </div>
-            </div>
-        </footer>
+    <?php include 'footer.php' ?>
     </div>
 </body>
     <script defer src="./FontAwesome/JS/all.js"></script>

@@ -40,6 +40,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_GET["add_student"])) {
             $insertStmt->bind_param("ss", $email, $hashedPassword);
 
             if ($insertStmt->execute()) {
+
+                if (!isset($_SESSION)){
+                    session_start();
+                }
+                $_SESSION['user_email'] = $email;
+                $_SESSION['user_type'] = $usertype;
+                
                 if ($rememberMe) {
                     setcookie("user_email", $email, time() + (86400 * 30), "/"); // 30 days
                 }

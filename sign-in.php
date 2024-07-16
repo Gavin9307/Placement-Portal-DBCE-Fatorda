@@ -56,6 +56,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_GET["login"])) {
                 $checkStmt->bind_result($dbEmail, $dbPassword);
                 $checkStmt->fetch();
                 if (password_verify($password, $dbPassword)) {
+
+                    if (!isset($_SESSION)){
+                        session_start();
+                    }
+                    $_SESSION['user_email'] = $email;
+                    $_SESSION['user_type'] = $usertype;
+
                     if ($rememberMe) {
                         setcookie("user_email", $email, time() + 86400 * 30, "/");
                     }

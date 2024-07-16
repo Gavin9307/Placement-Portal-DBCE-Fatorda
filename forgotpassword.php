@@ -94,7 +94,7 @@
                     <h2>Placement Portal - Don Bosco College of Engineering</h2>
                 </div>
                 <ul class="right-part">
-                    <a href="./student-support.html">
+                    <a href="./student-support.php">
                         <li>Contact Us</li>
                     </a>
                     <a href="./sign-in.php">

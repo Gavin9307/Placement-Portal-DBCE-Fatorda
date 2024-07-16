@@ -17,7 +17,7 @@
                     <h2>Placement Portal - Don Bosco College of Engineering</h2>
                 </div>
                 <ul class="right-part">
-                    <a href="./index.html"><li>Home</li></a>
+                    <a href="./Students/"><li>Home</li></a>
                     <a href="./index.html"><li>Dashboard</li></a>
                 </ul>
             </div>

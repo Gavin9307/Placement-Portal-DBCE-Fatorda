@@ -1,3 +1,90 @@
+<?php
+require "conn.php";
+
+$email = "";
+$password = "";
+$error = "";
+$rememberMe = false;
+
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_GET["login"])) {
+    global $conn;
+    $email = htmlspecialchars($_POST["email"]);
+    $password = htmlspecialchars($_POST["password"]);
+    $usertype = htmlspecialchars($_POST["usertype"]);
+
+    if (isset($_POST["remember_me"])) {
+        $rememberMe = true;
+    }
+
+    if (empty($email)) {
+        $error = "Email is required.";
+    } else if (empty($password)) {
+        $error = "Password is required.";
+    } else if (empty($usertype)) {
+        $error = "User type is required.";
+    } else {
+        $table = "";
+        switch ($usertype) {
+            case "stu":
+                $Table = "student";
+                $Email = "S_College_Email";
+                $Password = "S_Password";
+                break;
+            case "tpo":
+                $Table = "placementcoordinator";
+                $Email = "PC_Email";
+                $Password = "PC_Password";
+                break;
+            case "pc":
+                $Table = "placementcoordinator";
+                $Email = "PC_Email";
+                $Password = "PC_Password";
+                break;
+            default:
+                $error = "Select user type.";
+                break;
+        }
+
+        if (empty($error)) {
+            $checkEmailQuery = "SELECT $Email, $Password FROM $Table WHERE $Email = ?";
+            $checkStmt = $conn->prepare($checkEmailQuery);
+            $checkStmt->bind_param("s", $email);
+            $checkStmt->execute();
+            $checkStmt->store_result();
+
+            if ($checkStmt->num_rows > 0) {
+                $checkStmt->bind_result($dbEmail, $dbPassword);
+                $checkStmt->fetch();
+                if (password_verify($password, $dbPassword)) {
+                    if ($rememberMe) {
+                        setcookie("user_email", $email, time() + 86400 * 30, "/");
+                    }
+                    switch ($usertype) {
+                        case "stu":
+                            header("Location: ./Students/dashboard.php");
+                            break;
+                        case "tpo":
+                            header("Location: ./Students/dashboard.php");
+                            break;
+                        case "pc":
+                            header("Location: ./Students/dashboard.php");
+                            break;
+                        default:
+                            break;
+                    }
+                    exit();
+                } else {
+                    $error = "Invalid password.";
+                }
+            } else {
+                $error = "Email not registered.";
+            }
+        }
+    }
+}
+?>
+
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -28,35 +115,38 @@
                 <img src="./Assets/college-university-students.png" alt="">
 
                 <div class="right-column">
-                    <form action="">
+                    <form action="./sign-in.php?login" method="post">
                         <h2>Welcome back! <br> Sign in</h2>
                         <div class="inputbox">
                             <label for="usertype">Sign in as</label><br>
                             <select name="usertype" id="usertype">
-                                <option value="student">Select Type</option>
-                                <option value="student">Student</option>
+                                <option value="" disabled selected>Select Type</option>
+                                <option value="stu">Student</option>
                                 <option value="tpo">TPO</option>
                                 <option value="pc">Placement Coordinator</option>
                             </select>
                         </div>
                         <div class="inputbox">
                             <label for="email">Email</label><br>
-                            <input type="text" placeholder="example@dbcegoa.ac.in" required>
+                            <input name="email" type="text" placeholder="example@dbcegoa.ac.in" required>
                         </div>
 
                         <div class="inputbox">
                             <label for="password">Password</label><br>
-                            <input type="password" placeholder="Password" id="password" required>
+                            <input name="password" type="password" placeholder="Password" id="password" required>
                         </div><br>
 
                         <div class="checkbox-container">
-                            <input type="checkbox" name="remember-me" id="remember-me">
+                            <input type="checkbox" name="remember_me" id="remember-me">
                             <label for="remember-me">Remember me</label>
                         </div><br>
                         <button type="submit" class="subbtn" onclick=" ">Sign in</button>
                         <div class="forgotpassword">
-                            <a href="#">Forgot Password</a>
+                            <a href="./forgotpassword.php">Forgot Password</a>
                         </div>
+                        <?php if (!empty($error)): ?>
+                            <div style="color: red; font-size: small; text-align:center; margin-top:10px"><?php echo $error; ?></div><br>
+                        <?php endif; ?>
                     </form>
                 </div>
             </div>

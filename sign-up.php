@@ -11,7 +11,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_GET["add_student"])) {
     $email = htmlspecialchars($_POST["email"]);
     $password = htmlspecialchars($_POST["password"]);
     if (isset($_POST["remember_me"])) {
-        $rememberMe = $_POST["remember_me"];
+        $rememberMe = true;
     }
     $pattern = "/^[a-zA-Z0-9._%+-]+@dbcegoa.ac.in$/";
 
@@ -43,7 +43,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_GET["add_student"])) {
                 if ($rememberMe) {
                     setcookie("user_email", $email, time() + (86400 * 30), "/"); // 30 days
                 }
-                header("Location: ./student/dashboard.html");
+                header("Location: ./students/dashboard.php");
                 exit();
             } else {
                 $error = "Registration failed, please try again.";

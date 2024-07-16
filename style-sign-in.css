@@ -83,7 +83,6 @@ main {
 }
 
 .right-column .forgotpassword{
-    margin-top: 10px;
     cursor: pointer;
 }
 .forgotpassword > a:hover{

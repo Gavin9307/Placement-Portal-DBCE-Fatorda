@@ -49,6 +49,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_GET["add_student"])) {
                 
                 if ($rememberMe) {
                     setcookie("user_email", $email, time() + (86400 * 30), "/"); // 30 days
+                    setcookie("user_type", $usertype, time() + (86400 * 30), "/"); 
                 }
                 header("Location: ./students/dashboard.php");
                 exit();

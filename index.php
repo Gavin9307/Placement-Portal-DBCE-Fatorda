@@ -1,3 +1,9 @@
+<?php 
+    if (!isset($_SESSION)) {
+        session_start();
+    }
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -15,9 +21,26 @@
                     <h2>Placement Portal - Don Bosco College of Engineering</h2>
                 </div>
                 <ul class="right-part">
-                    <a href="./sign-in.php"><li>Sign in</li></a>
-                    <a href="./sign-up.php"><li>Sign up</li></a>
-                    <a href="./student-support.php"><li>Contact Us</li></a>
+                    <?php 
+                        if (!isset($_SESSION['user_type'])) {
+                            echo '<a href="./sign-in.php"><li>Sign in</li></a>
+                            <a href="./sign-up.php"><li>Sign up</li></a>
+                            <a href="./student-support.php"><li>Contact Us</li></a>';
+                        }
+                        else {
+                            if ($_SESSION['user_type'] == "stu"){
+                                echo '<a href="./Students/dashboard.php"><li>Dashboard</li></a>
+                                <a href="./student-support.php"><li>Contact Us</li></a>';
+                            }
+                            else if ($_SESSION['user_type'] == "pc"){
+                                echo '<a href="./PlacementCoordinator/dashboard.php"><li>Dashboard</li></a>';
+                            }
+                            else if ($_SESSION['user_type'] == "tpo"){
+                                echo '<a href="./PlacementCoordinator/dashboard.php"><li>Dashboard</li></a>';
+                            }
+                        }
+                    ?>
+                    
                 </ul>
             </div>
         </header>
@@ -27,8 +50,26 @@
                 <div class="main-left-part">
                     <h3>Welcome to Don Bosco <br> College of Engineering <br> Placement <br> Portal</h3>
                     <div class="button-container">
-                        <a href="./sign-up.php"><button class="sign-up">Sign up</button></a>
-                        <a href="./sign-in.php"><button class="sign-in">Sign in</button></a>
+                        <?php 
+                            if (!isset($_SESSION['user_type'])) {
+                                echo '<a href="./sign-up.php"><button class="sign-up">Sign up</button></a>
+                                <a href="./sign-in.php"><button class="sign-in">Sign in</button></a>';
+                            }
+                            else {
+                                if ($_SESSION['user_type'] == "stu"){
+                                    echo '<a href="./Students/dashboard.php"><button class="sign-up">Dashboard</button></a>';
+                                }
+                                else if ($_SESSION['user_type'] == "pc"){
+                                    echo '<a href="./PlacementCoordinator/dashboard.php"><button class="sign-up">Dashboard</button></a>';
+                                }
+                                else if ($_SESSION['user_type'] == "tpo"){
+                                    echo '<a href="./PlacementCoordinator/dashboard.php"><button class="sign-up">Dashboard</button></a>';
+                                }
+                            }
+                        
+                        ?>
+
+                        
                     </div>
                 </div>
                 <img src="./Assets/interview-image.jpg" alt="">

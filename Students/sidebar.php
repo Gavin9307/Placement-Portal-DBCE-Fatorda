@@ -27,9 +27,10 @@ if (isset($_SESSION["user_type"]) && isset($_SESSION["user_email"])) {
                                 <img src="../Data/Students/Profile_Images/'. $userProfilePic . '" alt="'.$userProfilePic.'">
                                 <p>' . $userName . '</p>
                                 <p>' . $userEmail . '</p>
-                                <a href=""><button>Update Profile</button></a>
+                                <a href="../logout.php"><button>Logout</button></a>
                             </div>
                             <div class="bottom-container">
+                                <a href="./my-profile.php"><button id="myprofile">Update Profile</button></a>
                                 <a href="./performance-and-metrics.php"><button id="performance">Performance</button></a>
                                 <a href="./my-applications.php"><button id="myapplications">My Application</button></a>
                                 <a href="./job-opportunities.php"><button id="jobopportunities">Job Opportunities</button></a>

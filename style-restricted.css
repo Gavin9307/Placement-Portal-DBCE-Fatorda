@@ -17,47 +17,21 @@
 
 /* Main content */
 main {
-    padding-top: 30px;
+    
 }
 
 .main-container {
     max-width: 1200px;
     margin: 0 auto;
-    position: relative;
-    min-height:700px;
-    
-}
-
-.main-left-part {
+    margin-bottom: 100px;
+    margin-top: 50px;
     display: flex;
     flex-direction: column;
-    gap: 50px;
     justify-content: center;
+    align-items: center;
+    gap: 10px;
 }
 
-.main-left-part > h3 {
-    font-size: 70px;
-    font-weight: 700;
-    z-index: 1;
+.main-container > img {
+    width: 400px;
 }
-
-.main-left-part > img {
-    width: 500px;
-}
-
-
-.sign-up {
-    background-color: var(--primary-blue);
-}
-.sign-in {
-    background-color: var(--primary-grey);
-}
-
-.sign-up {
-    color: white;
-}
-
-.sign-in {
-    color: black;
-}
-

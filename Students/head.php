@@ -6,3 +6,4 @@
 <script defer src="../FontAwesome/JS/all.js"></script>
 <link rel="stylesheet" href="./css/header.css">
 <link rel="stylesheet" href="./css/footer.css">
+<link rel="stylesheet" href="./css/sidebar.css">

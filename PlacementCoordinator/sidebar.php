@@ -9,7 +9,7 @@
 
         <div class="bottom-container">
             <a href="./studentmanagement.php"><button id="studentmanagement">Student Management</button></a>
-            <a href="./companymanagement.php"><button id="mycompanymanagement">Company Management</button></a>
+            <a href="./companymanagement.php"><button id="companymanagement">Company Management</button></a>
             <a href="./jobmanagement.php"><button id="jobmanagement">Job Management</button></a>
             <a href="./notifications.php"><button id="notifications">Send Notifications</button></a>
             <a href="./placementcordinator.php"><button id="placementcoordinator">Placement Coordinators</button></a>

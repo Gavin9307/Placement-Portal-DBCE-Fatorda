@@ -10,7 +10,7 @@
                 <div class="dot">.</div><i class="fa-solid fa-bell"></i>
             </div>
             <li class="profile-container">
-                <span>Gavin</span>
+                <span>Patric</span>
                 <img src="../Assets/profile.jpg" alt="">
             </li>
         </ul>

@@ -1,5 +1,6 @@
 <?php
     require "../conn.php";
+    include "../utility_functions.php";
     global $conn;
     if (!isset($_SESSION)) {
         session_start();
@@ -123,22 +124,9 @@
 
                     <div class="students-reviews-container">
                         <p><strong>Student Reviews:</strong></p>
-                        <div class="students-review">
-                            <div class="students-container">
-                                <div class="students-logo-container">
-                                    <img src="../Assets/profile.jpg" alt="">
-                                    <p>Syndroy Araujo</p>
-                                </div>
-                                <div class="rating-container">
-                                    <span class="fa fa-star checked fa-xl"></span>
-                                    <span class="fa fa-star checked fa-xl"></span>
-                                    <span class="fa fa-star checked fa-xl"></span>
-                                    <span class="fa fa-star fa-xl"></span>
-                                    <span class="fa fa-star fa-xl"></span>
-                                </div>
-                            </div>
-                            <p class="students-message">Lorem ipsum dolor sit amet consectetur adipisicing elit. Expedita, dolor optio officiis laboriosam similique facere harum ad voluptates reiciendis soluta dignissimos magnam minus beatae est dolorum nulla exercitationem dicta, modi ab aliquid iste sequi provident debitis. Temporibus eos ut harum quod hic, quis aliquid sunt. Corporis quod ut aperiam veniam.</p>
-                        </div>
+                        <?php 
+                            getFeedbacks();
+                        ?>
                     </div>
 
                 </div>

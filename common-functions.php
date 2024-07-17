@@ -1,4 +1,6 @@
 <?php
+
+    require './conn.php';
     use PHPMailer\PHPMailer\PHPMailer;
     use PHPMailer\PHPMailer\Exception;
 
@@ -44,4 +46,5 @@
 
         return $password;
     }
+
 ?>

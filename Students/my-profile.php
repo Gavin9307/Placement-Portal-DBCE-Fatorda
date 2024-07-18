@@ -76,14 +76,26 @@
                         </div>
                         <div class="form-adjust">
                             <div>
+                                <label for="">Department</label><br>
+                                <select name="" id="">
+                                     <option value=""disabled selected>Select</option>
+                                    <option value="">Computer</option>
+                                    <option value="">Mechanical</option>
+                                    <option value="">ECS</option>
+                                    <option value="">CIVIL</option>
+                                </select>
+                            </div>
+                            <div>
                                 <label for="">Class</label><br>
-                                <input type="text">
+                                <select name="" id=""> 
+                                    <option value="" disabled selected>Select</option>
+                                    <option value="">FE</option>
+                                    <option value="">SE</option>
+                                    <option value="">TE</option>
+                                    <option value="">BE</option>
+                                </select>
                             </div>
     
-                            <div>
-                                <label for="">Department</label><br>
-                                <input type="text">
-                            </div>
                         </div>
                         <h3>Other Information:</h3>
                         <div class="form-adjust">
@@ -158,8 +170,12 @@
                                 <input type="text">
                             </div>
                             <div>
-                                <label for="">No. of Backs</label><br>
-                                <input type="text">
+                                <label for="">Do you have any backlogs?</label><br>
+                                <select name="" id="">
+                                    <option value=""disabled selected>Select</option>
+                                    <option value="">Yes</option>
+                                    <option value="">No</option>
+                                </select>
                             </div>
                         </div>
                         <button>Update</button>

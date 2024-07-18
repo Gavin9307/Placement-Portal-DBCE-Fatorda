@@ -118,6 +118,24 @@ form h3 {
     border: 1px solid var(--secondary-grey);
 }
 
+.form-adjust select {
+    width: 100%;
+    padding: 10px;
+    border-radius: 5px;
+    margin-top: 5px;
+    outline: none;
+    border: 1px solid var(--secondary-grey);
+}
+
+.form-adjust option {
+    width: 100%;
+    padding: 10px;
+    border-radius: 5px;
+    margin-top: 5px;
+    outline: none;
+    border: 1px solid var(--secondary-grey);
+}
+
 .form-adjust input:focus {
     border: 1px solid var(--primary-blue);
 }

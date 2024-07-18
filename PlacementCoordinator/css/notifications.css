@@ -100,6 +100,27 @@
 .main-container-heading > a {
     cursor: pointer;
 }
+.main-container-header  {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px;
+}
+.main-container-header .add-button {
+    margin-top: 10px;
+    padding-block: 5px;
+    padding-inline: 25px;
+    border-radius: 5px;
+    border: none;
+    font-weight: 600;
+    font-size: 18px;
+    cursor: pointer;
+    background-color: var(--primary-blue);
+    color: var(--primary-white);
+    position: absolute;
+    right: 25px; 
+    
+}
 .sections {
     position: relative;
     margin-top: 30px;
@@ -132,9 +153,24 @@
     margin-bottom: 30px;
 }
 
-.sections  button {
+.sections .edit-button {
     margin-top: 10px;
-    
+    padding-block: 5px;
+    padding-inline: 25px;
+    border-radius: 5px;
+    border: none;
+    font-weight: 600;
+    font-size: 18px;
+    cursor: pointer;
+    background-color: var(--primary-blue);
+    color: var(--primary-white);
+    position: absolute;
+    right: 150px; /* Adjust as necessary */
+    bottom: 20px;
+}
+
+.sections  .delete-button {
+    margin-top: 10px;
     padding-block: 5px;
     padding-inline: 25px;
     border-radius: 5px;

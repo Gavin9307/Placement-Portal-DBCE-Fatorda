@@ -15,9 +15,11 @@
             <?php include './sidebar.php' ?>
 
             <div class="main-container">
+                <div class="main-container-header">
                 <h2 class="main-container-heading"><a href="./dashboard.html"><i class="fa-solid fa-arrow-left fa-lg" style="color: #000000;"></i></a>
                     Notifications</h2>
-
+                    <a href=""><button class="add-button">Post Notifications</button></a>    
+                </div>
                 <div class="sections">
                     <div class="company-container">
                         <p><strong>Date:</strong> 12/12/2003</p>
@@ -25,8 +27,8 @@
                     </div>
                     <p class="subject"><strong>Subject:</strong> Round 1 for Google Location updated</p>
                     <p class= "message"><strong>Message:</strong> Lorem ipsum dolor sit amet consectetur. Tellus mauris blandit sagittis ligula sollicitudin elit. Quam integer ac scelerisque amet fermentum fringilla lacus urna. Iaculis sit quam</p>
-                    <a href=""><button>Edit</button></a>
-                    <a href=""><button>Delete</button></a>
+                    <a href=""><button class="edit-button">Edit</button></a>
+                    <a href=""><button class="delete-button">Delete</button></a>
                 </div>
 
                 <div class="sections">
@@ -36,8 +38,8 @@
                     </div>
                     <p class="subject"><strong>Subject:</strong> Round 1 for Google Location updated</p>
                     <p class= "message"><strong>Message:</strong> Lorem ipsum dolor sit amet consectetur. Tellus mauris blandit sagittis ligula sollicitudin elit. Quam integer ac scelerisque amet fermentum fringilla lacus urna. Iaculis sit quam</p>
-                    <a href=""><button>Edit</button></a>
-                    <a href=""><button>Delete</button></a>
+                    <a href=""><button class="edit-button">Edit</button></a>
+                    <a href=""><button class="delete-button">Delete</button></a>
                 </div>
             </div>
         </div>

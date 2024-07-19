@@ -19,7 +19,8 @@
 /* Main Content */
 .container {
     width: 100%;
-    display:flex ;
+    display:flex;
+   
 }
 
 #myprofile {
@@ -67,6 +68,11 @@
     color: var(--primary-white);
 } 
 
+.upload-button-container{
+    display: flex;
+    gap: 20px;
+}
+
 .sections  button {
     margin-top: 10px;
     
@@ -110,6 +116,15 @@ form h3 {
 }
 
 .form-adjust input {
+    width: 100%;
+    padding: 10px;
+    border-radius: 5px;
+    margin-top: 5px;
+    outline: none;
+    border: 1px solid var(--secondary-grey);
+}
+
+.form-adjust select {
     width: 100%;
     padding: 10px;
     border-radius: 5px;

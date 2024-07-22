@@ -1,6 +1,4 @@
 <?php
-
-
 function getFeedbacks() {
     global $conn;
     $fetchFeedbackQuery = "SELECT feedback.Message as message,feedback.Rating as rating,feedback.S_College_Email as S_email,feedback.C_id,student.S_Fname as fname,student.S_Lname as lname,student.S_Profile_pic as image FROM feedback INNER JOIN student ON student.S_College_Email = feedback.S_College_Email INNER JOIN company ON company.C_id = feedback.C_id WHERE feedback.C_id = ? ORDER BY feedback.Message_Date DESC;";
@@ -145,64 +143,161 @@ WHERE A.Interest = ? AND A.S_College_Email = ?;";
 
 function getApplicationDetails(){
     global $conn;
+    
+    // Fetch application details
     $fetchApplicationDetailsQuery = "SELECT C.C_Name as cname, C.C_Logo clogo, A.J_apply_date applydate, P.J_Position position, A.J_id as jid 
-FROM company as C
-INNER JOIN jobposting as J ON J.C_id = C.C_id
-INNER JOIN jobplacements as P ON P.J_id = J.J_id
-INNER JOIN jobapplication as A ON A.J_id = J.J_id
-WHERE A.Interest = ? AND A.S_College_Email = ?;";
+    FROM company as C
+    INNER JOIN jobposting as J ON J.C_id = C.C_id
+    INNER JOIN jobplacements as P ON P.J_id = J.J_id
+    INNER JOIN jobapplication as A ON A.J_id = J.J_id
+    WHERE A.Interest = ? AND A.S_College_Email = ?";
 
     $fetchApplicationDetails = $conn->prepare($fetchApplicationDetailsQuery);
-    $z = 1;
-    $fetchApplicationDetails->bind_param("is",$z,$_SESSION["user_email"]);
+    $interest = 1; 
+    $fetchApplicationDetails->bind_param("is", $interest, $_SESSION["user_email"]);
     $fetchApplicationDetails->execute();
     $result = $fetchApplicationDetails->get_result();
 
-    while( $row = $result->fetch_assoc() ) {
+    while ($row = $result->fetch_assoc()) {
         echo '<div class="company-container">
-                        <div class="company-logo-container">
-                            <img src="../Data/Companies/Company_Logo/'.$row['clogo'].'" alt="">
-                             <p>'.$row['cname'].'</p>
-                        </div>
-                        <p><strong>Apply Date:</strong> '.$row['applydate'].'</p>
-                    </div>
-                    <div class="position-application-container">
-                        <p class="position"><strong>Position:</strong> '.$row['position'].'</p>';
+            <div class="company-logo-container">
+                <img src="../Data/Companies/Company_Logo/'.$row['clogo'].'" alt="">
+                <p>'.$row['cname'].'</p>
+            </div>
+            <p><strong>Apply Date:</strong> '.$row['applydate'].'</p>
+        </div>
+        <div class="position-application-container">
+            <p class="position"><strong>Position:</strong> '.$row['position'].'</p>';
 
-        // Calculate rounds passed
         $jid = (int)$_GET['jid'];
-        $totalRoundsQuery = "SELECT R.Round_no round, R.Location location, R.Link link, R.Time time1, R.Date date1, S.RoundStatus status1, R.Description description  
-FROM rounds as R
-INNER JOIN studentrounds as S ON S.R_id = R.R_id
-WHERE
-S.S_College_Email = ? AND R.J_id = ?";
-    $totalRounds = $conn->prepare($totalRoundsQuery);
-    $totalRounds->bind_param("si",$_SESSION["user_email"],$jid);
-    $totalRounds->execute();
-    $totalRounds->get_result();
-    
-    $jid = (int)$_GET['jid'];
-        $totalRoundsPassedQuery = "SELECT R.Round_no round, R.Location location, R.Link link, R.Time time1, R.Date date1, S.RoundStatus status1, R.Description description  
-FROM rounds as R
-INNER JOIN studentrounds as S ON S.R_id = R.R_id
-WHERE
-S.S_College_Email = ? AND R.J_id = ? AND S.RoundStatus = ?";
-    $totalRoundsPassed = $conn->prepare($totalRoundsPassedQuery);
-    $stat = 'passed';
-    $totalRoundsPassed->bind_param("sis",$_SESSION["user_email"],$jid,$stat);
-    $totalRoundsPassed->execute();
-    $totalRoundsPassed->get_result();
+        $totalRoundsFailQuery = "SELECT COUNT(*) as total_rounds 
+        FROM rounds as R
+        INNER JOIN studentrounds as S ON S.R_id = R.R_id
+        WHERE S.S_College_Email = ? AND R.J_id = ? AND S.RoundStatus = ?";
 
-        if ($totalRounds->num_rows == $totalRoundsPassed->num_rows){
-            echo '<p><strong>Status:</strong> Passed</p>
-                        </div>';
+        $totalRoundsFail = $conn->prepare($totalRoundsFailQuery);
+        $status = 'rejected';
+        $totalRoundsFail->bind_param("sis", $_SESSION["user_email"], $jid,$status);
+        $totalRoundsFail->execute();
+        $totalRoundsFailResult = $totalRoundsFail->get_result();
+        $totalRoundsFailCount = $totalRoundsFailResult->fetch_assoc()['total_rounds'];
+
+        if ($totalRoundsFailCount>0){
+            echo '<p><strong>Status:</strong> Rejected</p>';
+            echo '</div>';
+            echo '<a href="./my-applications-feedback.php"><button>Give Feedback</button></a>';
+            return false;
         }
-        else {
-            echo '<p><strong>Status:</strong> Pending</p>
-                        </div>';
+
+        
+        $totalRoundsQuery = "SELECT COUNT(*) as total_rounds 
+        FROM rounds as R
+        INNER JOIN studentrounds as S ON S.R_id = R.R_id
+        WHERE S.S_College_Email = ? AND R.J_id = ?";
+
+        $totalRounds = $conn->prepare($totalRoundsQuery);
+        $totalRounds->bind_param("si", $_SESSION["user_email"], $jid);
+        $totalRounds->execute();
+        $totalRoundsResult = $totalRounds->get_result();
+        $totalRoundsCount = $totalRoundsResult->fetch_assoc()['total_rounds'];
+
+        $totalRoundsPassedQuery = "SELECT COUNT(*) as passed_rounds 
+        FROM rounds as R
+        INNER JOIN studentrounds as S ON S.R_id = R.R_id
+        WHERE S.S_College_Email = ? AND R.J_id = ? AND S.RoundStatus = ?";
+
+        $totalRoundsPassed = $conn->prepare($totalRoundsPassedQuery);
+        $status = 'passed';
+        $totalRoundsPassed->bind_param("sis", $_SESSION["user_email"], $jid, $status);
+        $totalRoundsPassed->execute();
+        $totalRoundsPassedResult = $totalRoundsPassed->get_result();
+        $totalRoundsPassedCount = $totalRoundsPassedResult->fetch_assoc()['passed_rounds'];
+
+        if ($totalRoundsCount == $totalRoundsPassedCount) {
+            echo '<p><strong>Status:</strong> Passed</p>';
+            echo '</div>';
+            echo '<a href="./my-applications-feedback.php"><button>Give Feedback</button></a>';
+        } else {
+            echo '<p><strong>Status:</strong> Pending</p>';
+            echo '</div>';
         }
-                        
     }
 }
+
+function getApplicationRoundDetails() {
+    global $conn;
+    
+    // Fetch application details
+    $fetchApplicationRoundDetailsQuery = "SELECT R.Round_no round, R.Location location, R.Link link, R.Time time1, R.Date date1, S.RoundStatus status1, R.Description description  
+FROM rounds as R
+INNER JOIN studentrounds as S ON S.R_id = R.R_id
+WHERE
+S.S_College_Email = ? AND R.J_id = ?;";
+
+    $jid = (int)$_GET['jid'];
+    $fetchApplicationRoundDetails = $conn->prepare($fetchApplicationRoundDetailsQuery);
+    $interest = 1; 
+    $fetchApplicationRoundDetails->bind_param("si", $_SESSION["user_email"], $jid);
+    $fetchApplicationRoundDetails->execute();
+    $result = $fetchApplicationRoundDetails->get_result();
+
+    while ($row = $result->fetch_assoc()) {
+        echo '<br><hr><br>
+                    <div class="round-heading">
+                        <h3>Round '.$row['round'].':</h3>
+                        <p><strong>Round Status:</strong> '.$row['status1'].'</p>
+                    </div>
+                    <div class="round-details">
+                        <p><strong>Date:</strong> '.$row['date1'].'</p>
+                        <p><strong>Time:</strong> '.$row['time1'].'</p>
+                        <p><strong>Link:</strong>  '.$row['link'].'</p>
+                        <p><strong>Details:</strong> <p style="white-space: pre-wrap;">'.$row['description'].'</p></p>
+                        
+                    </div>';
+
+    }
+
+    $jid = (int)$_GET['jid'];
+        
+        $totalRoundsQuery = "SELECT COUNT(*) as total_rounds 
+        FROM rounds as R
+        INNER JOIN studentrounds as S ON S.R_id = R.R_id
+        WHERE S.S_College_Email = ? AND R.J_id = ?";
+
+        $totalRounds = $conn->prepare($totalRoundsQuery);
+        $totalRounds->bind_param("si", $_SESSION["user_email"], $jid);
+        $totalRounds->execute();
+        $totalRoundsResult = $totalRounds->get_result();
+        $totalRoundsCount = $totalRoundsResult->fetch_assoc()['total_rounds'];
+
+        $totalRoundsPassedQuery = "SELECT COUNT(*) as passed_rounds 
+        FROM rounds as R
+        INNER JOIN studentrounds as S ON S.R_id = R.R_id
+        WHERE S.S_College_Email = ? AND R.J_id = ? AND S.RoundStatus = ?";
+
+        $totalRoundsPassed = $conn->prepare($totalRoundsPassedQuery);
+        $status = 'passed';
+        $totalRoundsPassed->bind_param("sis", $_SESSION["user_email"], $jid, $status);
+        $totalRoundsPassed->execute();
+        $totalRoundsPassedResult = $totalRoundsPassed->get_result();
+        $totalRoundsPassedCount = $totalRoundsPassedResult->fetch_assoc()['passed_rounds'];
+
+        if ($totalRoundsCount == $totalRoundsPassedCount) {
+            echo '</div>';
+            echo '<div class="sections">
+                    <div class="offer-letter-container">
+                        <p style="white-space: pre;"><strong>Offer Letter:</strong> <span class="offer-letter">offerletter.pdf </span>  <i class="fa-solid fa-upload fa-sm" style="color: #0C07E4;"></i>  <i class="fa-solid fa-xmark fa-lg" style="color: #FB1616;"></i> </p>
+                        <a href=""><button>Submit</button></a>
+                    </div>
+                </div>';
+        } else {
+            echo '</div>';
+        }
+
+        
+
+}
+
+
 
 ?>

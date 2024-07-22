@@ -8,7 +8,7 @@
 </head>
 
 <body>
-    <div id="wrapper">
+<div id="wrapper">
         <?php include './header.php' ?>
 
         <div class="container">
@@ -17,25 +17,29 @@
             <div class="main-container">
                 <div class="main-container-header">
                 <h2 class="main-container-heading"><a href="./dashboard.html"><i class="fa-solid fa-arrow-left fa-lg" style="color: #000000;"></i></a>
-                    Notifications</h2>
-                    <a href="./notification-post.php"><button class="add-button">Post Notifications</button></a>    
+                    Notifications</h2>    
                 </div>
 
                 <div class="sections">
                     <form action="" method="get">
                         <h3>To :</h3>
                             <div class="form-adjust">
-                            <div class="departmentbox">
-                             <label for="">Department</label>
+                             <div class="departmentbox">
+                                <label for="">Department</label>
                             <div class="Checkbox"> 
-                                <input type="checkbox">  
-                                <label for="">ECS</label> 
-                                <input type="checkbox">  
-                                <label for="">COMP</label>
-                                <input type="checkbox">  
-                                <label for="">MECH</label>
-                                <input type="checkbox">  
-                                <label for="">CIVIL</label> 
+                                <div>
+                                    <input type="checkbox">  
+                                     <label for="">ECS</label> 
+                                </div>
+                                
+                                <div><input type="checkbox">  
+                                <label for="">COMP</label></div>
+                                <div><input type="checkbox">  
+                                <label for="">MECH</label></div>
+                                <div><input type="checkbox">  
+                                <label for="">CIVIL</label> </div>
+                                
+                                
                                 </div>
                              </div>
                             <div class="inputbox">
@@ -77,9 +81,12 @@
                         </div>
                     </form>
                     <h3>Subject:</h3>
-                    <textarea name="" class="textarea-subject" placeholder="subject" id=""></textarea>
+                    <textarea name="" class="textarea-subject" placeholder="Subject" id=""></textarea>
                     <h3>Message</h3>
                     <textarea name=""class="textarea-message" placeholder="Message" id=""></textarea>
+                    
+                    <a href="./notification-post.php"><button class="add-button">Post Notifications</button></a>
+                    
                 </div>
             </div>
         </div>

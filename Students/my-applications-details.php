@@ -1,5 +1,13 @@
 <?php
     require "../restrict.php";
+    require "../utility_functions.php";
+    require "../conn.php";
+    if (!isset($_GET["jid"])){
+        header("Location: ./my-applications.php");
+        exit();
+    }
+    global $conn;
+
 ?>
 
 
@@ -24,17 +32,9 @@
                     My Applications</h2>
 
                 <div class="sections">
-                    <div class="company-container">
-                        <div class="company-logo-container">
-                            <img src="../Assets/profile.jpg" alt="">
-                            <p>Google</p>
-                        </div>
-                        <p><strong>Apply Date:</strong> 12/12/2003</p>
-                    </div>
-                    <div class="position-application-container">
-                        <p><strong>Position:</strong> Associate Developer</p>
-                        <p><strong>Position:</strong> Associate Developer</p>
-                    </div>
+                    <?php
+                        getApplicationDetails();
+                    ?>
                     
                     <a href="./my-applications-feedback.php"><button>Give Feedback</button></a>
                     

@@ -1,6 +1,37 @@
 <?php
-    require "../restrict.php";
+require "../restrict.php";
+require "../utility_functions.php";
+require "../conn.php";
+
+if (!isset($_GET["jid"])){
+    header("Location: ./job-opportunities.php");
+    exit();
+}
+global $conn;
+
+if (isset($_GET["interest"])) {
+    $interest = (int)$_GET["interest"];
+    $jid = (int)$_GET["jid"];
+    $email = $_SESSION['user_email'];
+
+    $UpdateQuery = "UPDATE jobapplication J
+                    SET J.Interest = ?
+                    WHERE J.J_id = ? AND J.S_College_Email = ?;";
+
+    $Update = $conn->prepare($UpdateQuery);
+    if (!$Update) {
+        die("Prepare failed: " . $conn->error);
+    }
+
+    $Update->bind_param("iis", $interest, $jid, $email);
+    if (!$Update->execute()) {
+        die ("Execute failed: " . $Update->error);
+    }
+}
+
 ?>
+
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -22,53 +53,9 @@
                     Job Opportunities</h2>
 
                 <div class="sections">
-                    <div class="company-container">
-                        <div class="company-logo-container">
-                            <img src="../Assets/profile.jpg" alt="">
-                            <p>Google</p>
-                        </div>
-                        <p><strong>Due Date:</strong> 12/12/2003</p>
-                    </div>
-                    <p class="position"><strong>Position:</strong> Associate Developer</p>
-                    <p class=""><strong>Details:</strong>
-                    <p style="white-space: pre;">Job Description:
-                        Software Engineer Campus: Role
-                        As Software Engineer, you will implement solutions for a variety of projects in a highly collaborative and
-                        fast-paced environment. You will work closely with product and marketing managers, user interaction
-                        designers, and other software engineers to develop new product offerings and improve existing ones.
-
-                        Job Responsibilities
-                        • Prepare Technical and Design documents.
-                        • Code/Configure while strictly following the guidelines.
-                        • Unit Test Implementation Changes.
-                        • Peer Review requirements and design artifacts, as well as code and configuration.
-                        • Integration test in Development/Integration regions.
-                        • Communicate with managers and peers on assigned work.
-                        • Follow defined processes and procedures.
-                        • Adapt/Learn/Use any other technologies as required.
-
-                        Desired Technical Skills
-                        • Analytical, Design, and Programming Skills.
-                        • Good understanding of Data Structures and Algorithms.
-                        • Object-Oriented Programming concepts.
-                        • RDBMS concepts, writing and debugging SQL queries.
-                        • Familiarity with Design Patterns.
-                        • Basic understanding of Operating systems.
-
-                        Desired Business Skills
-                        • Exceptional logic and analytical skills.
-                        • Excellent verbal and written communication skills in the English language.
-                        • Good documentation skills.
-
-                        Education
-                        • Successful completion of your course of study.
-                    </p>
-                    </p>
-
-                    <div class="interest-button-container">
-                        <a href="./my-applications-details.php"><button class="interested">Interested</button></a>
-                        <a href="./my-applications-details.php"><button class="not-interested">Not Interested</button></a>
-                    </div>
+                    <?php
+                        getJobDetail($_GET['jid']);
+                    ?>
                 </div>
             </div>
         </div>

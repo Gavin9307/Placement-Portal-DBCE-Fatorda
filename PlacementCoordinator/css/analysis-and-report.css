@@ -9,10 +9,7 @@
     --primary-blue : #0C07E4;
     --primary-grey : #d9d9d9;
     --primary-white : white;
-    --primary-red : #FB1616;
 }
-
-
 
 #wrapper {
     position: relative;
@@ -24,7 +21,7 @@
     display:flex ;
 }
 
-#notifications{
+#jobopportunities {
     color: var(--primary-blue);
     background-color: var(--primary-white);
 }
@@ -36,27 +33,6 @@
 }
 .main-container-heading > a {
     cursor: pointer;
-}
-.main-container-header  {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 15px;
-}
-.main-container-header .add-button {
-    margin-top: 10px;
-    padding-block: 5px;
-    padding-inline: 25px;
-    border-radius: 5px;
-    border: none;
-    font-weight: 600;
-    font-size: 18px;
-    cursor: pointer;
-    background-color: var(--primary-blue);
-    color: var(--primary-white);
-    position: absolute;
-    right: 25px; 
-    
 }
 .sections {
     position: relative;
@@ -82,16 +58,53 @@
     align-items: center;
 }
 
-.message, .subject{
+.position {
     margin-top: 20px;
-}
-
-.message {
     margin-bottom: 30px;
 }
 
-.sections .edit-button {
+.sections  button {
     margin-top: 10px;
+    
+    padding-block: 5px;
+    padding-inline: 25px;
+    border-radius: 5px;
+    border: none;
+    font-weight: 600;
+    font-size: 18px;
+    cursor: pointer;
+    background-color: var(--primary-blue);
+    color: var(--primary-white);
+
+    position: absolute;
+    right: 25px;
+    bottom: 20px;
+} 
+
+.form-adjust {
+    width: 50%;
+    margin: 0 auto;
+}
+
+.datebox {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+.departmentbox {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+.Checkbox{
+    width: 350px;
+    display:flex;
+    justify-content: space-between;
+}
+.add-button {
     padding-block: 5px;
     padding-inline: 25px;
     border-radius: 5px;
@@ -102,23 +115,6 @@
     background-color: var(--primary-blue);
     color: var(--primary-white);
     position: absolute;
-    right: 250px; 
-    bottom: 20px;
-}
-
-.sections  .delete-button {
-    margin-top: 10px;
-    padding-block: 5px;
-    padding-inline: 25px;
-    border-radius: 5px;
-    border: none;
-    font-weight: 600;
-    font-size: 18px;
-    cursor: pointer;
-    background-color: var(--primary-red);
-    color: var(--primary-white);
-
-    position: absolute;
     right: 25px;
     bottom: 20px;
-} 
+}

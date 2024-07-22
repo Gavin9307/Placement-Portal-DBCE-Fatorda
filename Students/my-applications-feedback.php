@@ -1,3 +1,7 @@
+<?php
+    require "../restrict.php";
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 

@@ -1,5 +1,6 @@
 <?php
 require "../conn.php";
+require "../restrict.php";
 include "../utility_functions.php";
 global $conn;
 if (!isset($_SESSION)) {
@@ -52,10 +53,20 @@ if (isset($_SESSION["user_type"]) && isset($_SESSION["user_email"])) {
         // Handle case where results are not obtained
     }
 } else {
-    // Handle case where session variables are not set
-    // Restricted
     echo "Session variables not set.";
+    exit();
 }
+
+if (isset($_POST["update_profile"])) {
+    $updateQuery = "UPDATE student as s SET s.S_Fname = ?,s.S_Mname = ?,s.S_Lname = ?,s.S_Personal_Email = ?,s.S_Address = ?,s.S_Phone_no = ?,s.S_10th_Perc = ?,s.S_12th_Perc = ?
+    WHERE s.S_College_Email = ?";
+    $result = $conn->prepare($updateQuery);
+    $result->bind_param("ssssssdds", $_POST["fname"], $_POST["mname"], $_POST["lname"], $_POST["pemail"], $_POST["addr"], $_POST["phno"], $_POST["per10"], $_POST["per12"],$_SESSION["user_email"]);
+    $result->execute();
+    header("Location: ./my-profile.php");
+    exit();
+}
+
 ?>
 
 <!DOCTYPE html>
@@ -89,35 +100,35 @@ if (isset($_SESSION["user_type"]) && isset($_SESSION["user_email"])) {
                 </form>';
                 ?>
                 <div class="sections">
-                    <form action="" method="post">
+                    <form action="./my-profile.php" method="post">
                         <h3>Personal Information:</h3>
                         <?php
                         echo '<div class="form-adjust">
                             <div>
                                 <label for="">First Name</label><br>
-                                <input type="text" value="'.$StudentFName.'">
+                                <input type="text" name="fname" value="'.$StudentFName.'">
                             </div>
                             <div>
                                 <label for="" >Middle Name</label><br>
-                                <input type="text" value="'.$StudentMName.'">
+                                <input type="text" name="mname" value="'.$StudentMName.'">
                             </div>
                             <div>
                                 <label for="" >Last Name</label><br>
-                                <input type="text" value="'.$StudentLName.'">
+                                <input type="text" name="lname" value="'.$StudentLName.'">
                             </div>
                         </div>
                         <div class="form-adjust">
                             <div>
                                 <label for="" >Contact No</label><br>
-                                <input type="text" value="'.$StudentPhoneNo.'">
+                                <input type="text" name="phno" value="'.$StudentPhoneNo.'">
                             </div>
                             <div>
                                 <label for="" >Address</label><br>
-                                <input type="text" value="'.$StudentAddress.'">
+                                <input type="text" name="addr" value="'.$StudentAddress.'">
                             </div>
                             <div>
                                 <label for="" >Personal Email</label><br>
-                                <input type="text" value="'.$StudentPEmail.'">
+                                <input type="text" name="pemail" value="'.$StudentPEmail.'">
                             </div>
                         </div>';
                         ?>
@@ -127,40 +138,40 @@ if (isset($_SESSION["user_type"]) && isset($_SESSION["user_email"])) {
                         <?php
                             echo '<div class="form-adjust">
                             <div>
-                                <label for="">College Email</label><br>
-                                <input type="text" value="'.$StudentCEmail.'">
+                                <label  for="">College Email</label><br>
+                                <input type="text" name="cemail" value="'.$StudentCEmail.'">
                             </div>
                             <div>
                                 <label for="">PR No.</label><br>
-                                <input type="text" value="'.$StudentPRN.'">
+                                <input type="text" name="prn" value="'.$StudentPRN.'">
                             </div>
 
                             <div>
                                 <label for="" >Roll No.</label><br>
-                                <input type="text" value="'.$StudentRollNo.'">
+                                <input type="text" name="rollno" value="'.$StudentRollNo.'">
                             </div>
                         </div>
                         <div class="form-adjust">
                             <div>
                                 <label for="" >Class</label><br>
-                                <input type="text" value="'.$StudentClass.'">
+                                <input type="text" name="class" value="'.$StudentClass.'">
                             </div>
 
                             <div>
                                 <label for="">Department</label><br>
-                                <input type="text"  value="'.$StudentDepartment.'">
+                                <input type="text" name="department" value="'.$StudentDepartment.'">
                             </div>
                         </div>
                         <h3>Other Information:</h3>
                         <div class="form-adjust">
                             <div>
                                 <label for="" >10th Percentage</label><br>
-                                <input type="text" value="'.$StudentPercentage_10.'">
+                                <input type="number" name="per10" value="'.$StudentPercentage_10.'">
                             </div>
 
                             <div>
                                 <label for="" >12th Percentage</label><br>
-                                <input type="text" value="'.$StudentPercentage_12.'">
+                                <input type="number" name="per12" value="'.$StudentPercentage_12.'">
                             </div>
                         </div>';
                         ?>
@@ -172,12 +183,12 @@ if (isset($_SESSION["user_type"]) && isset($_SESSION["user_email"])) {
 
                             <div>
                                 <label for="" value="">New Password</label><br>
-                                <input type="text">
+                                <input type="password" name="newpass">
                             </div>
 
                             <div>
                                 <label for="" value="">Confirm Password</label><br>
-                                <input type="text">
+                                <input type="password" name="newpassconfirm">
                             </div>
                         </div>
 
@@ -185,51 +196,51 @@ if (isset($_SESSION["user_type"]) && isset($_SESSION["user_email"])) {
                         <div class="form-adjust">
                             <div>
                                 <label for="">Sem 1</label><br>
-                                <input type="text" value="'.$StudentSem1.'">
+                                <input type="number" name="sem1" value="'.$StudentSem1.'">
                             </div>
 
                             <div>
                                 <label for="" >Sem 2</label><br>
-                                <input type="text" value="'.$StudentSem2.'">
+                                <input type="number" name="sem2" value="'.$StudentSem2.'">
                             </div>
                             <div>
                                 <label for="" >Sem 3</label><br>
-                                <input type="text" value="'.$StudentSem3.'">
+                                <input type="number" name="sem3" value="'.$StudentSem3.'">
                             </div>
 
                             <div>
                                 <label for="" >Sem 4</label><br>
-                                <input type="text" value="'.$StudentSem4.'">
+                                <input type="number" name="sem4" value="'.$StudentSem4.'">
                             </div>
                         </div>
                         <div class="form-adjust">
                             <div>
                                 <label for="">Sem 5</label><br>
-                                <input type="text" value="'.$StudentSem5.'">
+                                <input type="number" name="sem5" value="'.$StudentSem5.'">
                             </div>
 
                             <div>
                                 <label for="">Sem 6</label><br>
-                                <input type="text"  value="'.$StudentSem6.'">
+                                <input type="number" name="sem6"  value="'.$StudentSem6.'">
                             </div>
                             <div>
                                 <label for="" >Sem 7</label><br>
-                                <input type="text" value="'.$StudentSem7.'">
+                                <input type="number" name="sem7" value="'.$StudentSem7.'">
                             </div>
 
                             <div>
                                 <label for="" >Sem 8</label><br>
-                                <input type="text" value="'.$StudentSem8.'">
+                                <input type="number" name="sem8" value="'.$StudentSem8.'">
                             </div>
                         </div>
                         <div class="form-adjust cgpa">
                             <div>
                                 <label for="" >CGPA</label><br>
-                                <input type="text" value="'.$StudentCGPA.'">
+                                <input type="number" name="cgpa" value="'.$StudentCGPA.'">
                             </div>
                         <div>
                                 <label for="" >Do you have any backlogs?</label><br>
-                                <select name="" id="">';
+                                <select name="backs" id="">';
                         if ($StudentBacks == "0"){
                             echo '<option value="0" selected>No</option>
                          <option value="1">Yes</option>
@@ -247,7 +258,7 @@ if (isset($_SESSION["user_type"]) && isset($_SESSION["user_email"])) {
                         
                         ?>
                         
-                        <button>Update</button>
+                        <button name="update_profile">Update</button>
                     </form>
                 </div>
 

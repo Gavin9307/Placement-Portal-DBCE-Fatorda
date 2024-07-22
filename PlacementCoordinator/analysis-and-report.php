@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <?php include './head.php' ?>
+    <link rel="stylesheet" href="./css/analysis-and-report.css">
+    <title>Analysis and Reports</title>
+</head>
+
+<body>
+    <div id="wrapper">
+        <?php include './header.php' ?>
+
+        <div class="container">
+            <?php include './sidebar.php' ?>
+
+            <div class="main-container">
+                <h2 class="main-container-heading"><a href="./dashboard.html"><i class="fa-solid fa-arrow-left fa-lg" style="color: #000000;"></i></a>
+                    Analysis and Reports</h2>
+                <h3>Live Placement Drive Reports</h3>
+                <div class="sections">
+                    <div class="company-container">
+                        <div class="company-logo-container">
+                            <img src="../Assets/profile.jpg" alt="">
+                            <p>Google</p>
+                        </div>
+                        <p><strong>Due Date:</strong> 12/12/2003</p>
+                    </div>
+                    <p class="position"><strong>Position:</strong> Associate Developer</p>
+                    <p class= "department"><strong>Departments</strong>: Computer</p>
+                    <a href="./my-applications-details.html"><button>View Report</button></a>
+                </div>
+
+                <div class="sections">
+                    <div class="company-container">
+                        <div class="company-logo-container">
+                            <img src="../Assets/profile.jpg" alt="">
+                            <p>Google</p>
+                        </div>
+                        <p><strong>Apply Date:</strong> 12/12/2003</p>
+                    </div>
+                    <p class="position"><strong>Position:</strong> Associate Developer</p>
+                    <p class= "department"><strong>Departments</strong>: Computer</p>
+                    <a href="./my-applications-details.html"><button>View Report</button></a>
+                    </div>
+                <h3>Yearly Placement Drive Reports</h3>
+                <div class="form-adjust">
+                   <div class="datebox">
+                            <div>
+                                <label for=""><strong>From:</strong></label>
+                                <input type="date" >
+                            </div>   
+                            <div>
+                                <label for=""><strong>To:</strong></label>
+                                <input type="date" >
+                            </div> 
+                            </div>  
+
+                             <div class="departmentbox">
+                                <label for=""><strong>Department</strong></label>
+                            <div class="Checkbox"> 
+                                <div>
+                                    <input type="checkbox">  
+                                     <label for="">ECS</label> 
+                                </div>
+                                
+                                <div><input type="checkbox">  
+                                <label for="">COMP</label></div>
+                                <div><input type="checkbox">  
+                                <label for="">MECH</label></div>
+                                <div><input type="checkbox">  
+                                <label for="">CIVIL</label> </div>
+                                
+                                
+                                </div>
+                             </div>
+                                       
+                </div>
+                <a href="./notification-post.php"><button class="add-button">Get Report</button></a>
+                </div>
+            </div>
+        </div>
+
+        <?php include './footer.php' ?>
+    </div>
+
+</body>
+
+</html>

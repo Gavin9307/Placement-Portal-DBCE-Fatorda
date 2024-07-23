@@ -46,6 +46,20 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_GET["login"])) {
         }
 
         if (empty($error)) {
+            if ($usertype == "tpo"){
+                $checkTpoEmailQuery = "SELECT Admin_Email as adm_email FROM admin WHERE Admin_Email = ?";
+                $checkTpoStmt = $conn->prepare($checkTpoEmailQuery);
+                $checkTpoStmt->bind_param("s", $email);
+                $checkTpoStmt->execute();
+                $checkTpoStmt->store_result();
+                if ($checkTpoStmt->num_rows > 0) {
+                    goto pass;
+                }else{
+                    $error = "Invalid Email";
+                    goto passfail;
+                }
+            }
+            pass:
             $checkEmailQuery = "SELECT $Email, $Password FROM $Table WHERE $Email = ?";
             $checkStmt = $conn->prepare($checkEmailQuery);
             $checkStmt->bind_param("s", $email);
@@ -56,7 +70,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_GET["login"])) {
                 $checkStmt->bind_result($dbEmail, $dbPassword);
                 $checkStmt->fetch();
                 if (password_verify($password, $dbPassword)) {
-
                     if (!isset($_SESSION)){
                         session_start();
                     }
@@ -90,6 +103,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_GET["login"])) {
         }
     }
 }
+passfail:
 ?>
 
 

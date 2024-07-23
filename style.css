@@ -25,6 +25,7 @@ main {
     margin: 0 auto;
     position: relative;
     min-height:700px;
+    border: 1px solid red;
 }
 
 .main-left-part {
@@ -75,4 +76,7 @@ button {
 .sign-in {
     color: black;
 }
+
+
+
 

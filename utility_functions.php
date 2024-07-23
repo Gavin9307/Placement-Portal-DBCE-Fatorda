@@ -298,6 +298,43 @@ S.S_College_Email = ? AND R.J_id = ?;";
 
 }
 
+function getNotifications() {
+    global $conn;
+    $fetchNotificationsQuery = "SELECT ND.Message AS message,ND.Subject AS subject,ND.Attachment1 AS attach1,ND.Attachment2 AS attach2,ND.Notification_Date AS notidate
+    FROM 
+    notificationdetails AS ND
+    INNER JOIN studentnotifications AS SN ON ND.Notification_ID = SN.Notification_ID
+    WHERE 
+    SN.S_College_Email = ? AND ND.Notification_Due_Date >= CURRENT_DATE;";
 
+    $fetchNotifications = $conn->prepare($fetchNotificationsQuery);
+    $fetchNotifications->bind_param("s",$_SESSION["user_email"]);
+    $fetchNotifications->execute();
+    $result = $fetchNotifications->get_result();
+
+    while( $row = $result->fetch_assoc() ) {
+        $timestamp = $row["notidate"];
+        $istTimeZone = new DateTimeZone('Asia/Kolkata');
+        $dateTime = new DateTime($timestamp);
+        $dateTime->setTimezone($istTimeZone);
+        $date = $dateTime->format('Y-m-d');
+        $time = $dateTime->format('h:i:s A');
+        echo '<div class="sections">
+                    <div class="company-container">
+                        <p><strong>Date:</strong> '. $date .'</p>
+                        <p><strong>Time:</strong> '. $time .'</p>
+                    </div>
+                    <p class="subject"><strong>Subject:</strong> '. $row["subject"] .'</p>
+                    <p class= "message"><strong>Message:</strong> '. $row["message"] .'</p>';
+        
+        if ( $row['attach1'] != NULL) {
+            echo '<a href="../Data/Notifications/'.$row['attach1'].'"><button class="attachment1">Attachment 1</button></a>';
+        }
+        if ( $row['attach2'] != NULL) {
+            echo '<a href="../Data/Notifications/'.$row['attach2'].'"><button class="attachment2">Attachment 2</button></a>';
+        }
+        echo  '</div>';
+    }
+}
 
 ?>

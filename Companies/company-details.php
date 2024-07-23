@@ -2,14 +2,8 @@
     require "../conn.php";
     include "../utility_functions.php";
     global $conn;
-    if (!isset($_SESSION)) {
-        session_start();
-    }
     if (isset($_GET["id"])) {
-        if (isset($_SESSION["user_type"]) && isset($_SESSION["user_email"])) {
             $average_rating = 0;
-            $usertype = $_SESSION["user_type"]; // For Restriction
-            $useremail = $_SESSION["user_email"];
 
             $fetchCompanyQuery = "SELECT * FROM company WHERE C_id = ?";
             $fetchCompany = $conn->prepare($fetchCompanyQuery);
@@ -53,11 +47,7 @@
             } else {
                 // Handle case where results are not obtained
             }
-        } else {
-            // Handle case where session variables are not set
-            // Restricted
-            echo "Session variables not set.";
-        }
+        
     }
 ?>
 
@@ -75,10 +65,8 @@
         <?php include './header.php' ?>
 
         <div class="container">
-            <?php include './sidebar.php' ?>
-
             <div class="main-container">
-                <h2 class="main-container-heading"><a href="./dashboard.php"><i class="fa-solid fa-arrow-left fa-lg" style="color: #000000;"></i></a>
+                <h2 class="main-container-heading"><a href="./companies.php"><i class="fa-solid fa-arrow-left fa-lg" style="color: #000000;"></i></a>
                     Company Details</h2>
 
                 <div class="sections">

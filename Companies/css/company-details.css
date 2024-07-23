@@ -1,0 +1,93 @@
+*,*::after,*::before {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+    font-family: "Poppins", sans-serif;
+}
+
+:root {
+    --primary-blue : #0C07E4;
+    --primary-grey : #d9d9d9;
+    --primary-white : white;
+}
+
+#wrapper {
+    position: relative;
+}
+
+/* Main Content */
+.container {
+    width: 100%;
+    display:flex ;
+}
+
+#companies {
+    color: var(--primary-blue);
+    background-color: var(--primary-white);
+}
+
+.main-container {
+    width: 75%;
+    padding: 25px;
+    margin: 0 auto;
+}
+.main-container-heading > a {
+    cursor: pointer;
+}
+.sections {
+    position: relative;
+    margin-top: 30px;
+    box-shadow: 5px 10px 12.3px 5px rgba(0, 0, 0, .25);
+    padding: 20px;
+    margin-bottom: 50px;
+}
+
+.company-container > img {
+    height: 100px;
+}
+
+.company-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+
+.more-details > p {
+    margin-bottom: 10px;
+}
+
+
+.more-details {
+    margin-block: 20px;
+}
+
+.students-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.students-logo-container > img {
+    height: 50px;
+    width: 50px;
+    border-radius: 50%;
+}
+
+.students-logo-container {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.students-review {
+    margin-top: 10px;
+    margin-bottom: 30px;
+}
+
+.students-message {
+    margin-top: 10px;
+}
+
+.checked {
+    color:orange;
+}

@@ -1,0 +1,121 @@
+*,*::after,*::before {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+    font-family: "Poppins", sans-serif;
+}
+
+:root {
+    --primary-blue : #0C07E4;
+    --primary-grey : #d9d9d9;
+    --primary-white : white;
+    --primary-red : #FB1616;
+}
+
+
+
+#wrapper {
+    position: relative;
+}
+
+/* Main Content */
+.container {
+    width: 100%;
+    display:flex ;
+}
+
+#companies{
+    color: var(--primary-blue);
+    background-color: var(--primary-white);
+}
+
+.main-container {
+    max-width: 1200px;
+    padding: 25px;
+    margin: 0 auto;
+
+}
+.main-container-heading > a {
+    cursor: pointer;
+}
+.sections {
+    width: 1200px;
+    min-height: 700px;
+    position: relative;
+    margin-top: 30px;
+    box-shadow: 5px 10px 12.3px 5px rgba(0, 0, 0, .25);
+    padding: 20px;
+    margin-bottom: 50px;
+}
+
+.company-logo-container > img {
+    height: 50px;
+}
+
+.company-logo-container {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.company-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.message, .subject{
+    margin-top: 20px;
+}
+
+.message {
+    margin-bottom: 30px;
+}
+
+.search-container input{
+        width: 300px;
+        height: 17px;
+        border-radius: 5px;
+        font-size: 16px;
+        color:black;
+        padding: 20px ;
+        outline:none;
+        border:1px solid var(--primary-grey)
+}
+
+.search-container input:focus {
+    border: 1px solid var(--primary-blue);
+}
+
+.search-container button{
+    margin-left: 10px;
+    padding: 8px 25px;
+    border-radius: 5px;
+    border: none;
+    font-weight: 600;
+    font-size: 18px;
+    cursor: pointer;
+    color: var(--primary-white);
+    background-color: var(--primary-blue);
+    margin-top: 0px;
+    position: relative;
+    inset: 0;
+}
+
+
+.company-grid {
+    margin-top: 20px;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 15px;
+}
+
+.company-card {
+    cursor: pointer;
+    border: 1px solid var(--primary-grey);
+    padding: 10px;
+    border-radius: 15px;
+}
+.company-card img{
+    width: 100%;
+}

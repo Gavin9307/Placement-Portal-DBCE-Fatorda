@@ -1,22 +1,22 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Download CSV or PDF</title>
-</head>
-<body>
+  </head>
+  <body>
     <button onclick="downloadCSV()">Download CSV</button>
     <button onclick="downloadPDF()">Download PDF</button>
 
     <script>
-        function downloadCSV() {
-            window.location.href = 'generate_csv.php?format=csv';
-        }
+      function downloadCSV() {
+        window.location.href = "generate_csv.php?format=csv";
+      }
 
-        function downloadPDF() {
-            window.location.href = 'generate_csv.php?format=pdf';
-        }
+      function downloadPDF() {
+        window.location.href = "generate_csv.php?format=pdf";
+      }
     </script>
-</body>
+  </body>
 </html>

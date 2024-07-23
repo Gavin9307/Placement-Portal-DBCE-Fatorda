@@ -3,8 +3,8 @@
 
 <head>
     <?php include './head.php' ?>
-    <link rel="stylesheet" href="./css/notification-post.css">
-    <title>Notifications</title>
+    <link rel="stylesheet" href="./css/post-a-job.css">
+    <title>Post a Job</title>
 </head>
 
 <body>
@@ -17,12 +17,12 @@
             <div class="main-container">
                 <div class="main-container-header">
                 <h2 class="main-container-heading"><a href="./dashboard.html"><i class="fa-solid fa-arrow-left fa-lg" style="color: #000000;"></i></a>
-                    Notifications</h2>    
+                    Post a job</h2>    
                 </div>
 
                 <div class="sections">
                     <form action="" method="get">
-                        <h3>To :</h3>
+                        <h3>Requirements :</h3>
                             <div class="form-adjust">
                              <div class="departmentbox">
                                 <label for="">Department</label>
@@ -79,13 +79,51 @@
                                 </select>
                             </div>
                         </div>
-                   
-                    <h3>Subject:</h3>
-                    <textarea name="" class="textarea-subject" placeholder="Subject" id=""></textarea>
-                    <h3>Message:</h3>
-                    <textarea name=""class="textarea-message" placeholder="Message" id=""></textarea>
-                    <a href="./notification-post.php"><button class="add-button">Post Notifications</button></a>
-                    </form>               
+                        <h3>Company:</h3>
+                        <div class="form-adjust">
+                        <div class="inputbox">
+                            <label for="">Company:</label>
+                            <input type="text">
+                            </div>
+                        <div class="inputbox">
+                            <label for="">Position:</label>
+                            <input type="text">
+                         </div>
+                         <div class="inputbox">
+                            <label for="">Offered Salary:</label>
+                            <input type="text">
+                         </div>
+                         <div class="inputbox">
+                            <label for="">Due Date:</label>
+                            <input type="text">
+                         </div>
+                        </div>
+                         <h3>More Details:</h3>
+                         <textarea name="" class="textarea-message" placeholder="Enter details" id=""></textarea>
+                         <h3>Round 1:</h3>
+                         <div class="form-adjust">
+                            <div class="inputbox">
+                            <label for="">Location:</label>
+                            <input type="text">
+                            </div>
+                            <div class="inputbox">
+                                <label for="">Link:</label>
+                                <input type="text">
+                            </div>
+                            <div class="inputbox">
+                                <label for="">Time:</label>
+                                <input type="time">
+                            </div>
+                            <div class="inputbox">
+                                <label for="">Date:</label>
+                                <input type="date">
+                            </div>
+                            </div>
+                            <h3>Details:</h3>
+                            <textarea name="" class="textarea-message" placeholder="Enter round detials" id=""></textarea>
+                            <a href=""><button class="add-round-button">Add Rounds</button></a>
+                            <a href=""><button class="add-button">Post</button></a>
+                    </form>                 
                 </div>
             </div>
         </div>

@@ -95,21 +95,14 @@
 .textarea-message:focus {
     border: 1px solid var(--primary-blue);
 }
-.textarea-subject {
-    border: 1px solid var(--secondary-grey);
-    outline: none;
-    resize: none;
-    padding: 10px;
-    width: 100%;
-    border-radius: 5px;
-}
+
 .textarea-message{
     border: 1px solid var(--secondary-grey);
     outline: none;
     resize: none;
     padding:10px ;
     width: 100%;
-    height:120px;
+    height:200px;
     border-radius: 5px;
     margin-bottom: 50px;
 }
@@ -126,4 +119,16 @@
     position: absolute;
     right: 25px;
     bottom: 20px;
+}
+.sections .add-round-button {
+    padding-block: 5px;
+    padding-inline: 25px;
+    border-radius: 5px;
+    border: none;
+    font-weight: 600;
+    font-size: 18px;
+    cursor: pointer;
+    background-color: var(--primary-blue);
+    color: var(--primary-white);
+    
 }

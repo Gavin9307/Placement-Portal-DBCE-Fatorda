@@ -34,7 +34,6 @@ if (isset($_SESSION["user_type"]) && isset($_SESSION["user_email"])) {
                                 <a href="./performance-and-metrics.php"><button id="performance">Performance</button></a>
                                 <a href="./my-applications.php"><button id="myapplications">My Application</button></a>
                                 <a href="./job-opportunities.php"><button id="jobopportunities">Job Opportunities</button></a>
-                                <a href="./companies.php"><button id="companies">Company Information</button></a>
                                 <a href="./notifications.php"><button id="notifications">Notifications</button></a>
                             </div>
                         </div>

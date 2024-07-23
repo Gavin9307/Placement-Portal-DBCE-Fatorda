@@ -1,0 +1,39 @@
+/* Header */
+
+header {
+    padding: 10px;
+    background-color: var(--primary-grey);
+}
+
+.header-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+}
+
+.left-part {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    user-select: none;
+}
+
+.left-part > img {
+    width: 68px;
+}
+
+.left-part > h2 {
+    font-size: 25px;
+}
+
+.right-part {
+    list-style-type: none;
+    display: flex;
+    align-items: center;
+    gap: 35px;
+}
+
+.right-part > a {
+    cursor: pointer;
+}

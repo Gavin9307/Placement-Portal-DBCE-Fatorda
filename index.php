@@ -79,7 +79,31 @@
         <section>
             <div class="main-container">
                 <div class="scroll-container">
-                        
+                <div class="language-loop">
+        <div class="language-list">
+            <div class="language">Python</div>
+            <div class="language">JavaScript</div>
+            <div class="language">Java</div>
+            <div class="language">C++</div>
+            <div class="language">Ruby</div>
+            <div class="language">PHP</div>
+            <div class="language">Go</div>
+            <div class="language">Swift</div>
+            <div class="language">C#</div>
+            <div class="language">Rust</div>
+            <!-- Repeat the list to create an infinite loop -->
+            <div class="language">Python</div>
+            <div class="language">JavaScript</div>
+            <div class="language">Java</div>
+            <div class="language">C++</div>
+            <div class="language">Ruby</div>
+            <div class="language">PHP</div>
+            <div class="language">Go</div>
+            <div class="language">Swift</div>
+            <div class="language">C#</div>
+            <div class="language">Rust</div>
+        </div>
+    </div>  
                 </div>
                 <div>
                 </div>

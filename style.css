@@ -80,3 +80,47 @@ button {
 
 
 
+
+.language-loop {
+    overflow: hidden;
+    width: 80%;
+    height: 100px; /* Adjust height as needed */
+    background-color: #fff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+
+    mask-image: linear-gradient(
+        to right,
+        rgba(0, 0, 0, 0) 0%,
+        rgba(0, 0, 0, 1) 20%,
+        rgba(0, 0, 0, 1) 80%,
+        rgba(0, 0, 0, 0) 100%
+    );
+}
+
+.language-list {
+    display: flex;
+    animation: scrollLeft 30s linear infinite;
+    /* Adjust mask-image gradient to fit your needs */
+    
+}
+
+.language {
+    padding: 20px;
+    min-width: 150px;
+    text-align: center;
+    background-color: #ffeb3b;
+    margin: 0 10px;
+    font-weight: bold;
+    border-radius: 5px;
+}
+
+@keyframes scrollLeft {
+    0% {
+        transform: translateX(0);
+    }
+    100% {
+        transform: translateX(-100%);
+    }
+}
+
+

@@ -13,7 +13,7 @@
         <?php include './header.php' ?>
 
         <div class="container">
-            <?php include './sidebar.php' ?>
+            <?php include './sidebar.php'?>
 
             <div class="main-container">
                 <h2 class="main-container-heading">Dashboard</h2>

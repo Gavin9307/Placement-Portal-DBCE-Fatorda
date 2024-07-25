@@ -85,10 +85,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_GET["login"])) {
                             header("Location: ./Students/dashboard.php");
                             break;
                         case "tpo":
-                            header("Location: ./Students/dashboard.php");
+                            header("Location: ./PlacementCoordinator/dashboard.php");
                             break;
                         case "pc":
-                            header("Location: ./Students/dashboard.php");
+                            header("Location: ./PlacementCoordinator/dashboard.php");
                             break;
                         default:
                             break;

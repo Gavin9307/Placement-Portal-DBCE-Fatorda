@@ -62,22 +62,11 @@
     margin-top: 20px;
     margin-bottom: 30px;
 }
-
-.sections  button {
-    margin-top: 10px;  
-    padding-block: 5px;
-    padding-inline: 25px;
-    border-radius: 5px;
-    border: none;
-    font-weight: 600;
-    font-size: 18px;
-    cursor: pointer;
-    background-color: var(--primary-blue);
-    color: var(--primary-white);
-    position: absolute;
-    right: 25px;
-    bottom: 20px;
-} 
+.section-container {
+    display:flex;
+    flex-direction:row;
+    align-items: stretch;
+}
 
 .form-adjust {
     width: 50%;
@@ -111,5 +100,42 @@
     font-size: 18px;
     cursor: pointer;
     background-color: var(--primary-blue);
-    color: var(--primary-white);
+    color: var(--primary-white);  
+}
+.getreportbutton {
+display:flex;
+justify-content: flex-end;
+}
+.sections  table {
+    width: 100%;
+}
+.sections td {
+    padding: 8px;
+    text-align: center;
+}
+.sections  a {
+    cursor: pointer;
+    color: blue;
+}
+.button-container-1{
+    display: flex;
+    justify-content: flex-end;
+    margin-right:10px;
+}
+.button-container-2{
+    display: flex;
+    justify-content: space-evenly;
+    margin-right:10px;
+}
+.viewmore-button {
+    margin-top: 10px;
+    padding-block: 5px;
+    padding-inline: 25px;
+    border-radius: 5px;
+    border: none;
+    font-weight: 600;
+    font-size: 18px;
+    cursor: pointer;
+    background-color: var(--primary-blue);
+    color: var(--primary-white); 
 }

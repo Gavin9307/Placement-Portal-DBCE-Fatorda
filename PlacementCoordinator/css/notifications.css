@@ -83,11 +83,20 @@
 }
 
 .message, .subject{
-    margin-top: 20px;
+    margin-top: 10px;
 }
 
 .message {
-    margin-bottom: 50px;
+    margin-bottom: 20px;
+}
+
+.attachment-links {
+    margin-right: 10px;
+    cursor: pointer;
+    color: var(--primary-blue);
+}
+.attachment-links:hover {
+    text-decoration: underline;
 }
 
 .sections .edit-button {

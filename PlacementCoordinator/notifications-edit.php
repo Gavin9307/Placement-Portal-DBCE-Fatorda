@@ -3,7 +3,7 @@
 
 <head>
     <?php include './head.php' ?>
-    <link rel="stylesheet" href="./css/edit-notifications.css">
+    <link rel="stylesheet" href="./css/notifications-edit.css">
     <title>Edit Notifications</title>
 </head>
 

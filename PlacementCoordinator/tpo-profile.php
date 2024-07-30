@@ -4,7 +4,7 @@
 <head>
     <?php include './head.php' ?>
     <link rel="stylesheet" href="./css/tpo-profile.css">
-    <title>Notifications</title>
+    <title>TPO profile</title>
 </head>
 
 <body>

@@ -3,19 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Download CSV or PDF</title>
+    <title>Generate PDF</title>
 </head>
 <body>
-    <button onclick="downloadCSV()">Download CSV</button>
     <button onclick="downloadPDF()">Download PDF</button>
-
     <script>
-        function downloadCSV() {
-            window.location.href = "generate_csv.php?format=csv";
-        }
-
         function downloadPDF() {
-            window.location.href = "generatepdf.php?format=pdf";
+            window.location.href = 'generatepdf.php';
         }
     </script>
 </body>

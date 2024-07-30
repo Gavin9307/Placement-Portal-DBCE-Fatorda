@@ -33,7 +33,7 @@ WHERE PC_Email= ?;";
 
         <div class="bottom-container">
             <a href="./student-management.php"><button id="studentmanagement">Student Management</button></a>
-            <a href="./companymanagement.php"><button id="companymanagement">Company Management</button></a>
+            <a href="./company.php"><button id="companymanagement">Company Management</button></a>
             <a href="./job-management.php"><button id="jobmanagement">Job Management</button></a>
             <a href="./notifications.php"><button id="notifications">Send Notifications</button></a>
             <a href="./placementcordinator.php"><button id="placementcoordinator">Placement Coordinators</button></a>

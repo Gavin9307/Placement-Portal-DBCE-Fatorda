@@ -29,7 +29,7 @@ if (!isset($_SESSION)) {
                 $company_name = htmlspecialchars($row['C_Name']);
                 $company_logo = htmlspecialchars($row['C_logo']);
                 echo '<div class="company-grid">
-                        <a href="./company-details.php?id=' . $company_id . '">
+                        <a href="./company-edit.php?id=' . $company_id . '">
                             <div class="company-card">
                                 <img src="../Data/Companies/Company_Logo/'. $company_logo . '" alt="' . $company_name . '">
                                 <p>' . $company_name . '</p>
@@ -43,7 +43,6 @@ if (!isset($_SESSION)) {
                         <strong>No Company Found !</strong>
                     </div>';
         }
-    
     }
 ?>
 
@@ -67,7 +66,7 @@ if (!isset($_SESSION)) {
             <div class="main-container">
                 <h2 class="main-container-heading"><a href="../index.php"><i class="fa-solid fa-arrow-left fa-lg" style="color: #000000;"></i></a>
                     Companies</h2>
-
+                <a href="./company-create.php"><button id="add-button">Add Company</button></a>
                 <div class="sections">
                     <div class="company-container">
                         <form class="search-container" action="./companies.php" method="get">

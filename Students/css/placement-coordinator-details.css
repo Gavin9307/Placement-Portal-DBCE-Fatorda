@@ -1,4 +1,4 @@
-*,*::after,*::before {
+*, *::after, *::before {
     padding: 0;
     margin: 0;
     box-sizing: border-box;
@@ -6,13 +6,11 @@
 }
 
 :root {
-    --primary-blue : #0C07E4;
-    --primary-grey : #d9d9d9;
-    --primary-white : white;
-    --primary-red : #FB1616;
+    --primary-blue: #0C07E4;
+    --primary-grey: #d9d9d9;
+    --primary-white: white;
+    --primary-red: #FB1616;
 }
-
-
 
 #wrapper {
     position: relative;
@@ -21,10 +19,10 @@
 /* Main Content */
 .container {
     width: 100%;
-    display:flex ;
+    display: flex;
 }
 
-#notifications{
+#notifications {
     color: var(--primary-blue);
     background-color: var(--primary-white);
 }
@@ -34,15 +32,18 @@
     padding: 25px;
     margin-bottom: 50px;
 }
+
 .main-container-heading > a {
     cursor: pointer;
 }
-.main-container-header  {
+
+.main-container-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
     padding: 15px;
 }
+
 .main-container-header .add-button {
     margin-top: 10px;
     padding-block: 5px;
@@ -54,52 +55,39 @@
     cursor: pointer;
     background-color: var(--primary-blue);
     color: var(--primary-white);
-    position: absolute;
-    right: 25px; 
 }
+
 .sections {
     position: relative;
     margin-top: 30px;
     box-shadow: 5px 10px 12.3px 5px rgba(0, 0, 0, .25);
     padding: 20px;
     margin-bottom: 50px;
-}
-
-.company-logo-container > img {
-    height: 50px;
-}
-
-.company-logo-container {
     display: flex;
-    align-items: center;
-    gap: 20px;
+    flex-direction: row;
+    align-items: stretch;
 }
 
-.company-container {
+.sec1 {
+    width: 50%;
+}
+
+.sec2 {
+    width: 50%;
     display: flex;
-    justify-content: space-between;
+    flex-direction: column;
     align-items: center;
+    justify-content: center;
 }
 
-.message, .subject{
-    margin-top: 10px;
+.sec2 img {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    margin-bottom: 10px;
 }
 
-.message {
-    margin-bottom: 20px;
-}
-
-.attachment-links {
-    margin-right: 10px;
-    cursor: pointer;
-    color: var(--primary-blue);
-}
-.attachment-links:hover {
-    text-decoration: underline;
-}
-
-.sections .edit-button {
-    margin-top: 10px;
+.sec2 .add-button {
     padding-block: 5px;
     padding-inline: 25px;
     border-radius: 5px;
@@ -109,13 +97,12 @@
     cursor: pointer;
     background-color: var(--primary-blue);
     color: var(--primary-white);
-    position: absolute;
-    right: 150px; 
-    bottom: 20px;
+    margin-top: 120px;
 }
 
-.sections  .delete-button {
-    margin-top: 10px;
+.parent .add-button {
+    align-items: center;
+    margin-top: 20px;
     padding-block: 5px;
     padding-inline: 25px;
     border-radius: 5px;
@@ -123,10 +110,28 @@
     font-weight: 600;
     font-size: 18px;
     cursor: pointer;
-    background-color: var(--primary-red);
+    background-color: var(--primary-blue);
     color: var(--primary-white);
+    
+}
+.parent {
+display: flex;
+flex-direction: column;
+justify-content: space-between;
 
-    position: absolute;
-    right: 25px;
-    bottom: 20px;
-} 
+align-items: center;
+
+}
+.parent img{
+  
+    width : 50%; 
+    align-items: center;
+    width: 150px;
+     height: 150px;
+     border-radius: 50%;
+     /*margin-bottom: 10px;*/
+     position: relative;
+     
+     top: 2px;
+     
+ }

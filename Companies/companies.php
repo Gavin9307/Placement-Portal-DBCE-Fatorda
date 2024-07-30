@@ -28,14 +28,16 @@ if (!isset($_SESSION)) {
                 $company_id = htmlspecialchars($row['C_id']);
                 $company_name = htmlspecialchars($row['C_Name']);
                 $company_logo = htmlspecialchars($row['C_logo']);
-                echo '<div class="company-grid">
-                        <a href="./company-details.php?id=' . $company_id . '">
-                            <div class="company-card">
-                                <img src="../Data/Companies/Company_Logo/'. $company_logo . '" alt="' . $company_name . '">
-                                <p>' . $company_name . '</p>
-                            </div>
-                        </a>
-                      </div>';
+                
+    echo '<a href="./company-details.php?id=' . $company_id . '">
+            <div class="company-card">
+                <div class="company-image">
+                    <img src="../Data/Companies/Company_Logo/' . $company_logo . '" alt="' . $company_name . '">
+                </div>
+                <p>' . $company_name . '</p>
+            </div>
+          </a>';
+
             }
         }
         else {
@@ -74,9 +76,11 @@ if (!isset($_SESSION)) {
                             <button>Submit</button>
                         </form>
                     </div>
+                    <div class="company-grid">
                     <?php
                         get_companies();
-                    ?>
+                        ?>
+                    </div>
                 </div>
             </div>
 

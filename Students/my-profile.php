@@ -67,6 +67,7 @@ if (isset($_POST["update_profile"])) {
     $_SESSION['profile_updated'] = true;
     echo "<script type='text/javascript'>window.location.href = window.location.href;</script>";
     exit();
+    
 }
 
 ?>

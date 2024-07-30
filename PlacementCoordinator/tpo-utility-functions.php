@@ -40,7 +40,7 @@ ORDER BY ND.Notification_Date DESC;";
         }
 
         echo '</p>
-                    <a href="./notifications-edit?nid=' . $row["nid"] . '"><button class="edit-button">Edit</button></a>
+                    <a href="./notifications-edit.php?nid=' . $row["nid"] . '"><button class="edit-button">Edit</button></a>
                     <form action="" method="post">
                         <input type="number" value="'.$row["nid"].'" hidden name="nid">
                         <button name="delete_noti" class="delete-button">Delete</button>

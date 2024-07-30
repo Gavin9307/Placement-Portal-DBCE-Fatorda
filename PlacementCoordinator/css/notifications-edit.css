@@ -69,3 +69,15 @@
     right: 25px;
     bottom: 20px;
 }
+
+.inputbox input, select{
+    border: 1px solid var(--secondary-grey);
+    width: 350px;
+    padding: 10px;
+    border-radius: 5px;
+    margin-top: 5px;
+    outline: none;
+}
+.inputbox :focus {
+    border: 1px solid var(--primary-blue);
+}

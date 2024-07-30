@@ -1,7 +1,7 @@
 <?php
 require "../conn.php";
 require "../restrict.php";
-include "./tpo-utitlity-functions.php";
+include "./tpo-utility-functions.php";
 global $conn;
 if (!isset($_SESSION)) {
     session_start();

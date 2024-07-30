@@ -27,10 +27,11 @@
             <div class="main-container">
                 <h2 class="main-container-heading"><a href="./dashboard.html"><i class="fa-solid fa-arrow-left fa-lg" style="color: #000000;"></i></a>
                     My Applications</h2>
-
-                <?php 
+                    <?php 
                     getApplications();
                 ?>
+
+                
             </div>
         </div>
 

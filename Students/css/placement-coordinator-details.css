@@ -1,0 +1,137 @@
+*, *::after, *::before {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+    font-family: "Poppins", sans-serif;
+}
+
+:root {
+    --primary-blue: #0C07E4;
+    --primary-grey: #d9d9d9;
+    --primary-white: white;
+    --primary-red: #FB1616;
+}
+
+#wrapper {
+    position: relative;
+}
+
+/* Main Content */
+.container {
+    width: 100%;
+    display: flex;
+}
+
+#notifications {
+    color: var(--primary-blue);
+    background-color: var(--primary-white);
+}
+
+.main-container {
+    width: 75%;
+    padding: 25px;
+    margin-bottom: 50px;
+}
+
+.main-container-heading > a {
+    cursor: pointer;
+}
+
+.main-container-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px;
+}
+
+.main-container-header .add-button {
+    margin-top: 10px;
+    padding-block: 5px;
+    padding-inline: 25px;
+    border-radius: 5px;
+    border: none;
+    font-weight: 600;
+    font-size: 18px;
+    cursor: pointer;
+    background-color: var(--primary-blue);
+    color: var(--primary-white);
+}
+
+.sections {
+    position: relative;
+    margin-top: 30px;
+    box-shadow: 5px 10px 12.3px 5px rgba(0, 0, 0, .25);
+    padding: 20px;
+    margin-bottom: 50px;
+    display: flex;
+    flex-direction: row;
+    align-items: stretch;
+}
+
+.sec1 {
+    width: 50%;
+}
+
+.sec2 {
+    width: 50%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.sec2 img {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    margin-bottom: 10px;
+}
+
+.sec2 .add-button {
+    padding-block: 5px;
+    padding-inline: 25px;
+    border-radius: 5px;
+    border: none;
+    font-weight: 600;
+    font-size: 18px;
+    cursor: pointer;
+    background-color: var(--primary-blue);
+    color: var(--primary-white);
+    margin-top: 120px;
+}
+
+.parent .add-button {
+    align-items: center;
+    margin-top: 20px;
+    padding-block: 5px;
+    padding-inline: 25px;
+    border-radius: 5px;
+    border: none;
+    font-weight: 600;
+    font-size: 18px;
+    cursor: pointer;
+    background-color: var(--primary-blue);
+    color: var(--primary-white);
+    
+}
+.parent {
+display: flex;
+flex-direction: column;
+justify-content: space-between;
+
+align-items: center;
+
+}
+.parent img{
+  
+    width : 50%; 
+    align-items: center;
+    width: 150px;
+     height: 150px;
+     border-radius: 50%;
+     /*margin-bottom: 10px;*/
+     position: relative;
+     
+     top: 2px;
+     
+ }

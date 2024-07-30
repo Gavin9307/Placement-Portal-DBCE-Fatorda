@@ -48,3 +48,75 @@ ORDER BY ND.Notification_Date DESC;";
                 </div>';
     }
 }
+
+
+function getLiveJobListings() {
+    global $conn;
+    $fetchJobQuery = "
+        SELECT C.C_Name as cname, C.C_Logo clogo, P.J_Due_date duedate, P.J_Position position, J.J_id jid 
+        FROM company as C
+        INNER JOIN jobposting as J ON J.C_id = C.C_id
+        INNER JOIN jobplacements as P ON P.J_id = J.J_id
+        WHERE P.J_Due_date >= CURRENT_DATE;
+    ";
+
+    $fetchJob = $conn->prepare($fetchJobQuery);
+    $fetchJob->execute();
+    $result = $fetchJob->get_result();
+
+    while ($row = $result->fetch_assoc()) {
+        $row["jid"] = (int) $row["jid"];
+        $fetchJobDeptQuery = "
+            SELECT d.Dept_name dname FROM department as d
+            INNER JOIN jobdepartments as jd on d.Dept_id = jd.Dept_id
+            WHERE jd.J_id = ?;
+        ";
+        $fetchJobDept = $conn->prepare($fetchJobDeptQuery);
+        $fetchJobDept->bind_param("i", $row["jid"]);
+        $fetchJobDept->execute();
+        $resultDept = $fetchJobDept->get_result();
+
+        echo '<div class="sections">
+                <div class="company-container">
+                    <div class="company-logo-container">
+                        <img src="../Data/Companies/Company_Logo/' . $row['clogo'] . '" alt="">
+                        <p>' . $row['cname'] . '</p>
+                    </div>
+                    <p><strong>Due Date:</strong> ' . date("d/m/Y", strtotime($row['duedate'])) . '</p>
+                </div>
+                <p class="position"><strong>Position:</strong> ' . $row['position'] . '</p>
+                <p class="department"><strong>Departments </strong>: ';
+
+        while ($rowDept = $resultDept->fetch_assoc()) {
+            echo $rowDept["dname"] . " ";
+        }
+
+        echo '</p>
+                <a href=""><button class="analysis-button">Analysis</button></a>
+                <a href=""><button class="edit-button">Edit Details</button></a>
+            </div>';
+    }
+}
+
+
+function getCompletedJobListings() {
+    global $conn;
+    $fetchJobQuery = "SELECT c.C_Name as cname, j.J_Due_date as duedate, SUM(ja.placed) as totalplaced
+        FROM company as c 
+        INNER JOIN jobposting as jp ON jp.C_id=c.C_id
+        INNER JOIN jobplacements as j ON jp.J_id=j.J_id
+        INNER JOIN jobapplication as ja ON ja.J_id=j.J_id
+        WHERE j.J_Due_date < CURRENT_DATE
+        GROUP BY c.C_Name, j.J_Due_date;";
+    $fetchJob = $conn->prepare($fetchJobQuery);
+    $fetchJob->execute();
+    $result = $fetchJob->get_result();
+    while ($row = $result->fetch_assoc()) {
+        echo '<tr>
+                        <td>'.$row["duedate"].'</td>
+                        <td>'.$row["cname"].'</td>
+                        <td>'.$row["totalplaced"].'</td>
+                        <td><a href="">View more</a></td>
+                    </tr>';
+    }
+}

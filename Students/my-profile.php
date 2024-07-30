@@ -6,6 +6,7 @@ global $conn;
 if (!isset($_SESSION)) {
     session_start();
 }
+
 if (isset($_SESSION["user_type"]) && isset($_SESSION["user_email"])) {
     $average_rating = 0;
     $usertype = $_SESSION["user_type"]; // For Restriction
@@ -47,7 +48,6 @@ if (isset($_SESSION["user_type"]) && isset($_SESSION["user_email"])) {
         $StudentSem8 = htmlspecialchars($StudentInfo['sem8']);
         $StudentCGPA = htmlspecialchars($StudentInfo['cgpa']);
         $StudentBacks = htmlspecialchars($StudentInfo['backs']);
-
         
     } else {
         // Handle case where results are not obtained
@@ -61,40 +61,36 @@ if (isset($_POST["update_profile"])) {
     $updateQuery = "UPDATE student as s SET s.S_Fname = ?,s.S_Mname = ?,s.S_Lname = ?,s.S_Personal_Email = ?,s.S_Address = ?,s.S_Phone_no = ?,s.S_10th_Perc = ?,s.S_12th_Perc = ?
     WHERE s.S_College_Email = ?";
     $result = $conn->prepare($updateQuery);
-    $result->bind_param("ssssssdds", $_POST["fname"], $_POST["mname"], $_POST["lname"], $_POST["pemail"], $_POST["addr"], $_POST["phno"], $_POST["per10"], $_POST["per12"],$_SESSION["user_email"]);
+    $result->bind_param("ssssssdds", $_POST["fname"], $_POST["mname"], $_POST["lname"], $_POST["pemail"], $_POST["addr"], $_POST["phno"], $_POST["per10"], $_POST["per12"], $_SESSION["user_email"]);
     $result->execute();
-    header("Location: ./my-profile.php");
+    
+    $_SESSION['profile_updated'] = true;
+    echo "<script type='text/javascript'>window.location.href = window.location.href;</script>";
     exit();
 }
 
 ?>
-
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <?php include './head.php' ?>
     <link rel="stylesheet" href="./css/my-profile.css">
-    <title>My Applications</title>
+    <title>My Profile</title>
 </head>
-
 <body>
     <div id="wrapper">
         <?php include './header.php' ?>
-
         <div class="container">
             <?php include './sidebar.php' ?>
-
             <div class="main-container">
                 <h2 class="main-container-heading"><a href="./dashboard.php"><i class="fa-solid fa-arrow-left fa-lg" style="color: #000000;"></i></a>
                     Edit Profile : </h2>
-
                 <?php
                     echo '<form action="./my-profile.php" method="post" enctype="multipart/form-data" class="profile-image">
                    <img src="../Data/Students/Profile_Images/'.$StudentImage.'" alt="Profile Picture" id="profile-image">
                     <input type="file" name="profile-picture" id="profile-picture-input" style="display:none;">
                     <div class="upload-button-container">
-                        <button type="button" onclick="document.getElementById("profile-picture-input").click();" class="change-picture">Select Picture</button>
+                        <button type="button" onclick="document.getElementById(\'profile-picture-input\').click();" class="change-picture">Select Picture</button>
                         <button type="submit" name="upload" class="change-picture">Upload Picture</button>
                     </div>
                 </form>';
@@ -105,29 +101,29 @@ if (isset($_POST["update_profile"])) {
                         <?php
                         echo '<div class="form-adjust">
                             <div>
-                                <label for="">First Name</label><br>
+                                <label for="fname">First Name</label><br>
                                 <input type="text" name="fname" value="'.$StudentFName.'">
                             </div>
                             <div>
-                                <label for="" >Middle Name</label><br>
+                                <label for="mname">Middle Name</label><br>
                                 <input type="text" name="mname" value="'.$StudentMName.'">
                             </div>
                             <div>
-                                <label for="" >Last Name</label><br>
+                                <label for="lname">Last Name</label><br>
                                 <input type="text" name="lname" value="'.$StudentLName.'">
                             </div>
                         </div>
                         <div class="form-adjust">
                             <div>
-                                <label for="" >Contact No</label><br>
+                                <label for="phno">Contact No</label><br>
                                 <input type="text" name="phno" value="'.$StudentPhoneNo.'">
                             </div>
                             <div>
-                                <label for="" >Address</label><br>
+                                <label for="addr">Address</label><br>
                                 <input type="text" name="addr" value="'.$StudentAddress.'">
                             </div>
                             <div>
-                                <label for="" >Personal Email</label><br>
+                                <label for="pemail">Personal Email</label><br>
                                 <input type="text" name="pemail" value="'.$StudentPEmail.'">
                             </div>
                         </div>';
@@ -138,40 +134,40 @@ if (isset($_POST["update_profile"])) {
                         <?php
                             echo '<div class="form-adjust">
                             <div>
-                                <label  for="">College Email</label><br>
+                                <label for="cemail">College Email</label><br>
                                 <input type="text" name="cemail" value="'.$StudentCEmail.'">
                             </div>
                             <div>
-                                <label for="">PR No.</label><br>
+                                <label for="prn">PR No.</label><br>
                                 <input type="text" name="prn" value="'.$StudentPRN.'">
                             </div>
 
                             <div>
-                                <label for="" >Roll No.</label><br>
+                                <label for="rollno">Roll No.</label><br>
                                 <input type="text" name="rollno" value="'.$StudentRollNo.'">
                             </div>
                         </div>
                         <div class="form-adjust">
                             <div>
-                                <label for="" >Class</label><br>
+                                <label for="class">Class</label><br>
                                 <input type="text" name="class" value="'.$StudentClass.'">
                             </div>
 
                             <div>
-                                <label for="">Department</label><br>
+                                <label for="department">Department</label><br>
                                 <input type="text" name="department" value="'.$StudentDepartment.'">
                             </div>
                         </div>
                         <h3>Other Information:</h3>
                         <div class="form-adjust">
                             <div>
-                                <label for="" >10th Percentage</label><br>
-                                <input type="number" name="per10" value="'.$StudentPercentage_10.'">
+                                <label for="per10">10th Percentage</label><br>
+                                <input type="number" name="per10" step="0.01" min="0" max="100" value="'.$StudentPercentage_10.'">
                             </div>
 
                             <div>
-                                <label for="" >12th Percentage</label><br>
-                                <input type="number" name="per12" value="'.$StudentPercentage_12.'">
+                                <label for="per12">12th Percentage</label><br>
+                                <input type="number" name="per12" step="0.01" min="0" max="100" value="'.$StudentPercentage_12.'">
                             </div>
                         </div>';
                         ?>
@@ -180,14 +176,13 @@ if (isset($_POST["update_profile"])) {
 
                         <?php
                         echo '<div class="form-adjust">
-
                             <div>
-                                <label for="" value="">New Password</label><br>
+                                <label for="newpass">New Password</label><br>
                                 <input type="password" name="newpass">
                             </div>
 
                             <div>
-                                <label for="" value="">Confirm Password</label><br>
+                                <label for="newpassconfirm">Confirm Password</label><br>
                                 <input type="password" name="newpassconfirm">
                             </div>
                         </div>
@@ -195,51 +190,51 @@ if (isset($_POST["update_profile"])) {
                         <h3>Results:</h3>
                         <div class="form-adjust">
                             <div>
-                                <label for="">Sem 1</label><br>
-                                <input type="number" name="sem1" value="'.$StudentSem1.'">
+                                <label for="sem1">Sem 1</label><br>
+                                <input type="number" name="sem1" step="0.01" min="0" max="10" value="'.$StudentSem1.'">
                             </div>
 
                             <div>
-                                <label for="" >Sem 2</label><br>
-                                <input type="number" name="sem2" value="'.$StudentSem2.'">
+                                <label for="sem2">Sem 2</label><br>
+                                <input type="number" name="sem2" step="0.01" min="0" max="10" value="'.$StudentSem2.'">
                             </div>
                             <div>
-                                <label for="" >Sem 3</label><br>
-                                <input type="number" name="sem3" value="'.$StudentSem3.'">
+                                <label for="sem3">Sem 3</label><br>
+                                <input type="number" name="sem3" step="0.01" min="0" max="10" value="'.$StudentSem3.'">
                             </div>
 
                             <div>
-                                <label for="" >Sem 4</label><br>
-                                <input type="number" name="sem4" value="'.$StudentSem4.'">
+                                <label for="sem4">Sem 4</label><br>
+                                <input type="number" name="sem4" step="0.01" min="0" max="10" value="'.$StudentSem4.'">
                             </div>
                         </div>
                         <div class="form-adjust">
                             <div>
-                                <label for="">Sem 5</label><br>
-                                <input type="number" name="sem5" value="'.$StudentSem5.'">
+                                <label for="sem5">Sem 5</label><br>
+                                <input type="number" name="sem5" step="0.01" min="0" max="10" value="'.$StudentSem5.'">
                             </div>
 
                             <div>
-                                <label for="">Sem 6</label><br>
-                                <input type="number" name="sem6"  value="'.$StudentSem6.'">
+                                <label for="sem6">Sem 6</label><br>
+                                <input type="number" name="sem6" step="0.01" min="0" max="10" value="'.$StudentSem6.'">
                             </div>
                             <div>
-                                <label for="" >Sem 7</label><br>
-                                <input type="number" name="sem7" value="'.$StudentSem7.'">
+                                <label for="sem7">Sem 7</label><br>
+                                <input type="number" name="sem7" step="0.01" min="0" max="10" value="'.$StudentSem7.'">
                             </div>
 
                             <div>
-                                <label for="" >Sem 8</label><br>
-                                <input type="number" name="sem8" value="'.$StudentSem8.'">
+                                <label for="sem8">Sem 8</label><br>
+                                <input type="number" name="sem8" step="0.01" min="0" max="10" value="'.$StudentSem8.'">
                             </div>
                         </div>
                         <div class="form-adjust cgpa">
                             <div>
-                                <label for="" >CGPA</label><br>
-                                <input type="number" name="cgpa" value="'.$StudentCGPA.'">
+                                <label for="cgpa">CGPA</label><br>
+                                <input type="number" name="cgpa" step="0.01" min="0" max="10" value="'.$StudentCGPA.'" step="0.01" min="0" max="10">
                             </div>
-                        <div>
-                                <label for="" >Do you have any backlogs?</label><br>
+                            <div>
+                                <label for="backs">Do you have any backlogs?</label><br>
                                 <select name="backs" id="">';
                         if ($StudentBacks == "0"){
                             echo '<option value="0" selected>No</option>
@@ -249,7 +244,7 @@ if (isset($_POST["update_profile"])) {
                         </div>';
                         }
                         else {
-                            echo '<option value="0" >No</option>
+                            echo '<option value="0">No</option>
                          <option value="1" selected>Yes</option>
                                 </select>
                         </div> 
@@ -257,17 +252,58 @@ if (isset($_POST["update_profile"])) {
                         }
                         
                         ?>
-                        
-                        <button name="update_profile">Update</button>
+                        <button id="myBtn" name="update_profile">Update</button>
+
+                        <div id="myModal" class="modal">
+                        <!-- Modal content -->
+                        <div class="modal-content">
+                        <span class="close">&times;</span>
+                        <p>Your Profile has been updated successfully</p>
+                        </div>
+                        </div>
+
+                        <script>
+                        // Get the modal
+                        var modal = document.getElementById("myModal");
+
+                        // Get the button that opens the modal
+                        var btn = document.getElementById("myBtn");
+
+                        // Get the <span> element that closes the modal
+                        var span = document.getElementsByClassName("close")[0];
+
+                        // When the user clicks the button, open the modal 
+                        btn.onclick = function() {
+                        modal.style.display = "block";
+                        }
+
+                        // When the user clicks on <span> (x), close the modal
+                        span.onclick = function() {
+                        modal.style.display = "none";
+                        }
+
+                        // When the user clicks anywhere outside of the modal, close it
+                        window.onclick = function(event) {
+                        if (event.target == modal) {
+                        modal.style.display = "none";
+                        }
+                        }
+
+                        <?php
+                        // If the profile was updated, show the modal
+                        if (isset($_SESSION['profile_updated']) && $_SESSION['profile_updated']) {
+                            echo 'modal.style.display = "block";';
+                            // Unset the session variable so the modal doesn't show again on refresh
+                            unset($_SESSION['profile_updated']);
+                        }
+                        ?>
+
+                        </script>
+
                     </form>
                 </div>
-
             </div>
         </div>
-
-        <?php include './footer.php' ?>
     </div>
-
 </body>
-
 </html>

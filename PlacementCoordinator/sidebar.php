@@ -37,7 +37,7 @@ WHERE PC_Email= ?;";
             <a href="./job-management.php"><button id="jobmanagement">Job Management</button></a>
             <a href="./notifications.php"><button id="notifications">Send Notifications</button></a>
             <a href="./placementcordinator.php"><button id="placementcoordinator">Placement Coordinators</button></a>
-            <a href="./analysisreport.php"><button id="analysisreport">Analysis & Reports</button></a>
+            <a href="./analysis-and-report.php"><button id="analysisreport">Analysis & Reports</button></a>
         </div>
     </div>
 </div>';

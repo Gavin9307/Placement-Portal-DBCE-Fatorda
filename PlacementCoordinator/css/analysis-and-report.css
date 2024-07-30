@@ -113,3 +113,7 @@
     background-color: var(--primary-blue);
     color: var(--primary-white);
 }
+.button-container-2{
+    display:flex;
+    justify-content: space-evenly;
+}

@@ -1,7 +1,7 @@
 <?php
     require "../conn.php";
     require "../restrict.php";
-    include "./tpo-utitlity-functions.php";
+    include "./tpo-utility-functions.php";
     global $conn;
     if (!isset($_SESSION)) {
         session_start();
@@ -41,7 +41,7 @@ WHERE N.Notification_ID = ?;";
                     Notifications</h2>
                     <a href="./notification-post.php"><button class="add-button">Post Notifications</button></a>    
                 </div>
-                <?php getTpoNotifications() ?>
+                <?php getTpoNotifications(); ?>
             </div>
         </div>
 

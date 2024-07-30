@@ -1,0 +1,88 @@
+
+// Git commands //
+===================
+
+git config --global user.name "Gavin"
+git config --global user.email jsdhfjs@djj.com
+1) git status
+2) git init
+3) git add file1 file2.../ git add .
+4) git rm --cached file1 file2...
+5) git commit -m "message"
+   git commit -a -m "message" //Adds unstaged files and commits (Doesnt Work when there is no file)
+6) git restore --staged <file>...
+
+// Always keep commits atomic
+
+7) git log --oneline
+
+8) git commit --amend //used to rename commit or add forgotten files to LATEST commit 
+
+9) Make .gitignore file and mention files to ignore in that
+
+10) git branch
+11) git branch branchname  // Head still remains on previous branch
+12) git switch branchname // Head points to branchname
+    git checkout branchname
+    * Use -c to create and switch to a branch directly
+    eg) git switch -c branchname 
+13) git branch -D branchname //force delete
+14) git branch -m branchname //move/rename
+
+15) git merge branchname_to_merge
+
+16) git diff //Compares changes of UNSTAGED files
+17) git diff HEAD // TO see both unstaged and staged changes since last commit or head
+18) git diff --staged / git diff --cached
+19) git diff HEAD/--staged filename
+20) git diff branch1..branch2
+21) git diff commit1..commit2 // Use hashes of commits
+
+22) git stash // saves all staged and unstaged changes
+23) git stash pop // reverts stashed changes
+24) git stash apply
+25) git stash list
+26) git stash drop (stashid)
+27) git stash clear
+
+
+28) git checkout commithash //detaches head on a specific commit rather then a branch
+29) git switch - // reatached head to the branch from where it came
+
+30) git checkout -- filename  / git checkout HEAD filename  // Restores previous commit or deletes any changes
+
+32) GIT RESTORE
+    a) git restore filename // Restores previous commit or deletes any changes
+    b) git restore --source commithash filename // changes the contents of file as they were in the specified commit (DOESNT change the git log)
+    c) git restore --staged filename // unstages staged file
+    
+33) git reset commithash //Resets the repo to the specified commit
+34) git reset --hard commithash //Resets the repo to the specified commit and reverses changes
+35) git revert commithash //Makes a new commit by undoing changes to the specified commit
+
+35) git remote add origin url
+36) git remote rename old new
+37) git remote remove name
+
+38) git push <remote> branch
+39) git branch -M name // Renames branch name
+
+40) git branch -r // View remote branches
+41) git branch origin/main // go in detached head condition to the last known main at the time of cloning/pushing.
+42) git switch branchname // to track a remote branch
+
+Git Fetching // Changes are not integrated into our working repo
+43) git fetch remote // Fetches all branches
+44) git fetch remote branch // Fetches specific branch
+
+Git pull // git fetch + git merge
+git pull remote branch
+
+
+git tag -a betaVer1.0 <id> -m "message"
+
+    
+    
+    
+    
+    

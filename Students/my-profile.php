@@ -65,6 +65,7 @@ if (isset($_POST["update_profile"])) {
     $result->execute();
     header("Location: ./my-profile.php");
     exit();
+    
 }
 
 ?>

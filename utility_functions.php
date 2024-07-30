@@ -100,7 +100,7 @@ P.J_Due_date >= CURRENT_DATE AND J.J_id = ?";
 
                     if ($row['interest'] == 0) {
                         echo '<div class="interest-button-container">
-                                <a href="./job-opportunities-detail.php?jid='.$job_id.'&interest=1"><button class="interested">Mark as Interested</button></a>
+                                <a href="./job-opportunities-detail.php?jid='.$job_id.'&interest=1"><button id="myBtn" class="interested">Mark as Interested</button></a>
                                 <a href="./job-opportunities-detail.php?jid='.$job_id.'&interest=0"><button class="not-interested">Not Interested</button></a>
                               </div>';
                     } else {

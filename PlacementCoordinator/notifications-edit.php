@@ -1,44 +1,154 @@
+<?php
+require "../conn.php";
+require "../restrict.php";
+include "./tpo-utility-functions.php";
+global $conn;
+
+if (!isset($_SESSION)) {
+    session_start();
+}
+
+if (!isset($_GET["nid"])) {
+    header("Location: ./notifications.php");
+    exit();
+}
+
+$nid = (int)$_GET["nid"];
+
+if (isset($_POST["update-button"])) {
+    $subject = $_POST["subject"];
+    $message = $_POST["message"];
+    $due_date = $_POST["due_date"];
+
+    // Directory to store attachments
+    $uploadDir = "../Data/Notifications/";
+
+    // Fetch current attachments to possibly delete later
+    $fetchNotiQuery = "SELECT Attachment1, Attachment2 FROM notificationdetails WHERE Notification_ID = ?";
+    $fetchNoti = $conn->prepare($fetchNotiQuery);
+    $fetchNoti->bind_param("i", $nid);
+    $fetchNoti->execute();
+    $result = $fetchNoti->get_result();
+    $row = $result->fetch_assoc();
+
+    $attachment1 = $row['Attachment1'];
+    $attachment2 = $row['Attachment2'];
+
+    // Handle Attachment1 deletion
+    if (isset($_POST['delete_attachment1']) && $_POST['delete_attachment1'] == 'yes') {
+        if (file_exists($attachment1)) {
+            unlink($attachment1);
+        }
+        $attachment1 = null;
+    }
+
+    // Handle Attachment2 deletion
+    if (isset($_POST['delete_attachment2']) && $_POST['delete_attachment2'] == 'yes') {
+        if (file_exists($attachment2)) {
+            unlink($attachment2);
+        }
+        $attachment2 = null;
+    }
+
+    // Handle Attachment1 upload
+    if (isset($_FILES["attachment1"]) && $_FILES["attachment1"]["error"] == 0) {
+        if (file_exists($attachment1)) {
+            unlink($attachment1);
+        }
+        $attachment1 = $uploadDir . "notification_" . $nid . "_attachment_1." . pathinfo($_FILES["attachment1"]["name"], PATHINFO_EXTENSION);
+        move_uploaded_file($_FILES["attachment1"]["tmp_name"], $attachment1);
+    }
+
+    // Handle Attachment2 upload
+    if (isset($_FILES["attachment2"]) && $_FILES["attachment2"]["error"] == 0) {
+        if (file_exists($attachment2)) {
+            unlink($attachment2);
+        }
+        $attachment2 = $uploadDir . "notification_" . $nid . "_attachment_2." . pathinfo($_FILES["attachment2"]["name"], PATHINFO_EXTENSION);
+        move_uploaded_file($_FILES["attachment2"]["tmp_name"], $attachment2);
+    }
+
+    $updateNotiQuery = "UPDATE notificationdetails 
+                        SET Subject = ?, Message = ?, Attachment1 = ?, Attachment2 = ?, Notification_Due_Date = ?
+                        WHERE Notification_ID = ?";
+    $result = $conn->prepare($updateNotiQuery);
+    $result->bind_param("sssssi", $subject, $message, $attachment1, $attachment2, $due_date, $nid);
+    $result->execute();
+    header("Location: ./notifications-edit.php?nid=".$nid);
+    exit();
+}
+?>
+
+
+
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
-    <?php include './head.php' ?>
+    <?php include './head.php'; ?>
     <link rel="stylesheet" href="./css/notifications-edit.css">
     <title>Edit Notifications</title>
 </head>
 
 <body>
-<div id="wrapper">
-        <?php include './header.php' ?>
+    <div id="wrapper">
+        <?php include './header.php'; ?>
 
         <div class="container">
-            <?php include './sidebar.php' ?>
+            <?php include './sidebar.php'; ?>
 
             <div class="main-container">
                 <div class="main-container-header">
-                <h2 class="main-container-heading"><a href="./dashboard.html"><i class="fa-solid fa-arrow-left fa-lg" style="color: #000000;"></i></a>
-                    Edit Notifications</h2>    
+                    <h2 class="main-container-heading">
+                        <a href="./notifications.php"><i class="fa-solid fa-arrow-left fa-lg" style="color: #000000;"></i></a>
+                        Edit Notifications
+                    </h2>
                 </div>
 
                 <div class="sections">
-                    <form action="" method="get">
-                    <h3>Position:</h3>
-                    <textarea name="" class="textarea-position" placeholder="Associate Developer" id=""></textarea>
-                    <h3>Message:</h3>
-                    <textarea name=""class="textarea-message" placeholder="Software Engineer Campus: Role
-As Software Engineer, you will implement solutions for a variety of projects in a highly collaborative and 
-fast-paced environment. You will work closely with product and marketing managers, user interaction 
-designers, and other software engineers to develop new product offerings and improve existing ones. 
-Software Engineer Campus: Role
-As Software Engineer, you will implement solutions for a variety of projects in a highly collaborative and  
-designers, and other software engineers to develop new product offerings and improve existing ones. " id=""></textarea>
-                    <a href=" "><button class="update-button">Update</button></a>
-                    </form>               
+                    <form action="" method="post" enctype="multipart/form-data">
+                        <?php
+                        $fetchNotiQuery = "SELECT Subject, Message, Attachment1, Attachment2, Notification_Due_Date 
+                                           FROM notificationdetails
+                                           WHERE Notification_ID = ?";
+                        $fetchNoti = $conn->prepare($fetchNotiQuery);
+                        $fetchNoti->bind_param("i", $nid);
+                        $fetchNoti->execute();
+                        $result = $fetchNoti->get_result();
+                        $row = $result->fetch_assoc();
+                        ?>
+
+                        <div class="inputbox">
+                            <h3>Due Date:</h3>
+                            <input type="date" name="due_date" value="<?php echo $row['Notification_Due_Date']; ?>">
+                        </div><br>
+                        <div class="inputbox">
+                            <h3>Attachment 1:</h3>
+                            <input type="file" name="attachment1">
+                            <?php if ($row['Attachment1']): ?>
+                                <p>Current file: <a style="color:blue;" href="<?php echo '../Data/Notifications/' . basename($row['Attachment1']); ?>" target="_blank"><?php echo basename($row['Attachment1']); ?></a></p>
+                                <p style="color:red;">Delete Attachment: <input style="width: 20px;" type="checkbox" name="delete_attachment1" value="yes"></p>
+                            <?php endif; ?>
+                        </div><br>
+                        <div class="inputbox">
+                            <h3>Attachment 2:</h3>
+                            <input type="file" name="attachment2">
+                            <?php if ($row['Attachment2']): ?>
+                                <p>Current file: <a style="color:blue;" href="<?php echo '../Data/Notifications/' . basename($row['Attachment2']); ?>" target="_blank"><?php echo basename($row['Attachment2']); ?></a></p>
+                                <p style="color:red;">Delete Attachment: <input style="width: 20px;" type="checkbox" name="delete_attachment2" value="yes"></p>
+                            <?php endif; ?>
+                        </div><br>
+                        <h3>Subject:</h3>
+                        <textarea name="subject" class="textarea-position"><?php echo $row['Subject']; ?></textarea><br>
+                        <h3>Message:</h3>
+                        <textarea name="message" class="textarea-message"><?php echo $row['Message']; ?></textarea><br>
+                        <button type="submit" name="update-button" class="update-button">Update</button>
+                    </form>
                 </div>
             </div>
         </div>
 
-        <?php include './footer.php' ?>
+        <?php include './footer.php'; ?>
     </div>
 
 </body>

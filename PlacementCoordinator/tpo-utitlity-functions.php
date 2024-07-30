@@ -97,3 +97,26 @@ function getLiveJobListings() {
             </div>';
     }
 }
+
+
+function getCompletedJobListings() {
+    global $conn;
+    $fetchJobQuery = "SELECT c.C_Name as cname, j.J_Due_date as duedate, SUM(ja.placed) as totalplaced
+        FROM company as c 
+        INNER JOIN jobposting as jp ON jp.C_id=c.C_id
+        INNER JOIN jobplacements as j ON jp.J_id=j.J_id
+        INNER JOIN jobapplication as ja ON ja.J_id=j.J_id
+        WHERE j.J_Due_date < CURRENT_DATE
+        GROUP BY c.C_Name, j.J_Due_date;";
+    $fetchJob = $conn->prepare($fetchJobQuery);
+    $fetchJob->execute();
+    $result = $fetchJob->get_result();
+    while ($row = $result->fetch_assoc()) {
+        echo '<tr>
+                        <td>'.$row["duedate"].'</td>
+                        <td>'.$row["cname"].'</td>
+                        <td>'.$row["totalplaced"].'</td>
+                        <td><a href="">View more</a></td>
+                    </tr>';
+    }
+}

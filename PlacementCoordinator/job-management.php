@@ -49,30 +49,8 @@
                         <th>Students Placed</th>
                         <th>Details</th>
                     </tr>
-                    <tr>
-                        <td>12/12/23</td>
-                        <td>Google</td>
-                        <td>2</td>
-                        <td><a href="">View more</a></td>
-                    </tr>
-                    <tr>
-                        <td>24/12/23</td>
-                        <td>IBM</td>
-                        <td>9</td>
-                        <td><a href="">View more</a></td>
-                    </tr>
-                    <tr>
-                        <td>24/12/23</td>
-                        <td>IBM</td>
-                        <td>9</td>
-                        <td><a href="">View more</a></td>
-                    </tr>
-                    <tr>
-                        <td>24/12/23</td>
-                        <td>IBM</td>
-                        <td>9</td>
-                        <td><a href="">View more</a></td>
-                    </tr>
+                    <?php getCompletedJobListings(); ?>
+                    
                 </table>
                 <div class="button-container">
                 <a href="./notification-post.php"><button class="viewmore-button">View More</button></a>

@@ -150,11 +150,11 @@ function getApplicationDetails(){
     INNER JOIN jobposting as J ON J.C_id = C.C_id
     INNER JOIN jobplacements as P ON P.J_id = J.J_id
     INNER JOIN jobapplication as A ON A.J_id = J.J_id
-    WHERE A.Interest = ? AND A.S_College_Email = ?";
+    WHERE A.Interest = ? AND A.S_College_Email = ? AND J.J_id = ?";
 
     $fetchApplicationDetails = $conn->prepare($fetchApplicationDetailsQuery);
     $interest = 1; 
-    $fetchApplicationDetails->bind_param("is", $interest, $_SESSION["user_email"]);
+    $fetchApplicationDetails->bind_param("iss", $interest, $_SESSION["user_email"],$_GET["jid"]);
     $fetchApplicationDetails->execute();
     $result = $fetchApplicationDetails->get_result();
 
@@ -170,6 +170,8 @@ function getApplicationDetails(){
             <p class="position"><strong>Position:</strong> '.$row['position'].'</p>';
 
         $jid = (int)$_GET['jid'];
+        
+        // Add placed condition
         $totalRoundsFailQuery = "SELECT COUNT(*) as total_rounds 
         FROM rounds as R
         INNER JOIN studentrounds as S ON S.R_id = R.R_id

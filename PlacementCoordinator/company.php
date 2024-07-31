@@ -29,7 +29,7 @@ if (!isset($_SESSION)) {
                 $company_name = htmlspecialchars($row['C_Name']);
                 $company_logo = htmlspecialchars($row['C_logo']);
                 echo '<div class="company-grid">
-                        <a href="./company-edit.php?id=' . $company_id . '">
+                        <a href="./company-edit.php?cid=' . $company_id . '">
                             <div class="company-card">
                                 <img src="../Data/Companies/Company_Logo/'. $company_logo . '" alt="' . $company_name . '">
                                 <p>' . $company_name . '</p>

@@ -27,7 +27,7 @@
                         <p><strong>Due Date:</strong> 12/12/2003</p>
                     </div>
                     <p class="position"><strong>Position:</strong> Associate Developer</p>
-                    <p class= "department"><strong>Departments</strong>: Computer</p>
+                    <p class="department"><strong>Departments</strong>: Computer</p>
                     <a href="./my-applications-details.html"><button>View Report</button></a>
                 </div>
 
@@ -40,48 +40,58 @@
                         <p><strong>Apply Date:</strong> 12/12/2003</p>
                     </div>
                     <p class="position"><strong>Position:</strong> Associate Developer</p>
-                    <p class= "department"><strong>Departments</strong>: Computer</p>
+                    <p class="department"><strong>Departments</strong>: Computer</p>
                     <a href="./my-applications-details.html"><button>View Report</button></a>
-                    </div>
-                <h3>Yearly Placement Drive Reports</h3>
-                <div class="form-adjust">
-                   <div class="datebox">
-                            <div>
-                                <label for=""><strong>From:</strong></label>
-                                <input type="date" >
-                            </div>   
-                            <div>
-                                <label for=""><strong>To:</strong></label>
-                                <input type="date" >
-                            </div> 
-                            </div>  
-
-                             <div class="departmentbox">
-                                <label for=""><strong>Department</strong></label>
-                            <div class="Checkbox"> 
-                                <div>
-                                    <input type="checkbox">  
-                                     <label for="">ECS</label> 
-                                </div>
-                                
-                                <div><input type="checkbox">  
-                                <label for="">COMP</label></div>
-                                <div><input type="checkbox">  
-                                <label for="">MECH</label></div>
-                                <div><input type="checkbox">  
-                                <label for="">CIVIL</label> </div>
-                                
-                                
-                                </div>
-                             </div>
-                                       
                 </div>
-                <a href="./notification-post.php"><button class="add-button">Get Report</button></a>
+                <h3>Yearly Placement Drive Reports</h3>
+                <div class="sections">
+                <div class="form-adjust">
+                    <div class="datebox">
+                        <div>
+                            <label for=""><strong>From:</strong></label>
+                            <input type="date">
+                        </div>
+                        <div>
+                            <label for=""><strong>To:</strong></label>
+                            <input type="date">
+                        </div>
+                    </div>
+
+                    <div class="departmentbox">
+                        <label for=""><strong>Department</strong></label>
+                        <div class="Checkbox">
+                            <div>
+                                <input type="checkbox">
+                                <label for="">ECS</label>
+                            </div>
+
+                            <div><input type="checkbox">
+                                <label for="">COMP</label>
+                            </div>
+                            <div><input type="checkbox">
+                                <label for="">MECH</label>
+                            </div>
+                            <div><input type="checkbox">
+                                <label for="">CIVIL</label>
+                            </div>
+
+
+                        </div>
+                    </div>
+                    <a href="./notification-post.php"><button class="add-button">Get Report</button></a>
+                </div>
+                </div>
+                <h3>Other Reports:</h3>
+                <div class="button-container-2">
+                    <a href="./notification-post.php"><button class="add-button">Company Report</button></a>
+                    <a href="./notification-post.php"><button class="add-button">Student Report</button></a>
+                    <a href="./notification-post.php"><button class="add-button">Alumini Report</button></a>
                 </div>
             </div>
         </div>
+    </div>
 
-        <?php include './footer.php' ?>
+    <?php include './footer.php' ?>
     </div>
 
 </body>

@@ -42,7 +42,7 @@ ORDER BY ND.Notification_Date DESC;";
         echo '</p>
                     <a href="./notifications-edit.php?nid=' . $row["nid"] . '"><button class="edit-button">Edit</button></a>
                     <form action="" method="post">
-                        <input type="number" value="'.$row["nid"].'" hidden name="nid">
+                        <input type="number" value="' . $row["nid"] . '" hidden name="nid">
                         <button name="delete_noti" class="delete-button">Delete</button>
                     </form>
                 </div>';
@@ -50,7 +50,8 @@ ORDER BY ND.Notification_Date DESC;";
 }
 
 
-function getLiveJobListings() {
+function getLiveJobListings()
+{
     global $conn;
     $fetchJobQuery = "
         SELECT C.C_Name as cname, C.C_Logo clogo, P.J_Due_date duedate, P.J_Position position, J.J_id jid 
@@ -92,14 +93,20 @@ function getLiveJobListings() {
         }
 
         echo '</p>
-                <a href=""><button class="analysis-button">Analysis</button></a>
+               
+                <form action="" method="post">
+                    <input name="jid" type="hidden" value="'.$row["jid"].'">
+                    <button name="delete-listing" class="delete-button">Delete</button>
+                </form>
+                <a href="./job-live-listing-analysis.php?jid=' . $row["jid"] . '"><button class="analysis-button">Analysis</button></a>
                 <a href=""><button class="edit-button">Edit Details</button></a>
             </div>';
     }
 }
 
 
-function getCompletedJobListings() {
+function getCompletedJobListings()
+{
     global $conn;
     $fetchJobQuery = "SELECT c.C_Name as cname, j.J_Due_date as duedate, SUM(ja.placed) as totalplaced
         FROM company as c 
@@ -113,10 +120,79 @@ function getCompletedJobListings() {
     $result = $fetchJob->get_result();
     while ($row = $result->fetch_assoc()) {
         echo '<tr>
-                        <td>'.$row["duedate"].'</td>
-                        <td>'.$row["cname"].'</td>
-                        <td>'.$row["totalplaced"].'</td>
+                        <td>' . $row["duedate"] . '</td>
+                        <td>' . $row["cname"] . '</td>
+                        <td>' . $row["totalplaced"] . '</td>
                         <td><a href="">View more</a></td>
                     </tr>';
+    }
+}
+
+
+function getEligibleStudents()
+{
+    global $conn;
+    $jid = (int) $_GET["jid"];
+    $fetchJobEligibleQuery = "SELECT s.S_College_Email as semail,s.S_Fname as sfname,d.Dept_name as dname,ja.J_id as jid,ja.Interest as interest FROM student as s
+INNER JOIN jobapplication as ja ON s.S_College_Email=ja.S_College_Email
+INNER JOIN class as c ON c.Class_id=s.S_Class_id
+INNER JOIN department as d ON d.Dept_id=c.Dept_id
+WHERE ja.J_id = ? LIMIT 5;";
+    $fetchJobEligible = $conn->prepare($fetchJobEligibleQuery);
+    $fetchJobEligible->bind_param("i", $jid);
+    $fetchJobEligible->execute();
+    $result = $fetchJobEligible->get_result();
+    while ($row = $result->fetch_assoc()) {
+        echo '<tr>
+                <td>' . $row["sfname"] . '</td>
+                <td>' . $row["dname"] . '</td>';
+        if ($row['interest'] == 0) {
+            echo  '<td>Not Interested</td>';
+        } else {
+            echo '<td>Interested</td>';
+        }
+
+        echo '<td><a href="">View More</a></td>
+                <td><button class="remove-button">Remove</button></td>
+            </tr>';
+    }
+}
+
+
+function getInterestedStudents()
+{
+    global $conn;
+    $jid = (int) $_GET["jid"];
+    $fetchJobEligibleQuery = "SELECT s.S_College_Email as semail,ja.placed as placed,s.S_Fname as sfname,d.Dept_name as dname,ja.J_id as jid,ja.Interest as interest,jp.J_Due_date as duedate FROM student as s
+INNER JOIN jobapplication as ja ON s.S_College_Email=ja.S_College_Email
+INNER JOIN class as c ON c.Class_id=s.S_Class_id
+INNER JOIN department as d ON d.Dept_id=c.Dept_id
+INNER JOIN jobplacements as jp ON jp.J_id = ja.J_id
+WHERE ja.J_id = ? AND ja.Interest = ? LIMIT 5;";
+    $inte = 1;
+    $fetchJobEligible = $conn->prepare($fetchJobEligibleQuery);
+    $fetchJobEligible->bind_param("ii", $jid, $inte);
+    $fetchJobEligible->execute();
+    $result = $fetchJobEligible->get_result();
+    while ($row = $result->fetch_assoc()) {
+        echo '<tr>
+                <td>' . $row["sfname"] . '</td>
+                <td>' . $row["dname"] . '</td>';
+        if ($row['placed'] == 0) {
+            $retrieved_date = $row['duedate'];
+            $date_from_db = new DateTime($retrieved_date);
+            $current_date = new DateTime();
+            if ($date_from_db > $current_date) {
+                echo '<td>Pending</td>';
+            } else {
+                echo '<td>Rejected</td>';
+            }
+        } else {
+            echo '<td>Placed</td>';
+        }
+
+        echo '<td><a href="">View More</a></td>
+                <td><button class="remove-button">Remove</button></td>
+            </tr>';
     }
 }

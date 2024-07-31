@@ -17,7 +17,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST["post-job"])) {
     $companyId = !empty($_POST['company']) ? (int) $_POST['company'] : NULL;
     $dueDate = !empty($_POST['due-date']) ? $_POST['due-date'] : NULL;
     $backAllowed = !empty($_POST['has_backlogs']) ? (int) $_POST['has_backlogs'] : NULL;
-    $isPlaced = isset($_POST['is_placed']) ? $_POST['is_placed'] : NULL;
+    // $isPlaced = !empty($_POST['is_placed']) ? $_POST['is_placed'] : NULL;
     $percentage10 = !empty($_POST['percentage_10']) ? (float) $_POST['percentage_10'] : NULL;
     $percentage12 = !empty($_POST['percentage_12']) ? (float) $_POST['percentage_12'] : NULL;
     $gender = !empty($_POST['gender']) ? $_POST['gender'] : NULL;
@@ -86,9 +86,9 @@ WHERE 1=1";
         if (!is_null($maxCgpa)) {
             $studentQuery .= " AND cgpa <= $maxCgpa";
         }
-        if (!is_null($isPlaced)) {
-            $studentQuery .= " AND placed = '$isPlaced'";
-        }
+        // if (!is_null($isPlaced)) {
+        //     $studentQuery .= " AND placed = '$isPlaced'";
+        // }
         if (!is_null($percentage10)) {
             $studentQuery .= " AND S.S_10th_Perc >= $percentage10";
         }
@@ -99,9 +99,13 @@ WHERE 1=1";
             $studentQuery .= " AND gender = '$gender'";
         }
         if (!is_null($backAllowed)) {
-            $studentQuery .= " AND backs = $backAllowed";
+            if ($backAllowed == 0) {
+                $studentQuery .= " AND R.has_backlogs = 0";
+            } else {
+                $studentQuery .= " AND R.has_backlogs IN (0, 1)";
+            }
         }
-
+        echo $studentQuery;
         $studentsResult = $conn->query($studentQuery);
         if ($studentsResult->num_rows > 0) {
             $studentJobInsertQuery = "INSERT INTO jobapplication (S_College_Email, J_id, Interest) VALUES (?, ?, ?)";
@@ -210,14 +214,14 @@ WHERE 1=1";
                                 <label for="">Max CGPA</label>
                                 <input type="number" name="max-cgpa" step="0.1" placeholder="0.0" min="0" max="10">
                             </div>
-                            <div class="inputbox">
+                            <!-- <div class="inputbox">
                                 <label for="">Placed</label>
                                 <select name="is_placed">
                                     <option value="" selected>Select</option>
                                     <option value="Yes">Yes</option>
                                     <option value="No">No</option>
                                 </select>
-                            </div>
+                            </div> -->
                             <div class="inputbox">
                                 <label for="">Backlogs</label>
                                 <select name="has_backlogs">
@@ -297,13 +301,11 @@ WHERE 1=1";
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            let roundCount = 0; // Initialize the round count
+            let roundCount = 0; 
 
-            // Function to add a new round
             function addRound() {
-                roundCount++; // Increment round count for new round
+                roundCount++; 
 
-                // Create new round section HTML
                 const newRoundHTML = `
             <div class="round-section" id="round-${roundCount}">
                 <h3>Round ${roundCount}:</h3>
@@ -332,14 +334,11 @@ WHERE 1=1";
             </div>
         `;
 
-                // Append new round section to the container
                 document.getElementById('rounds-container').insertAdjacentHTML('beforeend', newRoundHTML);
             }
 
-            // Add new round on button click
             document.getElementById('add-round').addEventListener('click', addRound);
 
-            // Delete round functionality
             document.getElementById('rounds-container').addEventListener('click', function(event) {
                 if (event.target && event.target.classList.contains('delete-round-button')) {
                     const roundId = event.target.getAttribute('data-round-id');
@@ -348,6 +347,26 @@ WHERE 1=1";
                         roundElement.remove();
                         roundCount--;
                     }
+                }
+            });
+        });
+
+        document.addEventListener('DOMContentLoaded', function() {
+            // Function to check if at least one checkbox is selected
+            function validateCheckboxes() {
+                const checkboxes = document.querySelectorAll('input[name="departments[]"]');
+                for (const checkbox of checkboxes) {
+                    if (checkbox.checked) {
+                        return true;
+                    }
+                }
+                return false;
+            }
+
+            document.querySelector('form').addEventListener('submit', function(event) {
+                if (!validateCheckboxes()) {
+                    alert('Please select at least one department.');
+                    event.preventDefault(); 
                 }
             });
         });

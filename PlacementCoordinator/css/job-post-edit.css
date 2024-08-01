@@ -1,0 +1,147 @@
+#wrapper {
+    position: relative;
+}
+
+/* Main Content */
+.container {
+    width: 100%;
+    display:flex ;
+}
+
+#jobmanagement{
+    color: var(--primary-blue);
+    background-color: var(--primary-white);
+}
+
+
+.main-container {
+    width: 75%;
+    padding: 25px;
+    margin-bottom: 50px;
+}
+.main-container-heading > a {
+    cursor: pointer;
+}
+.main-container-header  {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px;
+}
+
+.sections {
+    position: relative;
+    margin-top: 30px;
+    box-shadow: 5px 10px 12.3px 5px rgba(0, 0, 0, .25);
+    padding: 20px;
+    margin-bottom: 50px;
+}
+
+.form-adjust {
+    width: 50%;
+    margin: 0 auto;
+}
+
+.inputbox {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.inputbox input, select{
+    border: 1px solid var(--secondary-grey);
+    width: 350px;
+    padding: 10px;
+    border-radius: 5px;
+    margin-top: 5px;
+    outline: none;
+}
+.inputbox :focus {
+    border: 1px solid var(--primary-blue);
+}
+
+.inputbox input::placeholder{
+    color:grey;
+}
+.textarea-subject:focus {
+    border: 1px solid var(--primary-blue);
+}
+.textarea-message:focus {
+    border: 1px solid var(--primary-blue);
+}
+
+.textarea-message{
+    border: 1px solid var(--secondary-grey);
+    outline: none;
+    resize: none;
+    padding:10px ;
+    width: 100%;
+    height:200px;
+    border-radius: 5px;
+    margin-bottom: 50px;
+}
+.sections .add-button {
+    padding-block: 5px;
+    padding-inline: 25px;
+    border-radius: 5px;
+    border: none;
+    font-weight: 600;
+    font-size: 18px;
+    cursor: pointer;
+    background-color: var(--primary-blue);
+    color: var(--primary-white);
+    position: absolute;
+    right: 25px;
+    bottom: 20px;
+}
+.sections .add-round-button {
+    padding-block: 5px;
+    padding-inline: 25px;
+    border-radius: 5px;
+    border: none;
+    font-weight: 600;
+    font-size: 18px;
+    cursor: pointer;
+    background-color: var(--primary-blue);
+    color: var(--primary-white);
+    
+}
+/* The Modal (background) */
+.modal {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Sit on top */
+    padding-top: 100px; /* Location of the box */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgb(0,0,0); /* Fallback color */
+    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+  }
+  
+  /* Modal Content */
+  .modal-content {
+    background-color: #fefefe;
+    margin: auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+  }
+  
+  /* The Close Button */
+  .close {
+    color: #aaaaaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+  }
+  
+  .close:hover,
+  .close:focus {
+    color: #000;
+    text-decoration: none;
+    cursor: pointer;
+  }

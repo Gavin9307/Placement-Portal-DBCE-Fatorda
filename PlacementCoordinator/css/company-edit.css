@@ -22,6 +22,10 @@
     align-items: center;
     padding: 15px;
 }
+#companymanagement{
+    color: var(--primary-blue);
+    background-color: var(--primary-white);
+}
 
 .sections {
     position: relative;

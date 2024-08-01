@@ -13,7 +13,6 @@
 }
 
 
-
 #wrapper {
     position: relative;
 }
@@ -24,7 +23,7 @@
     display:flex ;
 }
 
-#companies{
+#companymanagement{
     color: var(--primary-blue);
     background-color: var(--primary-white);
 }
@@ -58,6 +57,7 @@
     box-shadow: 5px 10px 12.3px 5px rgba(0, 0, 0, .25);
     padding: 20px;
     margin-bottom: 50px;
+    min-height: 700px;
 }
 
 .company-logo-container > img {
@@ -123,11 +123,23 @@
 }
 
 .company-card {
-    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
     border: 1px solid var(--primary-grey);
-    padding: 10px;
     border-radius: 15px;
+    overflow: hidden;
+    cursor: pointer;
+    height: 300px; 
 }
 .company-card img{
+    flex-grow: 1;
     width: 100%;
+    overflow: hidden;
+}
+
+.company-card p {
+    margin: 0;
+    padding: 5px;
+    background-color: #fff;
 }

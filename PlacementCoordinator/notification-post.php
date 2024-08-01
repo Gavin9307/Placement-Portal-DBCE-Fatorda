@@ -83,10 +83,10 @@ if (isset($_POST["subject"])) {
              if (!is_null($gender)) {
                  $studentQuery .= " AND gender = '$gender'";
              }
- 
+             
              $studentsResult = $conn->query($studentQuery);
  
-             if ($studentsResult->num_rows > 0) {
+            if ($studentsResult->num_rows > 0) {
                  $studentNotiInsertQuery = "INSERT INTO studentnotifications (Notification_ID, S_College_Email) VALUES (?, ?)";
                  $studentNotiInsert = $conn->prepare($studentNotiInsertQuery);
  

@@ -28,6 +28,7 @@ if (isset($_POST["update-company"])) {
 
     $allowedTypes = ['image/jpeg', 'image/jpg', 'image/png'];
     $logo = "";
+    $logo_uploaded = false;
     if ($_FILES['clogo']['error'] == 0) {
         $fileType = mime_content_type($_FILES['clogo']['tmp_name']);
         if (!in_array($fileType, $allowedTypes)) {
@@ -40,13 +41,25 @@ if (isset($_POST["update-company"])) {
             }
             move_uploaded_file($_FILES["clogo"]["tmp_name"], $logopath);
             $logo = 'C_id_' . $cid . '.' . pathinfo($_FILES['clogo']['name'], PATHINFO_EXTENSION);
+            $logo_uploaded = true;
         }
     }
-    $updateNotiQuery = "UPDATE company 
-                        SET C_Name = ?, C_Domain = ?, C_Scope = ?, C_Description = ?, C_Location = ?, C_HR_name = ?, C_HR_email = ?, C_HR_phone = ?, C_PC_Email = ?, C_Website = ?, C_Logo = ?
-                        WHERE C_id = ?";
-    $result = $conn->prepare($updateNotiQuery);
-    $result->bind_param("sssssssssssi", $cname, $domain, $scope, $description, $location, $hrname, $hremail, $hrcontact, $pcEmail, $link, $logo, $cid);
+
+    // Prepare the SQL query
+    if ($logo_uploaded) {
+        $updateNotiQuery = "UPDATE company 
+                            SET C_Name = ?, C_Domain = ?, C_Scope = ?, C_Description = ?, C_Location = ?, C_HR_name = ?, C_HR_email = ?, C_HR_phone = ?, C_PC_Email = ?, C_Website = ?, C_Logo = ?
+                            WHERE C_id = ?";
+        $result = $conn->prepare($updateNotiQuery);
+        $result->bind_param("sssssssssssi", $cname, $domain, $scope, $description, $location, $hrname, $hremail, $hrcontact, $pcEmail, $link, $logo, $cid);
+    } else {
+        $updateNotiQuery = "UPDATE company 
+                            SET C_Name = ?, C_Domain = ?, C_Scope = ?, C_Description = ?, C_Location = ?, C_HR_name = ?, C_HR_email = ?, C_HR_phone = ?, C_PC_Email = ?, C_Website = ?
+                            WHERE C_id = ?";
+        $result = $conn->prepare($updateNotiQuery);
+        $result->bind_param("ssssssssssi", $cname, $domain, $scope, $description, $location, $hrname, $hremail, $hrcontact, $pcEmail, $link, $cid);
+    }
+
     $result->execute();
     header("Location: ./company-edit.php?cid=" . $cid);
     exit();

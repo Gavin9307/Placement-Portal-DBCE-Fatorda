@@ -145,7 +145,7 @@ passfail:
                                 <option value="" disabled selected>Select Type</option>
                                 <option value="stu">Student</option>
                                 <option value="tpo">TPO</option>
-                                <option value="pc">Placement Coordinator</option>
+                                <!-- <option value="pc">Placement Coordinator</option> -->
                             </select>
                         </div>
                         <div class="inputbox">

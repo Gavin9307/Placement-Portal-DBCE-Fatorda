@@ -3,7 +3,7 @@
 
 <head>
     <?php include './head.php' ?>
-    <link rel="stylesheet" href="./css/analysis-and-report-yearly.css">
+    <link rel="stylesheet" href="./css/analysis-and-report-yearly-more-details.css">
     <title>Analysis and Reports</title>
 </head>
 
@@ -59,27 +59,25 @@
                         </form>
                     </div>
                 </div>
-                <div class="sections section-container">
-
-                    <div class="sections-1">
-                        <p><strong>Total Number of students</strong>: 100</p>
-                        <p><strong>Total Number of students Placed</strong>: 20</p>
-                        <iframe class="responsive-iframe" seamless frameborder="0" scrolling="no" src="https://docs.google.com/spreadsheets/d/e/2PACX-1vQwj2XQEskPgLtqr0YpmTsA4eb36sbaUt16rtthRpDURHxbVRPVZVkr-icApfmjR0Lv0WiMdjeGzFEV/pubchart?oid=1931950964&amp;format=interactive"></iframe>
-                    </div>
-                    <div class="sections-1">
-                        <p><strong>Total Number of Companies</strong>: 20</p>
-                        <p><strong>Companies That hired</strong>: 8</p>
-                        <iframe class="responsive-iframe" seamless frameborder="0" scrolling="no" src="https://docs.google.com/spreadsheets/d/e/2PACX-1vQwj2XQEskPgLtqr0YpmTsA4eb36sbaUt16rtthRpDURHxbVRPVZVkr-icApfmjR0Lv0WiMdjeGzFEV/pubchart?oid=1931950964&amp;format=interactive"></iframe>
-                    </div>
-
-
-                </div>
-
-                <div class="sections">
+                <div class="sortby-container">
                     <h3><strong>Student Details</strong></h3>
+                    <div>
+                        <label for=""><strong>Sort-By</strong></label>
+                        <select name="" id="">
+                            <option value="">Date: Latest to Oldest</option>
+                            <option value="">Date: Oldest to Latest</option>
+                            <option value="">Department()</option>
+                            <option value="">Offered Salary: High to Low</option>
+                            <option value="">Offered Salary: Low to High</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="sections">
+
                     <table>
                         <tr>
                             <th>Name</th>
+                            <th>Department</th>
                             <th>Company</th>
                             <th>Offered Salary</th>
                             <th>Joining Date</th>
@@ -87,6 +85,7 @@
                         </tr>
                         <tr>
                             <td>Nimish</td>
+                            <td>MECH</td>
                             <td>Google</td>
                             <td>30,000</td>
                             <td>2/3/2024</td>
@@ -94,6 +93,7 @@
                         </tr>
                         <tr>
                             <td>Patric</td>
+                            <td>MECH</td>
                             <td>Facebook</td>
                             <td>20,000</td>
                             <td>30/3/2024</td>
@@ -101,6 +101,7 @@
                         </tr>
                         <tr>
                             <td>Gavin</td>
+                            <td>MECH</td>
                             <td>Google</td>
                             <td>50,000</td>
                             <td>12/11/2024</td>
@@ -108,6 +109,7 @@
                         </tr>
                         <tr>
                             <td>Stephen</td>
+                            <td>MECH</td>
                             <td>Reliance</td>
                             <td>40,000</td>
                             <td>24/5/2024</td>
@@ -116,11 +118,11 @@
                     </table>
                     <div class="button-container-1">
                         <div class="dropdown">
-                            <button class="viewmore-button">View More</button>
+                            <button class="download-button">Download</button>
                             <div class="dropdown-content">
-                                <a href="./notification-post.php">Option 1</a>
-                                <a href="./another-link.php">Option 2</a>
-                                <a href="./yet-another-link.php">Option 3</a>
+                                <a href="https://docs.google.com/spreadsheets/d/1wS7cTnPvG7zB5z2of8AsV-jDNu_E0coXZXER_iIxzS0/export?format=csv&id=1wS7cTnPvG7zB5z2of8AsV-jDNu_E0coXZXER_iIxzS0">Download as CSV</a>
+                                <a href="https://docs.google.com/spreadsheets/d/1wS7cTnPvG7zB5z2of8AsV-jDNu_E0coXZXER_iIxzS0/export?format=pdf&id=1wS7cTnPvG7zB5z2of8AsV-jDNu_E0coXZXER_iIxzS0">Download as PDF</a>
+                                <a href="https://docs.google.com/spreadsheets/d/1wS7cTnPvG7zB5z2of8AsV-jDNu_E0coXZXER_iIxzS0/export?format=xlsx&id=1wS7cTnPvG7zB5z2of8AsV-jDNu_E0coXZXER_iIxzS0">Download as Excel</a>
                             </div>
                         </div>
                     </div>

@@ -261,8 +261,12 @@ if (isset($_POST["update_profile"])) {
                                 <p>Your Profile has been updated successfully</p>
                             </div>
                         </div>
-
-                        <script>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
                             // Get the modal
                             var modal = document.getElementById("myModal");
 
@@ -298,12 +302,6 @@ if (isset($_POST["update_profile"])) {
                             }
                             ?>
                         </script>
-
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
 </body>
 
 </html>

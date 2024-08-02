@@ -82,7 +82,20 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_GET["login"])) {
                     }
                     switch ($usertype) {
                         case "stu":
-                            header("Location: ./Students/dashboard.php");
+                            $checkRegistrationQuery = "SELECT registration_complete from student WHERE student.S_College_Email = ?;";
+                            $checkStmt = $conn->prepare($checkRegistrationQuery);
+                            $checkStmt->bind_param("s", $email);
+                            $checkStmt->execute();
+                            $result = $checkStmt->get_result();
+                            $row = $result->fetch_assoc();
+
+                            if($row["registration_complete"] == 0){
+                                header("Location: ./update-profile.php");
+                                exit();
+                            }
+                            else {
+                                header("Location: ./Students/dashboard.php");
+                            }
                             break;
                         case "tpo":
                             header("Location: ./PlacementCoordinator/dashboard.php");

@@ -58,17 +58,17 @@
                 </div>
                 <div class="sections section-container">
 
-                <div class="sections">
+                <div class="sections-1">
                     <p><strong>Total Number of students</strong>: 100</p>
-                    <p><strong>Total Number of students</strong>: 100</p>
-                    <iframe width="600" height="371" seamless frameborder="0" scrolling="no" src="https://docs.google.com/spreadsheets/d/e/2PACX-1vQwj2XQEskPgLtqr0YpmTsA4eb36sbaUt16rtthRpDURHxbVRPVZVkr-icApfmjR0Lv0WiMdjeGzFEV/pubchart?oid=1931950964&amp;format=interactive"></iframe>
+                    <p><strong>Total Number of students Placed</strong>: 20</p>
+                    <iframe  class="responsive-iframe" seamless frameborder="0" scrolling="no" src="https://docs.google.com/spreadsheets/d/e/2PACX-1vQwj2XQEskPgLtqr0YpmTsA4eb36sbaUt16rtthRpDURHxbVRPVZVkr-icApfmjR0Lv0WiMdjeGzFEV/pubchart?oid=1931950964&amp;format=interactive"></iframe>
                 </div>
-
-                <div class="sections">
-                    <p><strong>Total Number of students</strong>: 100</p>
-                    <p><strong>Total Number of students</strong>: 100</p>
-                    <iframe width="600" height="371" seamless frameborder="0" scrolling="no" src="https://docs.google.com/spreadsheets/d/e/2PACX-1vQwj2XQEskPgLtqr0YpmTsA4eb36sbaUt16rtthRpDURHxbVRPVZVkr-icApfmjR0Lv0WiMdjeGzFEV/pubchart?oid=1931950964&amp;format=interactive"></iframe>
+                <div class="sections-1">
+                    <p><strong>Total Number of Companies</strong>: 20</p>
+                    <p><strong>Companies That hired</strong>: 8</p>
+                    <iframe  class="responsive-iframe" seamless frameborder="0" scrolling="no" src="https://docs.google.com/spreadsheets/d/e/2PACX-1vQwj2XQEskPgLtqr0YpmTsA4eb36sbaUt16rtthRpDURHxbVRPVZVkr-icApfmjR0Lv0WiMdjeGzFEV/pubchart?oid=1931950964&amp;format=interactive"></iframe>
                 </div>
+               
 
                 </div>
 

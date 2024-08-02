@@ -34,6 +34,7 @@
 .main-container-heading > a {
     cursor: pointer;
 }
+
 .sections {
     position: relative;
     margin-top: 30px;
@@ -42,30 +43,10 @@
     margin-bottom: 50px;
 }
 
-.company-logo-container > img {
-    height: 50px;
-}
-
-.company-logo-container {
-    display: flex;
-    align-items: center;
-    gap: 20px;
-}
-
-.company-container {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.position {
-    margin-top: 20px;
-    margin-bottom: 30px;
-}
 .section-container {
     display:flex;
     flex-direction:row;
-    align-items: stretch;
+    justify-content: space-between;
 }
 
 .form-adjust {
@@ -138,4 +119,14 @@ justify-content: flex-end;
     cursor: pointer;
     background-color: var(--primary-blue);
     color: var(--primary-white); 
+}
+
+.sections-1 {
+    width: 100%;
+    height: 100%;
+}
+
+.responsive-iframe {
+    width: 100%;
+    height: 300px;   
 }

@@ -16,7 +16,7 @@
 
             <div class="main-container">
                 <div class="main-container-header">
-                <h2 class="main-container-heading"><a href="./dashboard.html"><i class="fa-solid fa-arrow-left fa-lg" style="color: #000000;"></i></a>
+                <h2 class="main-container-heading"><a href="./dashboard.html"><a href="./dashboard.php"><i class="fa-solid fa-arrow-left fa-lg" style="color: #000000;"></i></a></a>
                 Student Management</h2>    
                 </div>
 
@@ -90,9 +90,10 @@
                         <td><a href="">View more</a></td>
                     </tr>
                 </table>
-                <div class="button-container">
-                <a href="./notification-post.php"><button class="viewmore-button">View More</button></a>
+               
                 </div>
+                <div class="button-container">
+                <a href="./student-management-search-students.php"><button class="viewmore-button">View More</button></a>
                 </div>
                        
                 <form action="" method="get">
@@ -164,11 +165,11 @@
                         <td><a href="">View more</a></td>
                     </tr>
                 </table>
+             
+                </div>
                 <div class="button-container">
-                <a href="./notification-post.php"><button class="viewmore-button">View More</button></a>
-                </div>
-                </div>
-                                  
+                <a href="./student-management-deleted-students.php"><button class="viewmore-button">View More</button></a>
+                </div>                
                 
             </div>
         </div>

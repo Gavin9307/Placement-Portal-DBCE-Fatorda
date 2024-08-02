@@ -1,16 +1,3 @@
-*,*::after,*::before {
-    padding: 0;
-    margin: 0;
-    box-sizing: border-box;
-    font-family: "Poppins", sans-serif;
-}
-
-:root {
-    --primary-blue : #0C07E4;
-    --primary-grey : #d9d9d9;
-    --primary-white : white;
-}
-
 #wrapper {
     position: relative;
 }
@@ -21,7 +8,7 @@
     display:flex ;
 }
 
-#jobopportunities {
+#placementcoordinator{
     color: var(--primary-blue);
     background-color: var(--primary-white);
 }
@@ -34,6 +21,12 @@
 .main-container-heading > a {
     cursor: pointer;
 }
+.main-container-header  {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px;
+}
 
 .sections {
     position: relative;
@@ -43,69 +36,60 @@
     margin-bottom: 50px;
 }
 
-.section-container {
-    display:flex;
-    flex-direction:row;
-    justify-content: space-between;
-}
-
 .form-adjust {
-    width: 50%;
+    width: 60%;
     margin: 0 auto;
 }
 
-.datebox {
+.inputbox {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-top: 20px;
-    margin-bottom: 20px;
+    margin-bottom: 10px;
 }
 .departmentbox {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 10px;
+    margin-bottom: 10px; 
 }
 .Checkbox{
     width: 350px;
     display:flex;
     justify-content: space-between;
 }
-.add-button {
-    padding-block: 5px;
-    padding-inline: 25px;
+.inputbox input, select{
+    border: 1px solid var(--secondary-grey);
+    width: 350px;
+    padding: 10px;
     border-radius: 5px;
-    border: none;
-    font-weight: 600;
-    font-size: 18px;
-    cursor: pointer;
-    background-color: var(--primary-blue);
-    color: var(--primary-white);  
+    margin-top: 5px;
+    outline: none;
 }
-.getreportbutton {
-display:flex;
-justify-content: flex-end;
+.inputbox :focus {
+    border: 1px solid var(--primary-blue);
 }
+
+.inputbox input::placeholder{
+    color:grey;
+}
+
+
 .sections  table {
     width: 100%;
 }
 .sections td {
-    padding: 8px;
+    padding: 14px;
     text-align: center;
 }
 .sections  a {
     cursor: pointer;
     color: blue;
 }
-.button-container-1{
+
+.button-container{
     display: flex;
     justify-content: flex-end;
-    margin-right:10px;
-}
-.button-container-2{
-    display: flex;
-    justify-content: space-evenly;
     margin-right:10px;
 }
 .viewmore-button {
@@ -120,13 +104,19 @@ justify-content: flex-end;
     background-color: var(--primary-blue);
     color: var(--primary-white); 
 }
-
-.sections-1 {
-    width: 100%;
-    height: 100%;
+.search-button {
+    padding-block: 5px;
+    padding-inline: 25px;
+    border-radius: 5px;
+    border: none;
+    font-weight: 600;
+    font-size: 18px;
+    cursor: pointer;
+    background-color: var(--primary-blue);
+    color: var(--primary-white);  
 }
-
-.responsive-iframe {
-    width: 100%;
-    height: 300px;   
+.search-button-container {
+    margin-top:20px;
+    display:flex;
+    justify-content: flex-end;
 }

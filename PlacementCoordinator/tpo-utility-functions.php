@@ -95,17 +95,40 @@ function getLiveJobListings()
         echo '</p>
                
                 <form action="" method="post">
-                    <input name="jid" type="hidden" value="'.$row["jid"].'">
+                    <input name="jid" type="hidden" value="' . $row["jid"] . '">
                     <button name="delete-listing" class="delete-button">Delete</button>
                 </form>
                 <a href="./job-live-listing-analysis.php?jid=' . $row["jid"] . '"><button class="analysis-button">Analysis</button></a>
-                <a href=""><button class="edit-button">Edit Details</button></a>
+                <a href="./job-edit.php?jid=' . $row["jid"] . '"><button class="edit-button">Edit Details</button></a>
             </div>';
     }
 }
 
 
 function getCompletedJobListings()
+{
+    global $conn;
+    $fetchJobQuery = "SELECT c.C_Name as cname, j.J_Due_date as duedate, SUM(ja.placed) as totalplaced
+        FROM company as c 
+        INNER JOIN jobposting as jp ON jp.C_id=c.C_id
+        INNER JOIN jobplacements as j ON jp.J_id=j.J_id
+        INNER JOIN jobapplication as ja ON ja.J_id=j.J_id
+        WHERE j.J_Due_date < CURRENT_DATE
+        GROUP BY c.C_Name, j.J_Due_date LIMIT 5;";
+    $fetchJob = $conn->prepare($fetchJobQuery);
+    $fetchJob->execute();
+    $result = $fetchJob->get_result();
+    while ($row = $result->fetch_assoc()) {
+        echo '<tr>
+                        <td>' . $row["duedate"] . '</td>
+                        <td>' . $row["cname"] . '</td>
+                        <td>' . $row["totalplaced"] . '</td>
+                        <td><a href="">View more</a></td>
+                    </tr>';
+    }
+}
+
+function getCompletedJobListingsAll()
 {
     global $conn;
     $fetchJobQuery = "SELECT c.C_Name as cname, j.J_Due_date as duedate, SUM(ja.placed) as totalplaced
@@ -152,7 +175,7 @@ WHERE ja.J_id = ? LIMIT 5;";
             echo '<td>Interested</td>';
         }
 
-        echo '<td><a href="">View More</a></td>
+        echo '<td><a href="job-eligible-students-details.php?jid=' . $jid . '&semail=' . $row["semail"] . '">View More</a></td>
                 <td><button class="remove-button">Remove</button></td>
             </tr>';
     }
@@ -196,3 +219,163 @@ WHERE ja.J_id = ? AND ja.Interest = ? LIMIT 5;";
             </tr>';
     }
 }
+
+function getEligibleStudentsAll()
+{
+    global $conn;
+    $jid = (int) $_GET["jid"];
+    $fetchJobEligibleQuery = "SELECT s.S_College_Email as semail,s.S_Fname as sfname,d.Dept_name as dname,ja.J_id as jid,ja.Interest as interest FROM student as s
+INNER JOIN jobapplication as ja ON s.S_College_Email=ja.S_College_Email
+INNER JOIN class as c ON c.Class_id=s.S_Class_id
+INNER JOIN department as d ON d.Dept_id=c.Dept_id
+WHERE ja.J_id = ? LIMIT 5;";
+    $fetchJobEligible = $conn->prepare($fetchJobEligibleQuery);
+    $fetchJobEligible->bind_param("i", $jid);
+    $fetchJobEligible->execute();
+    $result = $fetchJobEligible->get_result();
+    while ($row = $result->fetch_assoc()) {
+        echo '<tr>
+                <td>' . $row["sfname"] . '</td>
+                <td>' . $row["dname"] . '</td>';
+        if ($row['interest'] == 0) {
+            echo  '<td>Not Interested</td>';
+        } else {
+            echo '<td>Interested</td>';
+        }
+
+        echo '<td><a href="job-eligible-students-details.php?jid=' . $jid . '&semail=' . $row["semail"] . '">View More</a></td>
+                <td><button class="remove-button">Remove</button></td>
+            </tr>';
+    }
+}
+
+
+function getInterestedStudentsAll()
+{
+    global $conn;
+    $jid = (int) $_GET["jid"];
+    $fetchJobEligibleQuery = "SELECT s.S_College_Email as semail,ja.placed as placed,s.S_Fname as sfname,d.Dept_name as dname,ja.J_id as jid,ja.Interest as interest,jp.J_Due_date as duedate FROM student as s
+INNER JOIN jobapplication as ja ON s.S_College_Email=ja.S_College_Email
+INNER JOIN class as c ON c.Class_id=s.S_Class_id
+INNER JOIN department as d ON d.Dept_id=c.Dept_id
+INNER JOIN jobplacements as jp ON jp.J_id = ja.J_id
+WHERE ja.J_id = ? AND ja.Interest = ? LIMIT 5;";
+    $inte = 1;
+    $fetchJobEligible = $conn->prepare($fetchJobEligibleQuery);
+    $fetchJobEligible->bind_param("ii", $jid, $inte);
+    $fetchJobEligible->execute();
+    $result = $fetchJobEligible->get_result();
+    while ($row = $result->fetch_assoc()) {
+        echo '<tr>
+                <td>' . $row["sfname"] . '</td>
+                <td>' . $row["dname"] . '</td>';
+        if ($row['placed'] == 0) {
+            $retrieved_date = $row['duedate'];
+            $date_from_db = new DateTime($retrieved_date);
+            $current_date = new DateTime();
+            if ($date_from_db > $current_date) {
+                echo '<td>Pending</td>';
+            } else {
+                echo '<td>Rejected</td>';
+            }
+        } else {
+            echo '<td>Placed</td>';
+        }
+
+        echo '<td><a href="">View More</a></td>
+                <td><button class="remove-button">Remove</button></td>
+            </tr>';
+    }
+}
+
+
+function getEligibleStudentsDetails()
+{
+    global $conn;
+    $jid = (int) $_GET['jid'];
+    $semail = (string) $_GET['semail'];
+    $fetchStudentQuery = 'SELECT CONCAT_WS(" ",s.S_Fname,s.S_Mname,s.S_Lname) as name,s.S_Profile_pic as logo, s.S_Personal_Email as pemail,s.S_Phone_no as phno,s.S_Roll_no as rollno,c.Class_name as cname,d.Dept_name as dname,r.CGPA as cgpa FROM student AS s
+        INNER JOIN class AS c ON c.Class_id = s.S_Class_id
+        INNER JOIN department AS d ON c.Dept_id = d.Dept_id
+        INNER JOIN result AS r ON s.S_College_Email = r.S_College_Email
+        WHERE s.S_College_Email = ?';
+    $fetchStudent = $conn->prepare($fetchStudentQuery);
+    $fetchStudent->bind_param("s", $semail);
+    $fetchStudent->execute();
+    $result = $fetchStudent->get_result();
+    $row = $result->fetch_assoc();
+
+    echo '<div class="section-details">
+                        <p><strong>Name: </strong>' . $row["name"] . '</p>
+                        <p><strong>Department: </strong>' . $row["dname"] . '</p>
+                        <p><strong>Class: </strong>' . $row["cname"] . '</p>
+                        <p><strong>Contact Number: </strong>' . $row["phno"] . '</p>
+                        <p><strong>College Email: </strong>' . $semail . '</p>
+                        <p><strong>Personal Email: </strong>' . $row["pemail"] . '</p>
+                        <p><strong>Roll No.: </strong>' . $row["rollno"] . '</p>
+                        <p><strong>CGPA: </strong>' . $row["cgpa"] . '</p>
+                    </div>
+                    <div class="section-img">
+                        <img src="../Data/Students/Profile_Images/' . $row["logo"] . '" alt="">
+                        <div class="button-container">
+                            <a href="#"><button class="send-message-button">Send Message</button></a>
+                        </div>
+                    </div>';
+}
+
+
+function getInterestedStudentsDetails()
+{
+    global $conn;
+    $jid = (int) $_GET['jid'];
+    $semail = (string) $_GET['semail'];
+    $fetchStudentQuery = 'SELECT CONCAT_WS(" ",s.S_Fname,s.S_Mname,s.S_Lname) as name,s.S_Profile_pic as logo, s.S_Personal_Email as pemail,s.S_Phone_no as phno,s.S_Roll_no as rollno,c.Class_name as cname,d.Dept_name as dname,r.CGPA as cgpa FROM student AS s
+        INNER JOIN class AS c ON c.Class_id = s.S_Class_id
+        INNER JOIN department AS d ON c.Dept_id = d.Dept_id
+        INNER JOIN result AS r ON s.S_College_Email = r.S_College_Email
+        WHERE s.S_College_Email = ?';
+    $fetchStudent = $conn->prepare($fetchStudentQuery);
+    $fetchStudent->bind_param("s", $semail);
+    $fetchStudent->execute();
+    $result1 = $fetchStudent->get_result();
+    $row1 = $result1->fetch_assoc();
+
+    $fetchRoundsQuery = 'SELECT r.Round_no roundno,sr.RoundStatus roundstatus FROM rounds as r 
+INNER JOIN studentrounds AS sr ON sr.R_id=r.R_id
+WHERE r.J_id = ? AND sr.S_College_Email= ?;';
+
+    $fetchRounds = $conn->prepare($fetchRoundsQuery);
+    $fetchRounds->bind_param("is",$jid,$semail);
+    $fetchRounds->execute();
+    $result2 = $fetchRounds->get_result();
+    $row2 = $result2->fetch_assoc();
+
+    
+    echo '<div class="section-details">
+                        <p><strong>Name: </strong>' . $row1["name"] . '</p>
+                        <p><strong>Department: </strong>' . $row1["dname"] . '</p>
+                        <p><strong>Class: </strong>' . $row1["cname"] . '</p>
+                        <p><strong>Contact Number: </strong>' . $row1["phno"] . '</p>
+                        <p><strong>College Email: </strong>' . $semail . '</p>
+                        <p><strong>Personal Email: </strong>' . $row1["pemail"] . '</p>
+                        <p><strong>Roll No.: </strong>' . $row1["rollno"] . '</p>
+                        <p><strong>CGPA: </strong>' . $row1["cgpa"] . '</p>
+                        <form action="" method="post">
+                        <p>
+                            <strong>Round ' . $row2["roundno"] . ': </strong>
+                            <select name="round_1" id="" >
+                                <option value="pending">Pending</option>
+                                <option value="passed">Passed</option>
+                                <option value="rejected">Rejected</option>
+                            </select>
+                        </p>
+                    </form>    
+                    </div>
+                    <div class="section-img">
+                        <img src="../Data/Students/Profile_Images/' . $row1["logo"] . '" alt="">
+                        <div class="button-container">
+                            <a href="#"><button class="send-message-button">Send Message</button></a>
+                        </div>
+                    </div>';
+}
+

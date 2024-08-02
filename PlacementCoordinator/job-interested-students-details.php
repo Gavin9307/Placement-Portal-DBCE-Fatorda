@@ -45,7 +45,9 @@ if (!isset($_GET["jid"]) && !isset($_GET["semail"])) {
                     </div>
                 </div> -->
                 <div class="sections">
-                   <?php getEligibleStudentsDetails(); ?>
+                    <?php getInterestedStudentsDetails(); ?>
+
+                    
                 </div>
 
             </div>

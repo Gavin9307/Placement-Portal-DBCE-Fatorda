@@ -35,7 +35,7 @@
                     <tr>
                         <td>Nimish</td>
                         <td>MECH</td>
-                        <td><a href="">View more</a></td>
+                        <td><a href="./Placement-Coordinator-Details.php">View more</a></td>
                     </tr>
                     <tr>
                         <td>Syndroy</td>

@@ -46,18 +46,9 @@ if (isset($_POST["delete-listing"])) {
 
             <div class="main-container">
                 <div class="main-container-header">
-                    <h2 class="main-container-heading"><a href="./dashboard.html"><i class="fa-solid fa-arrow-left fa-lg" style="color: #000000;"></i></a>
+                    <h2 class="main-container-heading"><a href="./job-management.php"><i class="fa-solid fa-arrow-left fa-lg" style="color: #000000;"></i></a>
                         Job Management</h2>
-                    <a href="./job-post.php"><button class="add-button">Post a Job</button></a>
                 </div>
-                <h3>Live Listings</h3>
-
-
-                <?php
-                    getLiveJobListings();
-                ?>
-
-
                 <h3>Completed Listings</h3>
                 <div class="sections">
                     <table>
@@ -67,12 +58,12 @@ if (isset($_POST["delete-listing"])) {
                             <th>Students Placed</th>
                             <th>Details</th>
                         </tr>
-                        <?php getCompletedJobListings(); ?>
+                        <?php getCompletedJobListingsAll(); ?>
 
                     </table>
-                    <div class="button-container">
-                        <a href="./job-completed-listings.php"><button class="viewmore-button">View More</button></a>
-                    </div>
+                    <!-- <div class="button-container">
+                        <a href="./notification-post.php"><button class="viewmore-button">View More</button></a>
+                    </div> -->
                 </div>
             </div>
         </div>

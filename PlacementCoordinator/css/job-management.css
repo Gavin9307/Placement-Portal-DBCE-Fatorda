@@ -105,7 +105,10 @@
     right: 200px; 
     bottom: 20px;
 }
-
+#jobmanagement{
+    color: var(--primary-blue);
+    background-color: var(--primary-white);
+}
 .sections .delete-button {
     margin-top: 10px;
     padding-block: 5px;

@@ -16,6 +16,11 @@
     position: relative;
 }
 
+#jobmanagement{
+    color: var(--primary-blue);
+    background-color: var(--primary-white);
+}
+
 /* Main Content */
 .container {
     width: 100%;
@@ -90,15 +95,17 @@
     border: 2px solid red;
 }
 .section-details{
-    width:50%;
+    width:100%;
     margin-top:15px;
+    margin-bottom:15px;
 }
 .section-img{
+    margin-top:15px;
+    margin-bottom:15px;
     display:flex;
-    width:75%;
+    width:100%;
     align-items: center;
     flex-direction: column;
-
 }
 .section-img > img {
     border-radius: 50%;
@@ -121,4 +128,20 @@
     cursor: pointer;
     background-color: var(--primary-blue);
     color: var(--primary-white); 
+}
+
+.inputbox input, select{
+    border: 1px solid var(--secondary-grey);
+    width: 350px;
+    padding: 10px;
+    border-radius: 5px;
+    margin-top: 5px;
+    outline: none;
+}
+select:focus {
+    border: 1px solid var(--primary-blue);
+}
+
+input::placeholder{
+    color:grey;
 }

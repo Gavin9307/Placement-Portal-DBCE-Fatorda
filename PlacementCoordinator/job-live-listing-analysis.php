@@ -32,7 +32,7 @@ if (!isset($_GET["jid"])) {
 
             <div class="main-container">
                 <div class="main-container-header">
-                    <h2 class="main-container-heading"><a href="./job-management.php"><i class="fa-solid fa-arrow-left fa-lg" style="color: #000000;"></i></a>
+                    <h2 class="main-container-heading"><a href="<?php echo './job-live-listing-analysis.php?jid='.$_GET["jid"]; ?>"><i class="fa-solid fa-arrow-left fa-lg" style="color: #000000;"></i></a>
                         Details</h2>
                     <!-- <div class="company-container">
                         <p>Google</p>
@@ -56,7 +56,7 @@ if (!isset($_GET["jid"])) {
 
                     </table>
                     <div class="button-container">
-                        <a href="#"><button class="viewmore-button">View More</button></a>
+                        <a href="<?php echo './job-eligible-students.php?jid='.$_GET["jid"]; ?>"><button class="viewmore-button">View More</button></a>
                     </div>
                 </div>
 
@@ -77,7 +77,7 @@ if (!isset($_GET["jid"])) {
                        
                     </table>
                     <div class="button-container">
-                        <a href="#"><button class="viewmore-button">View More</button></a>
+                        <a href="<?php echo './job-interested-students.php?jid='.$_GET["jid"]; ?>"><button class="viewmore-button">View More</button></a>
                     </div>
                 </div>
                 <button class="getreport-button">Get Report</button>

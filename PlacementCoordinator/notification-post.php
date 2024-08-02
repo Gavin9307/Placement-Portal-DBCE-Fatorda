@@ -211,7 +211,7 @@ if (isset($_POST["subject"])) {
                         <textarea name="subject" class="textarea-subject" placeholder="Subject" id=""></textarea>
                         <h3>Message:</h3>
                         <textarea name="message" class="textarea-message" placeholder="Message" id=""></textarea>
-                        <a href="./notification-post.php"><button class="add-button">Post Notifications</button></a>
+                        <a href="./notifications.php"><button class="add-button">Post Notifications</button></a>
                     </form>
                 </div>
             </div>

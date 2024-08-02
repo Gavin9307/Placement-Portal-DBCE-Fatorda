@@ -33,7 +33,7 @@
     margin-top: 30px;
     box-shadow: 5px 10px 12.3px 5px rgba(0, 0, 0, .25);
     padding: 20px;
-    margin-bottom: 50px;
+    margin-bottom: 40px;
 }
 
 .form-adjust {
@@ -90,10 +90,8 @@
 .button-container{
     display: flex;
     justify-content: flex-end;
-    margin-right:10px;
 }
 .viewmore-button {
-    margin-top: 10px;
     padding-block: 5px;
     padding-inline: 25px;
     border-radius: 5px;

@@ -74,9 +74,10 @@
 
 
                 </div>
+                <h3><strong>Student Details</strong></h3>
 
                 <div class="sections">
-                    <h3><strong>Student Details</strong></h3>
+                    
                     <table>
                         <tr>
                             <th>Name</th>

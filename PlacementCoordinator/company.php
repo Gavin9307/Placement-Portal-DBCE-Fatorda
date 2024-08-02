@@ -69,7 +69,7 @@ function get_companies()
                 <a href="./company-create.php"><button id="add-button">Add Company</button></a>
                 <div class="sections">
                     <div class="company-container">
-                        <form class="search-container" action="./companies.php" method="get">
+                        <form class="search-container" action="" method="get">
                             <input type="text" name="company_search" placeholder="Company name">
                             <button>Submit</button>
                         </form>

@@ -16,7 +16,7 @@
 
             <div class="main-container">
                 <div class="main-container-header">
-                <h2 class="main-container-heading"><a href="./dashboard.html"><a href="./dashboard.php"><a href="./student-management.php"><i class="fa-solid fa-arrow-left fa-lg" style="color: #000000;"></i></a></a></a>
+                <h2 class="main-container-heading"><a href="./dashboard.php"><i class="fa-solid fa-arrow-left fa-lg" style="color: #000000;"></i></a>
                     Profile</h2>
                        
                 </div>
@@ -36,7 +36,7 @@
 
                     </div>
                     <div class= "sec2">   
-                        <a href="#"><button class="add-button">Update</button></a>
+                        <a href="./tpo-edit-profile.php"><button class="add-button">Update Profile</button></a>
                     </div>
                 </div>
 

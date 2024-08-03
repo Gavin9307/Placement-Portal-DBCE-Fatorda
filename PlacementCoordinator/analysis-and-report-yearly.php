@@ -74,7 +74,6 @@
                 <h3><strong>Student Details</strong></h3>
 
                 <div class="sections">
-<<<<<<< Updated upstream
                     
                     <table>
                         <tr>
@@ -123,56 +122,6 @@
                             </div>
                         </div>
                     </div>
-=======
-                    <h3><strong>Student Details</strong></h3>
-                <table>
-                    <tr>
-                        <th>Name</th>
-                        <th>Company</th>
-                        <th>Offered Salary</th>
-                        <th>Joining Date</th>
-                        <th>Details</th>
-                    </tr>
-                    <tr>
-                        <td>Nimish</td>
-                        <td>Google</td>
-                        <td>30,000</td>
-                        <td>2/3/2024</td>
-                        <td><a href="">View more</a></td>
-                    </tr>
-                    <tr>
-                        <td>Patric</td>
-                        <td>Facebook</td>
-                        <td>20,000</td>
-                        <td>30/3/2024</td>
-                        <td><a href="">View more</a></td>
-                    </tr>
-                    <tr>
-                        <td>Gavin</td>
-                        <td>Google</td>
-                        <td>50,000</td>
-                        <td>12/11/2024</td>
-                        <td><a href="">View more</a></td>
-                    </tr>
-                    <tr>
-                        <td>Stephen</td>
-                        <td>Reliance</td>
-                        <td>40,000</td>
-                        <td>24/5/2024</td>
-                        <td><a href="">View more</a></td>
-                    </tr>
-                </table>
-                <div class="button-container-1">
-                <div class="dropdown">
-        <button class="viewmore-button">View More</button>
-        <div class="dropdown-content">
-            <a href="./notification-post.php">Option 1</a>
-            <a href="./another-link.php">Option 2</a>
-            <a href="./yet-another-link.php">Option 3</a>
-        </div>
-    </div>
-                </div>
->>>>>>> Stashed changes
                 </div>
                 <h3>Other Reports:</h3>
                 <div class="button-container-2">

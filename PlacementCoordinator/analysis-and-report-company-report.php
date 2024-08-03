@@ -34,7 +34,7 @@
 
                             <div class="inputbox">
                                 <div>
-                                    <label for=""><strong>Company</strong></label>
+                                    <label for=""><strong>Company:</strong></label>
                                     <input type="text" placeholder="Company">
                                 </div>
                             </div>

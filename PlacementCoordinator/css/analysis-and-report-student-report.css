@@ -70,6 +70,11 @@
     margin-bottom: 15px;
     margin-left:30px; 
 }
+.inpbox{
+    display:flex;
+    justify-content: space-between;
+    margin-right: 50px;
+}
 
 .inputbox select {
     border: 1px solid var(--secondary-grey);

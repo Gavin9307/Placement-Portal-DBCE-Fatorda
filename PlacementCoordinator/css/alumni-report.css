@@ -66,19 +66,56 @@
     border: 1px solid var(--secondary-grey);
     padding: 10px;
     border-radius: 5px;
-    margin-top: 5px;
     outline: none;  
 }
 .departmentbox {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 10px;
+    margin-bottom: 20px;
 }
 .Checkbox{
     width: 350px;
     display:flex;
     justify-content: space-between;
+}
+.inputbox{
+    display:flex;
+    margin-bottom:20px;
+}
+
+label {
+    margin-top:8px;
+}
+
+.inputbox input,select {
+    width: 250px;
+    padding: 10px;
+    border-radius: 5px;
+    outline: none;
+}
+.salary-container{
+    display:flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+.minsal{
+    display:flex;
+}
+.minsal input{
+    width:150px;
+    padding: 10px;
+    border-radius: 5px;
+    outline: none;
+}
+.maxsal{
+    display:flex;
+}
+.maxsal input{
+    width:150px;
+    padding: 10px;
+    border-radius: 5px;
+    outline: none;
 }
 .add-button {
     padding-block: 5px;
@@ -128,18 +165,7 @@
     justify-content: space-evenly;
     margin-right:10px;
 }
-.viewmore-button {
-    margin-top: 10px;
-    padding-block: 5px;
-    padding-inline: 25px;
-    border-radius: 5px;
-    border: none;
-    font-weight: 600;
-    font-size: 18px;
-    cursor: pointer;
-    background-color: var(--primary-blue);
-    color: var(--primary-white); 
-}
+
 .sortby-container{
     display:flex;
     justify-content: space-between;

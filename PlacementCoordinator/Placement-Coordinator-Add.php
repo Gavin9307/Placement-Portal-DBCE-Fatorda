@@ -20,7 +20,7 @@
                 Placement Coordinators</h2>    
                 </div>
                 <h2 class="main-container-heading"><a href="./dashboard.html"><i class="fa-solid fa-lg" style="color: #000000;"></i></a>
-                Nimish Noronha</h2> 
+                Add Placement Coordinator</h2> 
                 <div class="sections">
                     <div class = "sec1">
                     <form action="" method="post" enctype="multipart/form-data">
@@ -45,13 +45,17 @@
                                 <label for="">Email :</label>
                                 <input name="email" type="text" placeholder="Email">
                     </div>
+                    <div class="inputbox">
+                                <label for="">Password :</label>
+                                <input name="password" type="text" placeholder="Password">
+                    </div>
                     </div>
                     </form>
                     </div>
                     <div class= "sec2">   
                     <img src="../Assets/profile.jpg" alt="">
                     <div><a href="#"><button class="add-button">Change Image</button></a></div>
-                    <div><a href="./Placement-Coordinator.php"><button class="add-button">Update</button></a></div>
+                    <div><a href="./Placement-Coordinator.php"><button class="add-button">Add</button></a></div>
                     </div>
                 </div>         
              

@@ -59,7 +59,7 @@
                                     </div>
                                 </div>
                                 <div class="update-position">
-                                    <button type="submit" class="update-button">Update</button>
+                                <a href="./tpo-profile.php" class="update-button">Update</a>
                                 </div>
                             </form>
                         </div>

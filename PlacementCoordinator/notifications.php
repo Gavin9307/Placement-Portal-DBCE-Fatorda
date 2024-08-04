@@ -37,7 +37,7 @@ WHERE N.Notification_ID = ?;";
 
             <div class="main-container">
                 <div class="main-container-header">
-                <h2 class="main-container-heading"><a href="./dashboard.html"><i class="fa-solid fa-arrow-left fa-lg" style="color: #000000;"></i></a>
+                <h2 class="main-container-heading"><a href="./dashboard.php"><i class="fa-solid fa-arrow-left fa-lg" style="color: #000000;"></i></a>
                     Notifications</h2>
                     <a href="./notification-post.php"><button class="add-button">Post Notifications</button></a>    
                 </div>

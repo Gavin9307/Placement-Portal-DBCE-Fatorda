@@ -1,24 +1,115 @@
 <?php
-require "../conn.php";
-require "../restrict.php";
-include "../utility_functions.php";
+require "./conn.php";
+require "./restrict.php";
+include "./utility_functions.php";
 global $conn;
+
 if (!isset($_SESSION)) {
     session_start();
 }
 
-if (isset($_POST["update_profile"])) {
-    $updateQuery = "UPDATE student as s SET s.S_Fname = ?,s.S_Mname = ?,s.S_Lname = ?,s.S_Personal_Email = ?,s.S_Address = ?,s.S_Phone_no = ?,s.S_10th_Perc = ?,s.S_12th_Perc = ?
-    WHERE s.S_College_Email = ?";
-    $result = $conn->prepare($updateQuery);
-    $result->bind_param("ssssssdds", $_POST["fname"], $_POST["mname"], $_POST["lname"], $_POST["pemail"], $_POST["addr"], $_POST["phno"], $_POST["per10"], $_POST["per12"], $_SESSION["user_email"]);
-    $result->execute();
+if (isset($_POST["create_profile"])) {
+    function handle_empty($input)
+    {
+        return empty($input) ? NULL : htmlspecialchars($input);
+    }
 
-    $_SESSION['profile_updated'] = true;
-    echo "<script type='text/javascript'>window.location.href = window.location.href;</script>";
-    exit();
+    // Debugging statements
+    echo '<pre>';
+    print_r($_POST);
+    echo '</pre>';
+
+    $StudentFName = handle_empty($_POST['fname']);
+    $StudentMName = empty($_POST['mname']) ? "" : $_POST['mname'];
+    $StudentLName = handle_empty($_POST['lname']);
+    $StudentAddress = handle_empty($_POST['address']);
+    $StudentPercentage_10 = handle_empty($_POST['per10']);
+    $StudentPercentage_12 = handle_empty($_POST['per12']);
+    $StudentPEmail = handle_empty($_POST['pemail']);
+    $StudentClass = handle_empty($_POST['class']);
+    $StudentYOA = handle_empty($_POST['yoa']);  // Check if this is set correctly
+    $StudentImage = "Default_Profile_Pic.jpg";
+    $StudentRollNo = handle_empty($_POST['rollno']);
+    $StudentPhoneNo = handle_empty($_POST['phno']);
+    $StudentPRN = handle_empty($_POST['prn']);
+    $StudentSem1 = handle_empty($_POST['sem1']);
+    $StudentSem2 = handle_empty($_POST['sem2']);
+    $StudentSem3 = handle_empty($_POST['sem3']);
+    $StudentSem4 = handle_empty($_POST['sem4']);
+    $StudentSem5 = handle_empty($_POST['sem5']);
+    $StudentSem6 = handle_empty($_POST['sem6']);
+    $StudentSem7 = handle_empty($_POST['sem7']);
+    $StudentSem8 = handle_empty($_POST['sem8']);
+    $StudentCGPA = handle_empty($_POST['cgpa']);
+    $StudentBacks = handle_empty($_POST['backs']);
+
+    $updateStudentQuery = "UPDATE student SET 
+        S_Fname = ?, 
+        S_Mname = ?, 
+        S_Lname = ?, 
+        S_Personal_Email = ?, 
+        S_Address = ?, 
+        S_Phone_no = ?, 
+        S_Roll_no = ?, 
+        S_PR_No = ?, 
+        S_10th_Perc = ?, 
+        S_12th_Perc = ?, 
+        S_Profile_pic = ?, 
+        S_Class_id = ?, 
+        S_Year_of_Admission = ?, 
+        Gender = ?, 
+        registration_complete = ? 
+        WHERE S_College_Email = ?";
+
+    // Prepare the statement
+    $stmt = $conn->prepare($updateStudentQuery);
+
+    // Use 1 for registration_complete since it's a boolean flag (assuming 1 for true)
+    $registrationComplete = 1;
+
+    // Bind parameters
+    $stmt->bind_param(
+        "ssssssssddssssis",
+        $StudentFName,
+        $StudentMName,
+        $StudentLName,
+        $StudentPEmail,
+        $StudentAddress,
+        $StudentPhoneNo,
+        $StudentRollNo,
+        $StudentPRN,
+        $StudentPercentage_10,
+        $StudentPercentage_12,
+        $StudentImage,
+        $StudentClass,
+        $StudentYOA,
+        $_POST['gender'],
+        $registrationComplete,
+        $_SESSION['user_email']
+    );
+
+
+    if ($stmt->execute()) {
+        $semesters = [$StudentSem1, $StudentSem2, $StudentSem3, $StudentSem4, $StudentSem5, $StudentSem6, $StudentSem7, $StudentSem8];
+        foreach ($semesters as &$sem) {
+            if (empty($sem)) {
+                $sem = 0;
+            }
+        }
+
+        $insertResultsQuery = "INSERT INTO result (S_College_Email, Sem1_SGPA, Sem2_SGPA, Sem3_SGPA, Sem4_SGPA, Sem5_SGPA, Sem6_SGPA, Sem7_SGPA, Sem8_SGPA, CGPA, has_backlogs) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        $stmt = $conn->prepare($insertResultsQuery);
+        $stmt->bind_param("sdddddddddd", $_SESSION['user_email'], $semesters[0], $semesters[1], $semesters[2], $semesters[3], $semesters[4], $semesters[5], $semesters[6], $semesters[7], $StudentCGPA, $StudentBacks);
+        $stmt->execute();
+
+        echo "Profile created successfully!";
+
+        header("Location: ./Students/dashboard.php");
+        exit;
+    } else {
+        echo "Error: " . $stmt->error;
+    }
 }
-
 ?>
 
 <!DOCTYPE html>
@@ -48,16 +139,16 @@ if (isset($_POST["update_profile"])) {
         </header>
         <main>
             <div class="main-container">
-            <h3>Edit Profile :</h3>
+                <h3>Create Profile :</h3>
                 <?php
-                echo '<form action="" method="post" enctype="multipart/form-data" class="profile-image">
-                   <img src="../Data/Students/Profile_Images/" alt="Profile Picture" id="profile-image">
-                    <input type="file" name="profile-picture" id="profile-picture-input" style="display:none;">
-                    <div class="upload-button-container">
-                        <button type="button" onclick="document.getElementById(\'profile-picture-input\').click();" class="change-picture">Select Picture</button>
-                        <button type="submit" name="upload" class="change-picture">Upload Picture</button>
-                    </div>
-                </form>';
+                // echo '<form action="" method="post" enctype="multipart/form-data" class="profile-image">
+                //    <img src="../Data/Students/Profile_Images/" alt="Profile Picture" id="profile-image">
+                //     <input type="file" name="profile-picture" id="profile-picture-input" style="display:none;">
+                //     <div class="upload-button-container">
+                //         <button type="button" onclick="document.getElementById(\'profile-picture-input\').click();" class="change-picture">Select Picture</button>
+                //         <button type="submit" name="upload" class="change-picture">Upload Picture</button>
+                //     </div>
+                // </form>';
                 ?>
                 <div class="sections">
                     <form action="" method="post">
@@ -65,7 +156,7 @@ if (isset($_POST["update_profile"])) {
                         <div class="form-adjust">
                             <div>
                                 <label for="fname">First Name</label><br>
-                                <input type="text" name="fname">
+                                <input type="text" name="fname" required>
                             </div>
                             <div>
                                 <label for="mname">Middle Name</label><br>
@@ -73,49 +164,69 @@ if (isset($_POST["update_profile"])) {
                             </div>
                             <div>
                                 <label for="lname">Last Name</label><br>
-                                <input type="text" name="lname">
+                                <input type="text" name="lname" required>
+                            </div>
+                            <div>
+                                <label for="gender">Gender</label><br>
+                                <select type="text" name="gender">
+                                    <option value="" selected>Choose Gender</option>
+                                    <option value="M">Male</option>
+                                    <option value="F">Female</option>
+                                </select>
                             </div>
                         </div>
                         <div class="form-adjust">
                             <div>
                                 <label for="phno">Contact No</label><br>
-                                <input type="text" name="phno">
+                                <input type="text" name="phno" required>
                             </div>
                             <div>
                                 <label for="addr">Address</label><br>
-                                <input type="text" name="addr">
+                                <input type="text" name="address" required>
                             </div>
                             <div>
                                 <label for="pemail">Personal Email</label><br>
-                                <input type="text" name="pemail">
+                                <input type="text" name="pemail" required>
                             </div>
+                            <div>
+                                <label for="yoa">Year of Admission</label><br>
+                                <input type="number" name="yoa" min="2020" max="2035" step="1" value="2024" required />
+                            </div>
+                        </div>
+                        <div class="form-adjust">
+
                         </div>
 
                         <h3>College Information:</h3>
                         <div class="form-adjust">
                             <div>
                                 <label for="cemail">College Email</label><br>
-                                <input type="text" name="cemail">
+                                <input type="text" name="cemail" disabled value="<?php echo $_SESSION['user_email'] ?>">
                             </div>
                             <div>
                                 <label for="prn">PR No.</label><br>
-                                <input type="text" name="prn">
+                                <input type="text" name="prn" required>
                             </div>
 
                             <div>
                                 <label for="rollno">Roll No.</label><br>
-                                <input type="text" name="rollno">
+                                <input type="text" name="rollno" required>
                             </div>
-                        </div>
-                        <div class="form-adjust">
                             <div>
                                 <label for="class">Class</label><br>
-                                <input type="text" name="class">
-                            </div>
+                                <select type="text" name="class">
+                                    <option value="" selected>Choose Class</option>
+                                    <?php
+                                    $fetchDeptQuery = "SELECT * FROM `class`";
+                                    $fetchDept = $conn->prepare($fetchDeptQuery);
+                                    $fetchDept->execute();
+                                    $result = $fetchDept->get_result();
 
-                            <div>
-                                <label for="department">Department</label><br>
-                                <input type="text" name="department">
+                                    while ($row = $result->fetch_assoc()) {
+                                        echo '<option value="' . $row['Class_id'] . '">' . $row["Class_name"] . '</option >';
+                                    }
+                                    ?>
+                                </select>
                             </div>
                         </div>
                         <h3>Other Information:</h3>
@@ -135,7 +246,7 @@ if (isset($_POST["update_profile"])) {
                         <div class="form-adjust">
                             <div>
                                 <label for="sem1">Sem 1</label><br>
-                                <input type="number" name="sem1" step="0.01" min="0" max="10" >
+                                <input type="number" name="sem1" step="0.01" min="0" max="10">
                             </div>
 
                             <div>
@@ -186,15 +297,7 @@ if (isset($_POST["update_profile"])) {
                             </div>
                         </div>
 
-                        <button id="myBtn" name="update_profile">Update</button>
-
-                        <div id="myModal" class="modal">
-                            <!-- Modal content -->
-                            <div class="modal-content">
-                                <span class="close">&times;</span>
-                                <p>Your Profile has been updated successfully</p>
-                            </div>
-                        </div>
+                        <button id="myBtn" name="create_profile">Create Profile</button>
                     </form>
                 </div>
             </div>

@@ -123,7 +123,19 @@ form h3 {
     outline: none;
     border: 1px solid var(--secondary-grey);
 }
-
+.upload-button-container {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+    align-items: end;
+}
+.upload-button-container input {
+    width: 250px;
+    padding: 7px;
+    border-radius: 5px;
+    outline: none;
+    border: 1px solid var(--secondary-grey);
+}
 .form-adjust select {
     width: 100%;
     padding: 10px;

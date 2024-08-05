@@ -76,7 +76,7 @@
                             </div>
 
                             <div class="getreportbutton">
-                                <a href="http://192.168.21.72/graphs/export_to_google_sheets.php"><button class="add-button">Get Report</button></a>
+                                <a href="./GoogleSheetsReports/export_to_google_sheets.php"><button class="add-button">Get Report</button></a>
                             </div>
                         </form>
                     </div>

@@ -379,3 +379,83 @@ WHERE r.J_id = ? AND sr.S_College_Email= ?;';
                     </div>';
 }
 
+
+function fetchStudents($isDeleted, $sname = null, $departments = [], $gender = null) {
+    global $conn;
+    $table = $isDeleted ? 'deletedstudents' : 'student';
+    $query = "SELECT s.S_College_Email as semail, s.S_Fname as fname, s.S_Lname as lname, c.Class_name as cname, d.Dept_name as dname 
+              FROM $table as s
+              INNER JOIN class as c ON c.Class_id = s.S_Class_id
+              INNER JOIN department as d ON d.Dept_id = c.Dept_id 
+              WHERE 1=1";
+    
+    $params = [];
+    $types = "";
+
+    if (!is_null($sname)) {
+        $query .= " AND s.S_Fname LIKE ?";
+        $params[] = "%$sname%";
+        $types .= "s";
+    }
+
+    if (!is_null($gender)) {
+        $query .= " AND s.gender = ?";
+        $params[] = $gender;
+        $types .= "s";
+    }
+
+    if (!empty($departments)) {
+        $placeholders = implode(',', array_fill(0, count($departments), '?'));
+        $query .= " AND d.Dept_name IN ($placeholders)";
+        $params = array_merge($params, $departments);
+        $types .= str_repeat("s", count($departments));
+    }
+
+    $query .= " LIMIT 5"; // Adjust the LIMIT as needed
+
+    $stmt = $conn->prepare($query);
+    if ($params) {
+        $stmt->bind_param($types, ...$params);
+    }
+    $stmt->execute();
+    return $stmt->get_result();
+}
+
+function fetchStudentsAll($isDeleted, $sname = null, $departments = [], $gender = null) {
+    global $conn;
+    $table = $isDeleted ? 'deletedstudents' : 'student';
+    $query = "SELECT s.S_College_Email as semail, s.S_Fname as fname, s.S_Lname as lname, c.Class_name as cname, d.Dept_name as dname 
+              FROM $table as s
+              INNER JOIN class as c ON c.Class_id = s.S_Class_id
+              INNER JOIN department as d ON d.Dept_id = c.Dept_id 
+              WHERE 1=1";
+    
+    $params = [];
+    $types = "";
+
+    if (!is_null($sname)) {
+        $query .= " AND s.S_Fname LIKE ?";
+        $params[] = "%$sname%";
+        $types .= "s";
+    }
+
+    if (!is_null($gender)) {
+        $query .= " AND s.gender = ?";
+        $params[] = $gender;
+        $types .= "s";
+    }
+
+    if (!empty($departments)) {
+        $placeholders = implode(',', array_fill(0, count($departments), '?'));
+        $query .= " AND d.Dept_name IN ($placeholders)";
+        $params = array_merge($params, $departments);
+        $types .= str_repeat("s", count($departments));
+    }
+
+    $stmt = $conn->prepare($query);
+    if ($params) {
+        $stmt->bind_param($types, ...$params);
+    }
+    $stmt->execute();
+    return $stmt->get_result();
+}

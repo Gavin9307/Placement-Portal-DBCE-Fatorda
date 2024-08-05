@@ -151,12 +151,12 @@ if (isset($_POST["subject"])) {
                                     $fetchDepartment = $conn->prepare($fetchDepartmentQuery);
                                     $fetchDepartment->execute();
                                     $result = $fetchDepartment->get_result();
-
+                                    
                                     while ($row = $result->fetch_assoc()) {
                                         echo '<div>
-                                                    <input name="' . htmlspecialchars($row["dname"]) . '" type="checkbox">
-                                                    <label for="">' . htmlspecialchars($row["dname"]) . '</label>
-                                                </div>';
+                                                <input name="departments[]" value="' . htmlspecialchars($row["dname"]) . '" type="checkbox">
+                                                <label for="">' . htmlspecialchars($row["dname"]) . '</label>
+                                              </div>';
                                     }
                                     ?>
                                 </div>

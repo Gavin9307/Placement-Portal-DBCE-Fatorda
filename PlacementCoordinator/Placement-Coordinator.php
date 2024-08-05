@@ -6,7 +6,11 @@
     <link rel="stylesheet" href="./css/Placement-Coordinator.css">
     <title>Placement Coordinators</title>
 </head>
+<?php 
 
+    
+
+?>
 <body>
 <div id="wrapper">
         <?php include './header.php' ?>

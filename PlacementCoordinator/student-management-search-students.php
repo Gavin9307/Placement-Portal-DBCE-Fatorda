@@ -1,3 +1,29 @@
+<?php
+require "../conn.php";
+require "../restrict.php";
+include "./tpo-utility-functions.php";
+global $conn;
+
+if (!isset($_SESSION)) {
+    session_start();
+}
+
+
+$studentSearch = false;
+$d_studentSearch = false;
+
+if (isset($_POST["student-search-button"])) {
+    $sname = !empty($_POST['sname']) ? $_POST['sname'] : null;
+    $departments = !empty($_POST['departments']) ? $_POST['departments'] : [];
+    $gender = !empty($_POST['gender']) ? $_POST['gender'] : null;
+
+    $studentsResult = fetchStudentsAll(false, $sname, $departments, $gender);
+    $studentSearch = true;
+} else {
+    $studentsResult = fetchStudentsAll(false);
+}
+
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -8,7 +34,7 @@
 </head>
 
 <body>
-<div id="wrapper">
+    <div id="wrapper">
         <?php include './header.php' ?>
 
         <div class="container">
@@ -16,73 +42,74 @@
 
             <div class="main-container">
                 <div class="main-container-header">
-                <h2 class="main-container-heading"><a href="./dashboard.html"><a href="./student-management.php"><i class="fa-solid fa-arrow-left fa-lg" style="color: #000000;"></i></a></a>
-                Student Management</h2>    
+                    <h2 class="main-container-heading"><a href="./dashboard.html"><a href="./student-management.php"><i class="fa-solid fa-arrow-left fa-lg" style="color: #000000;"></i></a></a>
+                        Student Management</h2>
                 </div>
 
-            
-                    <form action="" method="get">
-                        <h3>Student Search</h3>
-                        <div class="form-adjust">
-                            <form action="">
+
+                    <h3>Student Search</h3>
+                    <div class="form-adjust">
+
+                        <form action="" method="post">
                             <div class="inputbox">
                                 <label for="">Student Name:</label>
-                                <input type="text" placeholder="Enter Student Name">
+                                <input type="text" name="sname" placeholder="Enter Student Name">
                             </div>
 
-                             <div class="departmentbox">
+                            <div class="departmentbox">
                                 <label for="">Department:</label>
-                            <div class="Checkbox"> 
-                                <div><input type="checkbox">  
-                                <label for="">ECS</label></div>
-                                <div><input type="checkbox">  
-                                <label for="">COMP</label></div>
-                                <div><input type="checkbox">  
-                                <label for="">MECH</label></div>
-                                <div><input type="checkbox">  
-                                <label for="">CIVIL</label></div>
+                                <div class="Checkbox">
+                                    <?php
+                                    $fetchDepartmentQuery = "SELECT Dept_name as dname FROM department;";
+                                    $fetchDepartment = $conn->prepare($fetchDepartmentQuery);
+                                    $fetchDepartment->execute();
+                                    $result = $fetchDepartment->get_result();
+
+                                    while ($row = $result->fetch_assoc()) {
+                                        echo '<div>
+                                            <input name="departments[]" value="' . htmlspecialchars($row["dname"]) . '" type="checkbox">
+                                            <label for="">' . htmlspecialchars($row["dname"]) . '</label>
+                                          </div>';
+                                    }
+                                    ?>
                                 </div>
-                             </div>
-                            
+                            </div>
+
                             <div class="inputbox">
                                 <label for="">Gender:</label>
-                                <select name="" id="">
-                                    <option value=""disabled selected>Select</option>
-                                    <option value="">Male</option>
-                                    <option value="">Female</option>
+                                <select name="gender" id="">
+                                    <option value="" selected>Select</option>
+                                    <option value="M">Male</option>
+                                    <option value="F">Female</option>
                                 </select>
                             </div>
                             <div class="search-button-container">
-                            <a href=""> <button class="search-button"> Search</button></a>
+                                <button name="student-search-button" class="search-button">Search</button>
                             </div>
-                            </form>
-                        </div>
-                 <div class="sections">
-                    <table>
-                    <tr>
-                        <th>Name</th>
-                        <th>Department</th>
-                        <th>Class</th>
-                        <th>Details</th>
-                    </tr>
-                    <tr>
-                        <td>Gavin</td>
-                        <td>Computer</td>
-                        <td>BE</td>
-                        <td><a href="">View more</a></td>
-                    </tr>
-                    <tr>
-                        <td>Gavin</td>
-                        <td>Computer</td>
-                        <td>TE</td>
-                        <td><a href="">View more</a></td>
-                    </tr>
-                </table>
-                <div class="button-container">
-                <a href="./notification-post.php"><button class="viewmore-button">View More</button></a>
-                </div>
-                </div>         
-             
+                        </form>
+
+                    </div>
+                    <div class="sections">
+                        <table>
+                            <tr>
+                                <th>Name</th>
+                                <th>Department</th>
+                                <th>Class</th>
+                                <th>Details</th>
+                            </tr>
+                            <?php
+                            while ($student = $studentsResult->fetch_assoc()) {
+                                echo '<tr>
+                                <td>' . htmlspecialchars($student["fname"]) . ' ' . htmlspecialchars($student["lname"]) . '</td>
+                                <td>' . htmlspecialchars($student["dname"]) . '</td>
+                                <td>' . htmlspecialchars($student["cname"]) . '</td>
+                                <td><a href="">View more</a></td>
+                            </tr>';
+                            }
+                            ?>
+                        </table>
+                    </div>
+
             </div>
         </div>
 

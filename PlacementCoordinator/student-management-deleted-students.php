@@ -1,3 +1,29 @@
+<?php
+require "../conn.php";
+require "../restrict.php";
+include "./tpo-utility-functions.php";
+global $conn;
+
+if (!isset($_SESSION)) {
+    session_start();
+}
+
+
+$studentSearch = false;
+$d_studentSearch = false;
+
+if (isset($_POST["d_student-search-button"])) {
+    $d_sname = !empty($_POST['d_sname']) ? $_POST['d_sname'] : null;
+    $d_departments = !empty($_POST['d_departments']) ? $_POST['d_departments'] : [];
+    $d_gender = !empty($_POST['d_gender']) ? $_POST['d_gender'] : null;
+
+    $d_studentsResult = fetchStudents(true, $d_sname, $d_departments, $d_gender);
+    $d_studentSearch = true;
+} else {
+    $d_studentsResult = fetchStudents(true);
+}
+
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -8,7 +34,7 @@
 </head>
 
 <body>
-<div id="wrapper">
+    <div id="wrapper">
         <?php include './header.php' ?>
 
         <div class="container">
@@ -16,73 +42,71 @@
 
             <div class="main-container">
                 <div class="main-container-header">
-                <h2 class="main-container-heading"><a href="./dashboard.html"><a href="./student-management.php"><i class="fa-solid fa-arrow-left fa-lg" style="color: #000000;"></i></a></a>
-                Student Management</h2>    
+                    <h2 class="main-container-heading"><a href="./dashboard.html"><a href="./student-management.php"><i class="fa-solid fa-arrow-left fa-lg" style="color: #000000;"></i></a></a>
+                        Student Management</h2>
                 </div>
-
-            
-                    <form action="" method="get">
-                        <h3>Deleted Students</h3>
-                        <div class="form-adjust">
-                            <form action="">
-                            <div class="inputbox">
-                                <label for="">Student Name:</label>
-                                <input type="text" placeholder="Enter Student Name">
-                            </div>
-
-                             <div class="departmentbox">
-                                <label for="">Department:</label>
-                            <div class="Checkbox"> 
-                                <div><input type="checkbox">  
-                                <label for="">ECS</label></div>
-                                <div><input type="checkbox">  
-                                <label for="">COMP</label></div>
-                                <div><input type="checkbox">  
-                                <label for="">MECH</label></div>
-                                <div><input type="checkbox">  
-                                <label for="">CIVIL</label></div>
-                                </div>
-                             </div>
-                            
-                            <div class="inputbox">
-                                <label for="">Gender:</label>
-                                <select name="" id="">
-                                    <option value=""disabled selected>Select</option>
-                                    <option value="">Male</option>
-                                    <option value="">Female</option>
-                                </select>
-                            </div>
-                            <div class="search-button-container">
-                            <a href=""> <button class="search-button"> Search</button></a>
-                            </div>
-                            </form>
+                <h3>Deleted Students</h3>
+                <div class="form-adjust">
+                <form action="" method="post">
+                    <div class="inputbox">
+                            <label for="">Student Name:</label>
+                            <input type="text" name="d_sname" placeholder="Enter Student Name">
                         </div>
-                 <div class="sections">
-                    <table>
-                    <tr>
-                        <th>Name</th>
-                        <th>Department</th>
-                        <th>Class</th>
-                        <th>Details</th>
-                    </tr>
-                    <tr>
-                        <td>Gavin</td>
-                        <td>Computer</td>
-                        <td>SE</td>
-                        <td><a href="">View more</a></td>
-                    </tr>
-                    <tr>
-                        <td>Gavin</td>
-                        <td>MECH</td>
-                        <td>TE</td>
-                        <td><a href="">View more</a></td>
-                    </tr>
-                </table>
-                <div class="button-container">
-                <a href="./notification-post.php"><button class="viewmore-button">View More</button></a>
+
+                        <div class="departmentbox">
+                            <label for="">Department:</label>
+                            <div class="Checkbox">
+                                <?php
+                                $fetchDepartmentQuery = "SELECT Dept_name as dname FROM department;";
+                                $fetchDepartment = $conn->prepare($fetchDepartmentQuery);
+                                $fetchDepartment->execute();
+                                $result = $fetchDepartment->get_result();
+
+                                while ($row = $result->fetch_assoc()) {
+                                    echo '<div>
+                                            <input name="d_departments[]" value="' . htmlspecialchars($row["dname"]) . '" type="checkbox">
+                                            <label for="">' . htmlspecialchars($row["dname"]) . '</label>
+                                          </div>';
+                                }
+                                ?>
+                            </div>
+                        </div>
+
+                        <div class="inputbox">
+                            <label for="">Gender:</label>
+                            <select name="d_gender" id="">
+                                <option value="" selected>Select</option>
+                                <option value="M">Male</option>
+                                <option value="F">Female</option>
+                            </select>
+                        </div>
+                        <div class="search-button-container">
+                            <button name="d_student-search-button" class="search-button">Search</button>
+                        </div>
+                    </form>
                 </div>
-                </div>         
-             
+                <div class="sections">
+                    <table>
+                        <tr>
+                            <th>Name</th>
+                            <th>Department</th>
+                            <th>Class</th>
+                            <th>Details</th>
+                        </tr>
+                        <?php
+                        while ($student = $d_studentsResult->fetch_assoc()) {
+                            echo '<tr>
+                                <td>' . htmlspecialchars($student["fname"]) . ' ' . htmlspecialchars($student["lname"]) . '</td>
+                                <td>' . htmlspecialchars($student["dname"]) . '</td>
+                                <td>' . htmlspecialchars($student["cname"]) . '</td>
+                                <td><a href="">View more</a></td>
+                            </tr>';
+                        }
+                        ?>
+                       
+                    </table>
+                </div>
+
             </div>
         </div>
 

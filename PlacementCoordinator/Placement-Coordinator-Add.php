@@ -15,7 +15,7 @@ if (!isset($_SESSION)) {
 
 <head>
     <?php include './head.php' ?>
-    <link rel="stylesheet" href="./css/placement-coordinator-details.css">
+    <link rel="stylesheet" href="./css/Placement-Coordinator-Add.css">
     <title>Placement Coordinator details</title>
 </head>
 
@@ -33,33 +33,33 @@ if (!isset($_SESSION)) {
                         <div class="form-adjust">
                             <div>
                                 <label for="fname">First Name</label><br>
-                                <input type="text" name="fname" value="' . $StudentFName . '">
+                                <input type="text" name="fname">
                             </div>
                             <div>
                                 <label for="mname">Middle Name</label><br>
-                                <input type="text" name="mname" value="' . $StudentMName . '">
+                                <input type="text" name="mname">
                             </div>
                             <div>
                                 <label for="lname">Last Name</label><br>
-                                <input type="text" name="lname" value="' . $StudentLName . '">
+                                <input type="text" name="lname">
                             </div>
                         </div>
                         <div class="form-adjust">
                             <div>
                                 <label for="phno">Contact No</label><br>
-                                <input type="text" name="phno" value="' . $StudentPhoneNo . '">
+                                <input type="text" name="phno">
                             </div>
 
                             <div>
                                 <label for="pemail">Personal Email</label><br>
-                                <input type="text" name="pemail" value="' . $StudentPEmail . '">
+                                <input type="text" name="pemail" >
                             </div>
                         </div>
 
                         <h3>Change Password:</h3>
-                        <div class="form-adjust">
+                        <div class="form-adjust last-container">
                             <div>
-                                <label for="newpass">New Password</label><br>
+                                <label for="newpass">Password</label><br>
                                 <input type="password" name="newpass">
                             </div>
 
@@ -69,11 +69,12 @@ if (!isset($_SESSION)) {
                             </div>
                         </div>
 
-                        <button id="myBtn" name="update_profile">Update</button>
+                        <button id="myBtn" class="" name="update_profile">Add</button>
                     </form>
                 </div>
             </div>
         </div>
+        <?php include './footer.php' ?>
     </div>
 
 </body>

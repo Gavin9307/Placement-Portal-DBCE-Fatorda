@@ -103,7 +103,7 @@ if (isset($_POST["student-search-button"])) {
                                 <td>' . htmlspecialchars($student["fname"]) . ' ' . htmlspecialchars($student["lname"]) . '</td>
                                 <td>' . htmlspecialchars($student["dname"]) . '</td>
                                 <td>' . htmlspecialchars($student["cname"]) . '</td>
-                                <td><a href="">View more</a></td>
+                                href="student-management-view-student.php?semail='.$student["semail"].'"
                             </tr>';
                             }
                             ?>

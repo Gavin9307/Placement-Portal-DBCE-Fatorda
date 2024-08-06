@@ -116,7 +116,7 @@ if (isset($_POST["d_student-search-button"])) {
                                 <td>' . htmlspecialchars($student["fname"]) . ' ' . htmlspecialchars($student["lname"]) . '</td>
                                 <td>' . htmlspecialchars($student["dname"]) . '</td>
                                 <td>' . htmlspecialchars($student["cname"]) . '</td>
-                                <td><a href="">View more</a></td>
+                                <td><a href="student-management-view-student.php?semail='.$student["semail"].'">View more</a></td>
                             </tr>';
                         }
                         ?>
@@ -180,7 +180,7 @@ if (isset($_POST["d_student-search-button"])) {
                                 <td>' . htmlspecialchars($student["fname"]) . ' ' . htmlspecialchars($student["lname"]) . '</td>
                                 <td>' . htmlspecialchars($student["dname"]) . '</td>
                                 <td>' . htmlspecialchars($student["cname"]) . '</td>
-                                <td><a href="">View more</a></td>
+                                <td><a href="student-management-view-student.php?semail='.$student["semail"].'">View more</a></td>
                             </tr>';
                         }
                         ?>

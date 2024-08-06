@@ -21,10 +21,11 @@
     display:flex ;
 }
 
-#jobopportunities {
+#analysisreport {
     color: var(--primary-blue);
     background-color: var(--primary-white);
 }
+
 
 .main-container {
     width: 75%;

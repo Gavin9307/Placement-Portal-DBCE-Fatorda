@@ -1,3 +1,19 @@
+<?php
+require "../conn.php";
+require "../restrict.php";
+include "./tpo-utility-functions.php";
+global $conn;
+
+if (!isset($_SESSION)) {
+    session_start();
+}
+
+if (!isset($_GET["pcemail"])) {
+    header("Location: ./Placement-Coordinator.php");
+    exit();
+}
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 

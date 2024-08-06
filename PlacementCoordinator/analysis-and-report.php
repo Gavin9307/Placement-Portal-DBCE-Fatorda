@@ -15,7 +15,7 @@
             <?php include './sidebar.php' ?>
 
             <div class="main-container">
-                <h2 class="main-container-heading"><a href="./dashboard.html"><i class="fa-solid fa-arrow-left fa-lg" style="color: #000000;"></i></a>
+                <h2 class="main-container-heading"><a href="./dashboard.php"><i class="fa-solid fa-arrow-left fa-lg" style="color: #000000;"></i></a>
                     Analysis and Reports</h2>
                 <h3>Live Placement Drive Reports</h3>
                 <div class="sections">
@@ -28,7 +28,7 @@
                     </div>
                     <p class="position"><strong>Position:</strong> Associate Developer</p>
                     <p class="department"><strong>Departments</strong>: Computer</p>
-                    <a href="./my-applications-details.html"><button>View Report</button></a>
+                    <a href="./job-live-listing-analysis.php"><button>View Report</button></a>
                 </div>
 
                 <div class="sections">
@@ -78,14 +78,14 @@
 
                         </div>
                     </div>
-                    <a href="./notification-post.php"><button class="add-button">Get Report</button></a>
+                    <a href="./analysis-and-report-yearly.php"><button class="add-button">Get Report</button></a>
                 </div>
                 </div>
                 <h3>Other Reports:</h3>
                 <div class="button-container-2">
-                    <a href="./notification-post.php"><button class="add-button">Company Report</button></a>
-                    <a href="./notification-post.php"><button class="add-button">Student Report</button></a>
-                    <a href="./notification-post.php"><button class="add-button">Alumini Report</button></a>
+                    <a href="./analysis-and-report-company-report.php"><button class="add-button">Company Report</button></a>
+                    <a href="./analysis-and-report-student-report.php"><button class="add-button">Student Report</button></a>
+                    <a href="./alumni-report.php"><button class="add-button">Alumini Report</button></a>
                 </div>
             </div>
         </div>

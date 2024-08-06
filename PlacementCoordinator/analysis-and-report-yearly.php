@@ -15,7 +15,7 @@
             <?php include './sidebar.php' ?>
 
             <div class="main-container">
-                <h2 class="main-container-heading"><a href="./dashboard.html"><i class="fa-solid fa-arrow-left fa-lg" style="color: #000000;"></i></a>
+                <h2 class="main-container-heading"><a href="./analysis-and-report.php"><i class="fa-solid fa-arrow-left fa-lg" style="color: #000000;"></i></a>
                     Analysis and Reports</h2>
                 <h3>Yearly Placement Drive Reports</h3>
                 <div class="sections">
@@ -142,7 +142,7 @@
                 </div>
                 <h3>Other Reports:</h3>
                 <div class="button-container-2">
-                    <a href="./notification-post.php"><button class="add-button">Company Report</button></a>
+                    <a href="./analysis-and-report-company-report.php"><button class="add-button">Company Report</button></a>
                     <a href="./notification-post.php"><button class="add-button">Student Report</button></a>
                     <a href="./notification-post.php"><button class="add-button">Alumini Report</button></a>
                 </div>

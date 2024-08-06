@@ -63,6 +63,13 @@ if (isset($_POST["update_profile"])) {
     $result->bind_param("ssssssdds", $_POST["fname"], $_POST["mname"], $_POST["lname"], $_POST["pemail"], $_POST["addr"], $_POST["phno"], $_POST["per10"], $_POST["per12"], $_SESSION["user_email"]);
     $result->execute();
 
+    $updateResultQuery = "UPDATE result as r 
+SET r.Sem1_SGPA = ?,r.Sem2_SGPA = ?,r.Sem3_SGPA = ?,r.Sem4_SGPA = ?,r.Sem5_SGPA = ?,r.Sem6_SGPA = ?,r.Sem7_SGPA = ?,r.Sem8_SGPA = ?,r.CGPA = ?,r.has_backlogs = ?
+WHERE r.S_College_Email = ?";
+    $result = $conn->prepare($updateResultQuery);
+    $result->bind_param("dddddddddis", $_POST["sem1"], $_POST["sem2"], $_POST["sem3"], $_POST["sem4"], $_POST["sem5"], $_POST["sem6"], $_POST["sem7"], $_POST["sem8"],$_POST["cgpa"],$_POST["backs"], $_SESSION["user_email"]);
+    $result->execute();
+
     $_SESSION['profile_updated'] = true;
     echo "<script type='text/javascript'>window.location.href = window.location.href;</script>";
     exit();

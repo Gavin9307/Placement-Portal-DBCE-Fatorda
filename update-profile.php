@@ -13,11 +13,15 @@ if (isset($_POST["create_profile"])) {
     {
         return empty($input) ? NULL : htmlspecialchars($input);
     }
+    function handle_empty_int($input)
+    {
+        return empty($input) ? 0 : htmlspecialchars($input);
+    }
 
     // Debugging statements
-    echo '<pre>';
-    print_r($_POST);
-    echo '</pre>';
+    // echo '<pre>';
+    // print_r($_POST);
+    // echo '</pre>';
 
     $StudentFName = handle_empty($_POST['fname']);
     $StudentMName = empty($_POST['mname']) ? "" : $_POST['mname'];
@@ -32,16 +36,17 @@ if (isset($_POST["create_profile"])) {
     $StudentRollNo = handle_empty($_POST['rollno']);
     $StudentPhoneNo = handle_empty($_POST['phno']);
     $StudentPRN = handle_empty($_POST['prn']);
-    $StudentSem1 = handle_empty($_POST['sem1']);
-    $StudentSem2 = handle_empty($_POST['sem2']);
-    $StudentSem3 = handle_empty($_POST['sem3']);
-    $StudentSem4 = handle_empty($_POST['sem4']);
-    $StudentSem5 = handle_empty($_POST['sem5']);
-    $StudentSem6 = handle_empty($_POST['sem6']);
-    $StudentSem7 = handle_empty($_POST['sem7']);
-    $StudentSem8 = handle_empty($_POST['sem8']);
-    $StudentCGPA = handle_empty($_POST['cgpa']);
-    $StudentBacks = handle_empty($_POST['backs']);
+    $StudentSem1 = handle_empty_int($_POST['sem1']);
+    $StudentSem2 = handle_empty_int($_POST['sem2']);
+    $StudentSem3 = handle_empty_int($_POST['sem3']);
+    $StudentSem4 = handle_empty_int($_POST['sem4']);
+    $StudentSem5 = handle_empty_int($_POST['sem5']);
+    $StudentSem6 = handle_empty_int($_POST['sem6']);
+    $StudentSem7 = handle_empty_int($_POST['sem7']);
+    $StudentSem8 = handle_empty_int($_POST['sem8']);
+    $StudentSem8 = handle_empty_int($_POST['sem8']);
+    $StudentCGPA = handle_empty_int($_POST['cgpa']);
+    $StudentBacks = empty($_POST['backs']) || is_null($_POST['backs']) ? 0 : $_POST['mname'];
 
     $updateStudentQuery = "UPDATE student SET 
         S_Fname = ?, 
@@ -102,7 +107,7 @@ if (isset($_POST["create_profile"])) {
         $stmt->bind_param("sdddddddddd", $_SESSION['user_email'], $semesters[0], $semesters[1], $semesters[2], $semesters[3], $semesters[4], $semesters[5], $semesters[6], $semesters[7], $StudentCGPA, $StudentBacks);
         $stmt->execute();
 
-        echo "Profile created successfully!";
+        // echo "Profile created successfully!";
 
         header("Location: ./Students/dashboard.php");
         exit;

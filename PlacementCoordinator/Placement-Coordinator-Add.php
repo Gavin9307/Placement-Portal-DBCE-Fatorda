@@ -1,67 +1,79 @@
+<?php
+require "../conn.php";
+require "../restrict.php";
+include "../utility_functions.php";
+global $conn;
+if (!isset($_SESSION)) {
+    session_start();
+}
+
+
+
+?>
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
     <?php include './head.php' ?>
-    <link rel="stylesheet" href="./css/Placement-Coordinator-Details.css">
-    <title>Placement Coordinators</title>
+    <link rel="stylesheet" href="./css/Placement-Coordinator-Add.css">
+    <title>Placement Coordinator details</title>
 </head>
 
 <body>
-<div id="wrapper">
+    <div id="wrapper">
         <?php include './header.php' ?>
-
         <div class="container">
             <?php include './sidebar.php' ?>
-
             <div class="main-container">
-                <div class="main-container-header">
-                <h2 class="main-container-heading"><a href="./Placement-Coordinator.php"><i class="fa-solid fa-arrow-left fa-lg" style="color: #000000;"></i></a>
-                Placement Coordinators</h2>    
-                </div>
-                <h2 class="main-container-heading"><a href="./dashboard.html"><i class="fa-solid fa-lg" style="color: #000000;"></i></a>
-                Add Placement Coordinator</h2> 
+                <h2 class="main-container-heading"><a href="./dashboard.php"><i class="fa-solid fa-arrow-left fa-lg" style="color: #000000;"></i></a>
+                    Add Placement Coordinator :</h2>
                 <div class="sections">
-                    <div class = "sec1">
-                    <form action="" method="post" enctype="multipart/form-data">
-                    <div class="form-adjust">
-                    <div class="inputbox">
-                                <label for="">First Name :</label>
-                                <input name="first_name" type="text" placeholder="Student">
-                    </div>
-                    <div class="inputbox">
-                                <label for="">Last Name :</label>
-                                <input name="last_name" type="text" placeholder="Last Name">
-                    </div>
-                    <div class="inputbox">
-                                <label for="">Department :</label>
-                                <input name="department" type="text" placeholder="Department">
-                    </div>
-                    <div class="inputbox">
-                                <label for="">Contact No :</label>
-                                <input name="contact_no" type="text" placeholder="Contact No">
-                    </div>
-                    <div class="inputbox">
-                                <label for="">Email :</label>
-                                <input name="email" type="text" placeholder="Email">
-                    </div>
-                    <div class="inputbox">
-                                <label for="">Password :</label>
-                                <input name="password" type="text" placeholder="Password">
-                    </div>
-                    </div>
+                    <form action="./my-profile.php" method="post">
+                        <h3>Personal Information:</h3>
+                        <div class="form-adjust">
+                            <div>
+                                <label for="fname">First Name</label><br>
+                                <input type="text" name="fname">
+                            </div>
+                            <div>
+                                <label for="mname">Middle Name</label><br>
+                                <input type="text" name="mname">
+                            </div>
+                            <div>
+                                <label for="lname">Last Name</label><br>
+                                <input type="text" name="lname">
+                            </div>
+                        </div>
+                        <div class="form-adjust">
+                            <div>
+                                <label for="phno">Contact No</label><br>
+                                <input type="text" name="phno">
+                            </div>
+
+                            <div>
+                                <label for="pemail">Personal Email</label><br>
+                                <input type="text" name="pemail" >
+                            </div>
+                        </div>
+
+                        <h3>Change Password:</h3>
+                        <div class="form-adjust last-container">
+                            <div>
+                                <label for="newpass">Password</label><br>
+                                <input type="password" name="newpass">
+                            </div>
+
+                            <div>
+                                <label for="newpassconfirm">Confirm Password</label><br>
+                                <input type="password" name="newpassconfirm">
+                            </div>
+                        </div>
+
+                        <button id="myBtn" class="" name="update_profile">Add</button>
                     </form>
-                    </div>
-                    <div class= "sec2">   
-                    <img src="../Assets/profile.jpg" alt="">
-                    <div><a href="#"><button class="add-button">Change Image</button></a></div>
-                    <div><a href="./Placement-Coordinator.php"><button class="add-button">Add</button></a></div>
-                    </div>
-                </div>         
-             
+                </div>
             </div>
         </div>
-
         <?php include './footer.php' ?>
     </div>
 

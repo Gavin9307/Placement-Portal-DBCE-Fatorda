@@ -7,54 +7,52 @@ if (!isset($_SESSION)) {
     session_start();
 }
 
-if (isset($_SESSION["user_type"]) && isset($_SESSION["user_email"])) {
-    $average_rating = 0;
-    $usertype = $_SESSION["user_type"];
-    $useremail = $_SESSION["user_email"];
-
-    $fetchStudentQuery = "SELECT S.S_10th_marksheet as marksheet_10, S.S_12th_marksheet as marksheet_12, S.S_10th_Perc as percentage_10, S.S_12th_Perc as percentage_12, S.S_Address as address, S.S_College_Email as cemail, S.S_Fname as fname, S.S_Lname as lname, S.S_Mname as mname, S.S_Personal_Email as pemail, S.S_Phone_no as phoneno, S.S_PR_No as prno, S.S_Resume as resume, S.S_Roll_no as rollno, S.S_Year_of_Admission as yoa, C.Class_name as class, D.Dept_name as department, S.S_Profile_pic as image, R.Sem1_SGPA as sem1, R.Sem2_SGPA as sem2, R.Sem3_SGPA as sem3,R.Sem4_SGPA as sem4,R.Sem5_SGPA as sem5,R.Sem6_SGPA as sem6,R.Sem7_SGPA as sem7,R.Sem8_SGPA as sem8,R.CGPA as cgpa,R.has_backlogs as backs FROM student S INNER JOIN class as C ON C.Class_id = S.S_Class_id INNER JOIN department as D ON D.Dept_id = C.Dept_id INNER JOIN result as R ON R.S_College_Email = S.S_College_Email WHERE S.S_College_Email = ?;";
-    $fetchStudent = $conn->prepare($fetchStudentQuery);
-    $fetchStudent->bind_param("s", $_SESSION["user_email"]);
-    $fetchStudent->execute();
-    $result = $fetchStudent->get_result();
-
-    if ($result->num_rows > 0) {
-        $StudentInfo = $result->fetch_assoc();
-        $StudentFName = htmlspecialchars($StudentInfo['fname']);
-        $StudentMName = htmlspecialchars($StudentInfo['mname']);
-        $StudentLName = htmlspecialchars($StudentInfo['lname']);
-        $StudentAddress = htmlspecialchars($StudentInfo['address']);
-        $StudentMarksheet_12 = htmlspecialchars($StudentInfo['marksheet_12']);
-        $StudentMarksheet_10 = htmlspecialchars($StudentInfo['marksheet_10']);
-        $StudentPercentage_10 = htmlspecialchars($StudentInfo['percentage_10']);
-        $StudentPercentage_12 = htmlspecialchars($StudentInfo['percentage_12']);
-        $StudentPEmail = htmlspecialchars($StudentInfo['pemail']);
-        $StudentCEmail = htmlspecialchars($StudentInfo['cemail']);
-        $StudentClass = htmlspecialchars($StudentInfo['class']);
-        $StudentDepartment = htmlspecialchars($StudentInfo['department']);
-        $StudentYOA = htmlspecialchars($StudentInfo['yoa']);
-        $StudentImage = htmlspecialchars($StudentInfo['image']);
-        $StudentRollNo = htmlspecialchars($StudentInfo['rollno']);
-        $StudentPhoneNo = htmlspecialchars($StudentInfo['phoneno']);
-        $StudentPRN = htmlspecialchars($StudentInfo['prno']);
-        $StudentResume = htmlspecialchars($StudentInfo['resume']);
-        $StudentSem1 = htmlspecialchars($StudentInfo['sem1']);
-        $StudentSem2 = htmlspecialchars($StudentInfo['sem2']);
-        $StudentSem3 = htmlspecialchars($StudentInfo['sem3']);
-        $StudentSem4 = htmlspecialchars($StudentInfo['sem4']);
-        $StudentSem5 = htmlspecialchars($StudentInfo['sem5']);
-        $StudentSem6 = htmlspecialchars($StudentInfo['sem6']);
-        $StudentSem7 = htmlspecialchars($StudentInfo['sem7']);
-        $StudentSem8 = htmlspecialchars($StudentInfo['sem8']);
-        $StudentCGPA = htmlspecialchars($StudentInfo['cgpa']);
-        $StudentBacks = htmlspecialchars($StudentInfo['backs']);
-    } else {
-        // Handle case where results are not obtained
-    }
-} else {
-    echo "Session variables not set.";
+if (!isset($_GET["pcemail"])) {
+    header("Location: ./Placement-Coordinator.php");
     exit();
 }
+
+
+$fetchStudentQuery = "";
+$fetchStudent = $conn->prepare($fetchStudentQuery);
+$fetchStudent->bind_param("s", $_SESSION["user_email"]);
+$fetchStudent->execute();
+$result = $fetchStudent->get_result();
+
+if ($result->num_rows > 0) {
+    $StudentInfo = $result->fetch_assoc();
+    $StudentFName = htmlspecialchars($StudentInfo['fname']);
+    $StudentMName = htmlspecialchars($StudentInfo['mname']);
+    $StudentLName = htmlspecialchars($StudentInfo['lname']);
+    $StudentAddress = htmlspecialchars($StudentInfo['address']);
+    $StudentMarksheet_12 = htmlspecialchars($StudentInfo['marksheet_12']);
+    $StudentMarksheet_10 = htmlspecialchars($StudentInfo['marksheet_10']);
+    $StudentPercentage_10 = htmlspecialchars($StudentInfo['percentage_10']);
+    $StudentPercentage_12 = htmlspecialchars($StudentInfo['percentage_12']);
+    $StudentPEmail = htmlspecialchars($StudentInfo['pemail']);
+    $StudentCEmail = htmlspecialchars($StudentInfo['cemail']);
+    $StudentClass = htmlspecialchars($StudentInfo['class']);
+    $StudentDepartment = htmlspecialchars($StudentInfo['department']);
+    $StudentYOA = htmlspecialchars($StudentInfo['yoa']);
+    $StudentImage = htmlspecialchars($StudentInfo['image']);
+    $StudentRollNo = htmlspecialchars($StudentInfo['rollno']);
+    $StudentPhoneNo = htmlspecialchars($StudentInfo['phoneno']);
+    $StudentPRN = htmlspecialchars($StudentInfo['prno']);
+    $StudentResume = htmlspecialchars($StudentInfo['resume']);
+    $StudentSem1 = htmlspecialchars($StudentInfo['sem1']);
+    $StudentSem2 = htmlspecialchars($StudentInfo['sem2']);
+    $StudentSem3 = htmlspecialchars($StudentInfo['sem3']);
+    $StudentSem4 = htmlspecialchars($StudentInfo['sem4']);
+    $StudentSem5 = htmlspecialchars($StudentInfo['sem5']);
+    $StudentSem6 = htmlspecialchars($StudentInfo['sem6']);
+    $StudentSem7 = htmlspecialchars($StudentInfo['sem7']);
+    $StudentSem8 = htmlspecialchars($StudentInfo['sem8']);
+    $StudentCGPA = htmlspecialchars($StudentInfo['cgpa']);
+    $StudentBacks = htmlspecialchars($StudentInfo['backs']);
+} else {
+    // Handle case where results are not obtained
+}
+
 
 if (isset($_POST["update_profile"])) {
     $updateQuery = "UPDATE student as s SET s.S_Fname = ?,s.S_Mname = ?,s.S_Lname = ?,s.S_Personal_Email = ?,s.S_Address = ?,s.S_Phone_no = ?,s.S_10th_Perc = ?,s.S_12th_Perc = ?

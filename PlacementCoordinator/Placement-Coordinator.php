@@ -1,3 +1,16 @@
+<?php
+require "../conn.php";
+require "../restrict.php";
+include "./tpo-utility-functions.php";
+global $conn;
+
+if (!isset($_SESSION)) {
+    session_start();
+}
+
+?>
+
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -36,26 +49,9 @@
                         <th>Department</th>
                         <th>Details</th>
                     </tr>
-                    <tr>
-                        <td>Nimish</td>
-                        <td>MECH</td>
-                        <td><a href="./Placement-Coordinator-Details.php">View more</a></td>
-                    </tr>
-                    <tr>
-                        <td>Syndroy</td>
-                        <td>COMP</td>
-                        <td><a href="">View more</a></td>
-                    </tr>
-                    <tr>
-                        <td>Bliss</td>
-                        <td>COMP</td>
-                        <td><a href="">View more</a></td>
-                    </tr>
-                    <tr>
-                        <td>Warren</td>
-                        <td>COMP</td>
-                        <td><a href="">View more</a></td>
-                    </tr>
+
+                    <?php getPlacementCoordinators(); ?>
+                    
                 </table>
                 
                 </div>         

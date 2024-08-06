@@ -459,3 +459,20 @@ function fetchStudentsAll($isDeleted, $sname = null, $departments = [], $gender 
     $stmt->execute();
     return $stmt->get_result();
 }
+
+
+function getPlacementCoordinators(){
+    global $conn;
+    $fetchPlacementCoordinatorsQuery = "SELECT p.PC_Email as pcemail,p.PC_Lname as lname,p.PC_Fname as fname,d.Dept_name as dname from placementcoordinator as p INNER JOIN department as d ON d.Dept_id = p.PC_Dept_id";
+    $fetchPlacementCoordinators = $conn->prepare($fetchPlacementCoordinatorsQuery);
+    $fetchPlacementCoordinators->execute();
+    $result = $fetchPlacementCoordinators->get_result();
+
+    while ($row = $result->fetch_assoc()) {
+        echo '<tr>
+                <td>'.$row["fname"].' '.$row["lname"].'</td>
+                <td>'.$row["dname"].'</td>
+                <td><a href="./Placement-Coordinator-Details.php?pcemail='.$row["pcemail"].'">View more</a></td>
+              </tr>';
+    }
+}

@@ -112,7 +112,7 @@
                             <td>Google</td>
                             <td>30,000</td>
                             <td>2/3/2024</td>
-                            <td><a href="">View more</a></td>
+                            <td><a href="./alumini-details.php">View more</a></td>
                         </tr>
                         <tr>
                             <td>Patric</td>
@@ -120,7 +120,7 @@
                             <td>Facebook</td>
                             <td>20,000</td>
                             <td>30/3/2024</td>
-                            <td><a href="">View more</a></td>
+                            <td><a href="./alumini-details.php">View more</a></td>
                         </tr>
                         <tr>
                             <td>Gavin</td>
@@ -128,7 +128,7 @@
                             <td>Google</td>
                             <td>50,000</td>
                             <td>12/11/2024</td>
-                            <td><a href="">View more</a></td>
+                            <td><a href="./alumini-details.php">View more</a></td>
                         </tr>
                         <tr>
                             <td>Stephen</td>
@@ -136,7 +136,7 @@
                             <td>Reliance</td>
                             <td>40,000</td>
                             <td>24/5/2024</td>
-                            <td><a href="">View more</a></td>
+                            <td><a href="./alumini-details.php">View more</a></td>
                         </tr>
                     </table>
                     <div class="button-container-1">

@@ -15,7 +15,7 @@
             <?php include './sidebar.php' ?>
 
             <div class="main-container">
-                <h2 class="main-container-heading"><a href="./dashboard.html"><i class="fa-solid fa-arrow-left fa-lg" style="color: #000000;"></i></a>
+                <h2 class="main-container-heading"><a href="./dashboard.php"><i class="fa-solid fa-arrow-left fa-lg" style="color: #000000;"></i></a>
                     Analysis and Reports</h2>
                 <h3>Live Placement Drive Reports</h3>
                 <div class="sections">
@@ -28,7 +28,7 @@
                     </div>
                     <p class="position"><strong>Position:</strong> Associate Developer</p>
                     <p class="department"><strong>Departments</strong>: Computer</p>
-                    <a href="./my-applications-details.html"><button>View Report</button></a>
+                    <a href="./job-live-listing-analysis.php"><button>View Report</button></a>
                 </div>
 
                 <div class="sections">

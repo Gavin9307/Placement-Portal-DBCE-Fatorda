@@ -23,7 +23,7 @@
                 <div class="sections">
                     <h3>Performance and Metrics</h3>
                     <div class="sub-sections performance">
-                        <div class="right1"><i class=" fa-solid fa-chevron-right fa-2x" style="color: #000000;"></i>
+                      <a href="./performance-and-metrics.php"> <div class="right1"><i class=" fa-solid fa-chevron-right fa-2x" style="color: #000000;"></i></a> 
                         </div>
                         <p>Total Applications : 5</p>
                         <p>Interviews Attended : 3</p>
@@ -58,7 +58,7 @@
                 <div class="sections">
                     <h3>Job Opportunities</h3>
                     <div class="sub-sections companies">
-                        <div class="right1"><i class=" fa-solid fa-chevron-right fa-2x" style="color: #000000;"></i>
+                       <a href="./job-opportunities.php"> <div class="right1"><i class=" fa-solid fa-chevron-right fa-2x" style="color: #000000;"></i></a>
                         </div>
                         <div class="sub-table">
                             <div class="sub-table-row">

@@ -135,7 +135,7 @@ if (isset($_POST["upload_pic"])) {
         <div class="container">
             <?php include './sidebar.php' ?>
             <div class="main-container">
-                <h2 class="main-container-heading"><a href="./dashboard.php"><i class="fa-solid fa-arrow-left fa-lg" style="color: #000000;"></i></a>
+                <h2 class="main-container-heading"><a href="#" onclick="window.history.back(); return false;"><i class="fa-solid fa-arrow-left fa-lg" style="color: #000000;"></i></a>
                     Student Profile : </h2>
                 <?php
                 echo '
@@ -286,7 +286,7 @@ if (isset($_POST["upload_pic"])) {
                         }
 
                         ?>
-                        <button id="myBtn" name="update_profile">Update</button>
+                        <!-- <button id="myBtn" name="update_profile">Update</button> -->
                     </form>
                 </div>
             </div>

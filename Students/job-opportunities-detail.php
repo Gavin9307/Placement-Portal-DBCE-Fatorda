@@ -28,7 +28,7 @@ function applyStudentForJobRounds()
 
         try {
             // Prepare the insert statement
-            $insertStudentRoundsQuery = 'INSERT INTO studentrounds (Round_Status,S_College_email, R_id) VALUES (?, ?, ?)';
+            $insertStudentRoundsQuery = 'INSERT INTO studentrounds (RoundStatus,S_College_email, R_id) VALUES (?, ?, ?)';
             $rstatus = "pending";
             $insertStudentRounds = $conn->prepare($insertStudentRoundsQuery);
 
@@ -42,47 +42,55 @@ function applyStudentForJobRounds()
             $conn->commit();
             echo "Student rounds inserted successfully.";
         } catch (Exception $e) {
-            $conn->rollback();
+            // $conn->rollback();
             echo "Error: " . $e->getMessage();
         }
     } else {
         echo "No rounds found for the given job ID.";
     }
 
-    $fetchRounds->close();
-    // $conn->close();
 }
 
-// function deleteStudentFromJobRounds()
-// {
-//     global $conn;
-//     $jid = (int) $_GET['jid'];
-//     $semail = (string) $_GET['semail'];
+function deleteStudentFromJobRounds() {
+    global $conn;
+    $jid = (int) $_GET['jid'];
+    $semail = (string) $_SESSION['user_email'];
 
-//     // Begin a transaction
-//     $conn->begin_transaction();
+    // Begin a transaction
+    $conn->begin_transaction();
 
-//     try {
-//         // Delete entries from studentrounds based on jid and s_email
-//         $deleteStudentRoundsQuery = 'DELETE sr FROM studentrounds sr
-//                                      INNER JOIN Job_rounds jr ON sr.rid = jr.rid
-//                                      WHERE jr.jid = ? AND sr.s_email = ?';
-//         $deleteStudentRounds = $conn->prepare($deleteStudentRoundsQuery);
-//         $deleteStudentRounds->bind_param("is", $jid, $semail);
-//         $deleteStudentRounds->execute();
+    try {
+        // Fetch all rid values for the given jid
+        $fetchRoundsQuery = 'SELECT R_id FROM rounds WHERE J_id = ?';
+        $fetchRounds = $conn->prepare($fetchRoundsQuery);
+        $fetchRounds->bind_param("i", $jid);
+        $fetchRounds->execute();
+        $result = $fetchRounds->get_result();
 
-//         // Commit the transaction
-//         $conn->commit();
-//         echo "Student rounds deleted successfully.";
-//     } catch (Exception $e) {
-//         // Rollback the transaction in case of an error
-//         $conn->rollback();
-//         echo "Error: " . $e->getMessage();
-//     }
+        if ($result->num_rows > 0) {
+            // Prepare the delete statement
+            $deleteStudentRoundsQuery = 'DELETE FROM studentrounds WHERE S_College_email = ? AND R_id = ?';
+            $deleteStudentRounds = $conn->prepare($deleteStudentRoundsQuery);
 
-//     $deleteStudentRounds->close();
-//     $conn->close();
-// }
+            // Loop through each rid and delete from studentrounds
+            while ($row = $result->fetch_assoc()) {
+                $rid = $row['R_id'];
+                $deleteStudentRounds->bind_param("si", $semail, $rid);
+                $deleteStudentRounds->execute();
+            }
+
+            $conn->commit();
+            // echo "Student rounds deleted successfully.";
+        } else {
+            // echo "No rounds found for the given job ID.";
+        }
+    } catch (Exception $e) {
+        // Rollback the transaction in case of an error
+        // $conn->rollback();
+        echo "Error: " . $e->getMessage();
+    }
+
+}
 
 if (isset($_GET["interest"])) {
     $interest = (int)$_GET["interest"];
@@ -97,7 +105,7 @@ if (isset($_GET["interest"])) {
         applyStudentForJobRounds();
     }
     else {
-        // deleteStudentFromJobRounds();
+        deleteStudentFromJobRounds();
     }
 
     $Update = $conn->prepare($UpdateQuery);

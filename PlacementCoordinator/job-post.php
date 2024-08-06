@@ -73,10 +73,10 @@ FROM
     INNER JOIN department D ON D.Dept_id = C.Dept_id
 WHERE 1=1";
 
-        if (!empty($departments)) {
+        if (!empty($selectedDepartments)) {
             $departmentConditions = array_map(function ($dept) use ($conn) {
                 return "dname = '" . $conn->real_escape_string($dept) . "'";
-            }, $departments);
+            }, $selectedDepartments);
             $studentQuery .= " AND (" . implode(" OR ", $departmentConditions) . ")";
         }
 
@@ -105,7 +105,7 @@ WHERE 1=1";
                 $studentQuery .= " AND R.has_backlogs IN (0, 1)";
             }
         }
-        echo $studentQuery;
+        // echo $studentQuery;
         $studentsResult = $conn->query($studentQuery);
         if ($studentsResult->num_rows > 0) {
             $studentJobInsertQuery = "INSERT INTO jobapplication (S_College_Email, J_id, Interest) VALUES (?, ?, ?)";
@@ -131,21 +131,21 @@ WHERE 1=1";
 
                 foreach ($roundLocations as $index => $location) {
                     $roundNo = !empty($roundNos[$index]) ? $roundNos[$index] : null;
-                    $link = !empty($roundLinks[$index]) ? $roundLinks[$index] : null;
+                    $link = !empty($roundLinks[$index]) ? $roundLinks[$index] : " ";
                     $time = !empty($roundTimes[$index]) ? $roundTimes[$index] : null;
                     $date = !empty($roundDates[$index]) ? $roundDates[$index] : null;
-                    $description = !empty($roundDescriptions[$index]) ? $roundDescriptions[$index] : null;
+                    $description = !empty($roundDescriptions[$index]) ? $roundDescriptions[$index] : " ";
 
                     // Bind parameters and execute query
                     $insertRound->bind_param("issssss", $last_j_id,$roundNo,$location,$time, $date, $description,$link );
                     $insertRound->execute();
 
-                    $last_round_id = $conn->insert_id;
-                    $insertStudentsQuery = "INSERT INTO studentrounds (S_College_Email, R_id, RoundStatus) VALUES (?, ?, ?)";
-                    $insertStudent = $conn->prepare($insertStudentsQuery);
-                    $RoundStatus = "pending";
-                    $insertStudent->bind_param("sis",$studentEmail,$last_round_id,$RoundStatus);
-                    $insertStudent->execute();
+                    // $last_round_id = $conn->insert_id;
+                    // $insertStudentsQuery = "INSERT INTO studentrounds (S_College_Email, R_id, RoundStatus) VALUES (?, ?, ?)";
+                    // $insertStudent = $conn->prepare($insertStudentsQuery);
+                    // $RoundStatus = "pending";
+                    // $insertStudent->bind_param("sis",$studentEmail,$last_round_id,$RoundStatus);
+                    // $insertStudent->execute();
                 }
             }
 
@@ -300,77 +300,77 @@ WHERE 1=1";
     </div>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            let roundCount = 0; 
+    document.addEventListener('DOMContentLoaded', function() {
+        let roundCount = 0;
 
-            function addRound() {
-                roundCount++; 
+        function addRound() {
+            roundCount++;
 
-                const newRoundHTML = `
-            <div class="round-section" id="round-${roundCount}">
-                <h3>Round ${roundCount}:</h3>
-                <div class="form-adjust">
-                    <div class="inputbox">
-                        <label for="location-${roundCount}">Location:</label>
-                        <input required type="text" name="round_location[]" id="location-${roundCount}">
+            const newRoundHTML = `
+                <div class="round-section" id="round-${roundCount}">
+                    <h3>Round ${roundCount}:</h3>
+                    <div class="form-adjust">
+                        <div class="inputbox">
+                            <label for="location-${roundCount}">Location:</label>
+                            <input required type="text" name="round_location[]" id="location-${roundCount}">
+                        </div>
+                        <div class="inputbox">
+                            <label for="link-${roundCount}">Link:</label>
+                            <input type="text" name="round_link[]" id="link-${roundCount}">
+                        </div>
+                        <div class="inputbox">
+                            <label for="time-${roundCount}">Time:</label>
+                            <input type="time" name="round_time[]" id="time-${roundCount}">
+                        </div>
+                        <div class="inputbox">
+                            <label for="date-${roundCount}">Date:</label>
+                            <input type="date" name="round_date[]" id="date-${roundCount}">
+                        </div>
+                        <input type="hidden" name="round-no[]" value="${roundCount}">
                     </div>
-                    <div class="inputbox">
-                        <label for="link-${roundCount}">Link:</label>
-                        <input type="text" name="round_link[]" id="link-${roundCount}">
-                    </div>
-                    <div class="inputbox">
-                        <label for="time-${roundCount}">Time:</label>
-                        <input type="time" name="round_time[]" id="time-${roundCount}">
-                    </div>
-                    <div class="inputbox">
-                        <label for="date-${roundCount}">Date:</label>
-                        <input type="date" name="round_date[]" id="date-${roundCount}">
-                    </div>
-                     <input type="hidden" id="round-no" name="round-no" value="${roundCount}">
+                    <h3>Details:</h3>
+                    <textarea name="round_description[]" id="description-${roundCount}" class="textarea-message" placeholder="Enter round details"></textarea>
+                    <button type="button" class="add-round-button delete-round-button" data-round-id="round-${roundCount}" style="background-color:red;color:white;margin-bottom:50px;margin-top:-60px">Delete Round</button>
                 </div>
-                <h3>Details:</h3>
-                <textarea name="round_description[]" id="description-${roundCount}" class="textarea-message" placeholder="Enter round details"></textarea>
-                <button type="button" class="add-round-button delete-round-button" data-round-id="round-${roundCount}" style="background-color:red;color:white;margin-bottom:50px;margin-top:-60px">Delete Round</button>
-            </div>
-        `;
+            `;
 
-                document.getElementById('rounds-container').insertAdjacentHTML('beforeend', newRoundHTML);
+            document.getElementById('rounds-container').insertAdjacentHTML('beforeend', newRoundHTML);
+        }
+
+        document.getElementById('add-round').addEventListener('click', addRound);
+
+        document.getElementById('rounds-container').addEventListener('click', function(event) {
+            if (event.target && event.target.classList.contains('delete-round-button')) {
+                const roundId = event.target.getAttribute('data-round-id');
+                const roundElement = document.getElementById(roundId);
+                if (roundElement) {
+                    roundElement.remove();
+                    roundCount--;
+                }
             }
-
-            document.getElementById('add-round').addEventListener('click', addRound);
-
-            document.getElementById('rounds-container').addEventListener('click', function(event) {
-                if (event.target && event.target.classList.contains('delete-round-button')) {
-                    const roundId = event.target.getAttribute('data-round-id');
-                    const roundElement = document.getElementById(roundId);
-                    if (roundElement) {
-                        roundElement.remove();
-                        roundCount--;
-                    }
-                }
-            });
         });
+    });
 
-        document.addEventListener('DOMContentLoaded', function() {
-            // Function to check if at least one checkbox is selected
-            function validateCheckboxes() {
-                const checkboxes = document.querySelectorAll('input[name="departments[]"]');
-                for (const checkbox of checkboxes) {
-                    if (checkbox.checked) {
-                        return true;
-                    }
+    document.addEventListener('DOMContentLoaded', function() {
+        // Function to check if at least one checkbox is selected
+        function validateCheckboxes() {
+            const checkboxes = document.querySelectorAll('input[name="departments[]"]');
+            for (const checkbox of checkboxes) {
+                if (checkbox.checked) {
+                    return true;
                 }
-                return false;
             }
+            return false;
+        }
 
-            document.querySelector('form').addEventListener('submit', function(event) {
-                if (!validateCheckboxes()) {
-                    alert('Please select at least one department.');
-                    event.preventDefault(); 
-                }
-            });
+        document.querySelector('form').addEventListener('submit', function(event) {
+            if (!validateCheckboxes()) {
+                alert('Please select at least one department.');
+                event.preventDefault();
+            }
         });
-    </script>
+    });
+</script>
 </body>
 
 </html>

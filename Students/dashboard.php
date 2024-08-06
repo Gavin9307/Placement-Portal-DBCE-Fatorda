@@ -1,6 +1,14 @@
 <?php
+    require "../conn.php";
     require "../restrict.php";
+    include "../utility_functions.php";
+    global $conn;
+    if (!isset($_SESSION)) {
+        session_start();
+    }
+    
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 

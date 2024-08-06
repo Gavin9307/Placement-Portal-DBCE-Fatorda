@@ -43,7 +43,7 @@ if (isset($_POST["subject"])) {
         $notiUpdate = $conn->prepare($notiUpdateQuery);
         $notiUpdate->bind_param("ssi", $attachment1, $attachment2, $notificationId);
         if ($notiUpdate->execute()) {
-            echo "Notification successfully inserted with attachments.";
+            // echo "Notification successfully inserted with attachments.";
              // Fetch students based on the criteria
              $departments = !empty($_POST['departments']) ? $_POST['departments'] : [];
              $minCgpa = !empty($_POST['min_cgpa']) ? $_POST['min_cgpa'] : NULL;
@@ -59,9 +59,10 @@ if (isset($_POST["subject"])) {
                              INNER JOIN class C ON C.Class_id = S.S_Class_id
                              INNER JOIN department D ON D.Dept_id = C.Dept_id
                              WHERE 1=1";
+
              if (!empty($departments)) {
                 $departmentConditions = array_map(function($dept) use ($conn) {
-                    return "dname = '" . $conn->real_escape_string($dept) . "'";
+                    return "D.Dept_name = '" . $conn->real_escape_string($dept) . "'";
                 }, $departments);
                 $studentQuery .= " AND (" . implode(" OR ", $departmentConditions) . ")";
             }
@@ -96,17 +97,17 @@ if (isset($_POST["subject"])) {
                      $studentNotiInsert->execute();
                  }
  
-                 echo "Student notifications successfully inserted.";
+                //  echo "Student notifications successfully inserted.";
              } else {
-                 echo "No students matched the criteria.";
+                //  echo "No students matched the criteria.";
              }
         } else {
-            echo "Error updating notification with attachments: " . $notiUpdate->error;
+            // echo "Error updating notification with attachments: " . $notiUpdate->error;
         }
 
         $notiUpdate->close();
     } else {
-        echo "Error inserting notification: " . $notiInsert->error;
+        // echo "Error inserting notification: " . $notiInsert->error;
     }
     $notiInsert->close();
 

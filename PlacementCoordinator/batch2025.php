@@ -1,11 +1,12 @@
 <?php
 
 // Include the Composer autoloader
-require __DIR__ . '/vendor/autoload.php';
+require __DIR__ . './GoogleSheetsReports/vendor/autoload.php';
 
 use Google\Client;
 use Google\Service\Sheets;
 use Google\Service\Drive;
+use Google\Service\Drive\DriveFile;
 
 // Initialize the Google Client
 $client = new Client();
@@ -17,7 +18,7 @@ $client->setPrompt('select_account consent');
 $client->setRedirectUri('http://localhost:8080/'); // or your redirect URI
 
 // Load previously authorized credentials from a file.
-$tokenPath = 'token.json';
+$tokenPath = './GoogleSheetsReports/token.json';
 if (file_exists($tokenPath)) {
     $accessToken = json_decode(file_get_contents($tokenPath), true);
     $client->setAccessToken($accessToken);
@@ -77,6 +78,10 @@ if ($client->isAccessTokenExpired()) {
 // Initialize the Google Sheets API Service
 $service = new Sheets($client);
 
+$driveService = new Drive($client);
+
+
+
 // Create database connection
 $conn = new mysqli('localhost', 'root', '', 'placementdbce');
 if ($conn->connect_error) {
@@ -84,16 +89,19 @@ if ($conn->connect_error) {
 }
 
 // SQL query
-$sql = "SELECT CONCAT_WS(' ',s.S_Fname,s.S_Mname,s.S_Lname) as Name,c.Class_name as Class,d.Dept_name as Department,com.C_Name as Company,jp.J_Offered_salary as Offered_Salary,jo.Job_Post_Date as Joining_Date
-FROM student as s
-INNER JOIN class as c on s.S_Class_id=c.Class_id
-INNER JOIN department as d on d.Dept_id=c.Dept_id
-INNER JOIN jobapplication as ja ON ja.S_College_Email = s.S_College_Email 
-INNER JOIN jobposting as jo ON jo.J_id = ja.J_id
-INNER JOIN jobplacements as jp on jp.J_id = ja.J_id
-INNER JOIN company as com on com.C_id = jo.C_id
-
-WHERE ja.placed = 1;"; // Replace with your table name
+$sql = "SELECT 
+    COUNT(CASE WHEN d.Dept_name = 'CIVIL' THEN 1 END) as CIVIL,
+    COUNT(CASE WHEN d.Dept_name = 'MECH' THEN 1 END) as MECH,
+    COUNT(CASE WHEN d.Dept_name = 'ETC' THEN 1 END) as ETC,
+    COUNT(CASE WHEN d.Dept_name = 'COMP' THEN 1 END) as COMP
+FROM 
+    student as s
+INNER JOIN 
+    class as c ON c.Class_id = s.S_Class_id
+INNER JOIN 
+    department as d ON c.Dept_id = d.Dept_id
+WHERE 
+    s.S_Year_of_Admission = '2021';"; // Replace with your table name
 $result = $conn->query($sql);
 
 // Prepare data for Google Sheets as array
@@ -115,11 +123,29 @@ while ($row = $result->fetch_assoc()) {
     $data[] = array_values($row); 
 }
 
-$spreadsheetId = '1wS7cTnPvG7zB5z2of8AsV-jDNu_E0coXZXER_iIxzS0'; // Replace with your spreadsheet ID
-$range = 'Students details!A6'; // Start from the row no.(length of cells)
+$spreadsheetId = '1-WaAX--E--eWShVlqYrjqdwGs1IGzJCjk7Z8eXQ1OGo'; 
+$range = 'batch2025!A6:Z'; 
 
-// Clear the sheet contents
+// Specify the folder ID where the sheet should be stored
+$folderId = '1vHugh2jrY3yvGv9kef93RHx1aVMcnP3g'; 
 
+// Move the spreadsheet to the specified folder
+$file = new DriveFile();
+$driveService->files->update($spreadsheetId, $file, [
+    'addParents' => $folderId,
+    'removeParents' => 'root', 
+    'fields' => 'id, parents'
+]);
+
+
+// Clear the data
+try {
+    $requestBody = new Sheets\ClearValuesRequest();
+    $response = $service->spreadsheets_values->clear($spreadsheetId, $range, $requestBody);
+    echo "Data cleared successfully.";
+} catch (Exception $e) {
+    echo 'Error: ' . $e->getMessage();
+}
 
 
 
@@ -146,15 +172,13 @@ $conn->close();
 
 
 
-
-// Your PHP code logic here
-
 // Condition for redirection
 $shouldRedirect = true;
 
 if ($shouldRedirect) {
-   header("Location: /Placement-Portal-DBCE-Fatorda/PlacementCoordinator/analysis-and-report-yearly.php");
+    //returning to orignal page
+   //header("Location: /Placement-Portal-DBCE-Fatorda/PlacementCoordinator/analysis-and-report-yearly.php");
 
-    exit();
+    //exit();
 }
 ?>

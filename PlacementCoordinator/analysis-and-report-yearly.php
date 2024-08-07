@@ -1,3 +1,82 @@
+<?php
+require "../conn.php";
+require "../restrict.php";
+include "./tpo-utility-functions.php";
+global $conn;
+if (!isset($_SESSION)) {
+    session_start();
+}
+
+if (isset($_POST["submit"])) {
+    // Initialize variables
+$fromDate = $_GET['from_date'] ?? null;
+$toDate = $_GET['to_date'] ?? null;
+$departments = $_GET['departments'] ?? [];
+
+// Construct SQL query
+$sql = "SELECT 
+    ROW_NUMBER() OVER (ORDER BY s.S_Fname, s.S_Lname) AS 'Sr. No',
+    c.C_Name AS 'Company Name', 
+    jp.Job_Post_Date AS 'interview_date',
+    COALESCE(s.PLACED, 0) AS PLACED,
+    CASE 
+        WHEN d.Dept_name = 'COMP' THEN COALESCE(s.PLACED, 0)
+        ELSE 0
+    END AS no_of_students_in_comp,
+    CASE 
+        WHEN d.Dept_name = 'ECS' THEN COALESCE(s.PLACED, 0)
+        ELSE 0
+    END AS no_of_students_in_ecs,
+    CASE 
+        WHEN d.Dept_name = 'CIVIL' THEN COALESCE(s.PLACED, 0)
+        ELSE 0
+    END AS no_of_students_in_civil,
+    CASE 
+        WHEN d.Dept_name = 'MECH' THEN COALESCE(s.PLACED, 0)
+        ELSE 0
+    END AS no_of_students_in_mech,
+    COALESCE(
+        CASE WHEN d.Dept_name = 'COMP' THEN s.PLACED ELSE NULL END, 0
+    ) + COALESCE(
+        CASE WHEN d.Dept_name = 'ECS' THEN s.PLACED ELSE NULL END, 0
+    ) + COALESCE(
+        CASE WHEN d.Dept_name = 'CIVIL' THEN s.PLACED ELSE NULL END, 0
+    ) + COALESCE(
+        CASE WHEN d.Dept_name = 'MECH' THEN s.PLACED ELSE NULL END, 0
+    ) AS total,
+    COALESCE(jb.J_Offered_salary, 0) AS offered_salary
+    
+FROM 
+    student s
+INNER JOIN 
+    jobapplication j ON j.S_College_Email = s.S_College_Email
+INNER JOIN 
+    jobposting jp ON jp.J_id = j.J_id
+INNER JOIN 
+    company c ON c.C_id = jp.C_id
+INNER JOIN 
+    jobplacements jb ON jb.J_id = j.J_id
+INNER JOIN 
+    class cl ON cl.Class_id = s.S_Class_id
+INNER JOIN 
+    department d ON d.Dept_id = cl.Dept_id
+WHERE 
+    1=1";  
+
+if ($fromDate && $toDate) {
+    $sql .= " AND jp.Job_Post_Date BETWEEN '$fromDate' AND '$toDate'";
+}
+
+if (!empty($departments)) {
+    $departmentList = implode("','", $departments);
+    $sql .= " AND d.Dept_name IN ('$departmentList')";
+}
+
+header("Location: ./GoogleSheetsReports/StudentsReport.php?sql=" . urlencode($sql));
+
+}
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -20,45 +99,44 @@
                 <h3>Yearly Placement Drive Reports</h3>
                 <div class="sections">
                     <div class="form-adjust">
-                        <form action="">
-                            <div class="datebox">
-                                <div>
-                                    <label for=""><strong>From:</strong></label>
-                                    <input type="date">
-                                </div>
-                                <div>
-                                    <label for=""><strong>To:</strong></label>
-                                    <input type="date">
-                                </div>
-                            </div>
+                    <form action="" method="post">
+    <div class="datebox">
+        <div>
+            <label for="from_date"><strong>From:</strong></label>
+            <input type="date" name="from_date" id="from_date">
+        </div>
+        <div>
+            <label for="to_date"><strong>To:</strong></label>
+            <input type="date" name="to_date" id="to_date">
+        </div>
+    </div>
 
-                            <div class="departmentbox">
-                                <label for=""><strong>Department</strong></label>
-                                <div class="Checkbox">
-                                    <div>
-                                        <input type="checkbox">
-                                        <label for="">ECS</label>
-                                    </div>
+    <div class="departmentbox">
+        <label><strong>Department</strong></label>
+        <div class="Checkbox">
+            <div>
+                <input type="checkbox" name="departments[]" value="ECS" id="ecs">
+                <label for="ecs">ECS</label>
+            </div>
+            <div>
+                <input type="checkbox" name="departments[]" value="COMP" id="comp">
+                <label for="comp">COMP</label>
+            </div>
+            <div>
+                <input type="checkbox" name="departments[]" value="MECH" id="mech">
+                <label for="mech">MECH</label>
+            </div>
+            <div>
+                <input type="checkbox" name="departments[]" value="CIVIL" id="civil">
+                <label for="civil">CIVIL</label>
+            </div>
+        </div>
+    </div>
 
-                                    <div><input type="checkbox">
-                                        <label for="">COMP</label>
-                                    </div>
-                                    <div><input type="checkbox">
-                                        <label for="">MECH</label>
-                                    </div>
-                                    <div><input type="checkbox">
-                                        <label for="">CIVIL</label>
-                                    </div>
-
-                                </div>
-
-                            </div>
-                            <div class="getreportbutton">
-                            <a href="#" onclick="location.href='./GoogleSheetsReports/StudentsReport.php'; return false;">
-        <button class="add-button">Get Report</button>
-    </a>
-                            </div>
-                        </form>
+    <div class="getreportbutton">
+        <button class="add-button" name="submit" type="submit">Get Report</button>
+    </div>
+</form>
                     </div>
                 </div>
                 <div class="sections section-container">

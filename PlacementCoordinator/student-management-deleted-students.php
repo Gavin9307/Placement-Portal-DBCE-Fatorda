@@ -16,8 +16,8 @@ if (isset($_POST["d_student-search-button"])) {
     $d_sname = !empty($_POST['d_sname']) ? $_POST['d_sname'] : null;
     $d_departments = !empty($_POST['d_departments']) ? $_POST['d_departments'] : [];
     $d_gender = !empty($_POST['d_gender']) ? $_POST['d_gender'] : null;
-
-    $d_studentsResult = fetchStudents(true, $d_sname, $d_departments, $d_gender);
+    $d_batch = !empty($_POST['d_batch_year']) ? $_POST['d_batch_year'] : null;
+    $d_studentsResult = fetchStudents(true, $d_sname, $d_departments, $d_gender,$d_batch);
     $d_studentSearch = true;
 } else {
     $d_studentsResult = fetchStudents(true);
@@ -71,6 +71,19 @@ if (isset($_POST["d_student-search-button"])) {
                                 ?>
                             </div>
                         </div>
+                                
+                        <div class="inputbox">
+                            <label for="batch_year">Batch Year:</label>
+                            <select name="d_batch_year" id="batch_year">
+                                <option value="" selected>Select Batch</option>
+                                <?php
+                                $currentYear = date('Y');
+                                for ($year = $currentYear + 4; $year >= 2000 + 4; $year--) {
+                                    echo '<option value="' . $year . '">' . $year . '</option>';
+                                }
+                                ?>
+                            </select>
+                        </div>
 
                         <div class="inputbox">
                             <label for="">Gender:</label>
@@ -80,6 +93,7 @@ if (isset($_POST["d_student-search-button"])) {
                                 <option value="F">Female</option>
                             </select>
                         </div>
+
                         <div class="search-button-container">
                             <button name="d_student-search-button" class="search-button">Search</button>
                         </div>
@@ -89,6 +103,7 @@ if (isset($_POST["d_student-search-button"])) {
                     <table>
                         <tr>
                             <th>Name</th>
+                            <th>Batch</th>
                             <th>Department</th>
                             <th>Class</th>
                             <th>Details</th>
@@ -97,6 +112,7 @@ if (isset($_POST["d_student-search-button"])) {
                         while ($student = $d_studentsResult->fetch_assoc()) {
                             echo '<tr>
                                 <td>' . htmlspecialchars($student["fname"]) . ' ' . htmlspecialchars($student["lname"]) . '</td>
+                                <td>' . (int) htmlspecialchars($student["yoa"])+4 . '</td>
                                 <td>' . htmlspecialchars($student["dname"]) . '</td>
                                 <td>' . htmlspecialchars($student["cname"]) . '</td>
                                 <td><a href="student-management-view-student.php?semail='.$student["semail"].'">View more</a></td>

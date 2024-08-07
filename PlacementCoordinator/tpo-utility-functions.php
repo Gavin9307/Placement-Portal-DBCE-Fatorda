@@ -6,7 +6,6 @@ function getTpoNotifications()
 
     $fetchNotificationsQuery = "SELECT ND.Notification_ID as nid, ND.Message AS message, ND.Subject AS subject, ND.Attachment1 AS attach1, ND.Attachment2 AS attach2, ND.Notification_Date AS notidate, ND.Notification_Due_Date as duedate
 FROM notificationdetails AS ND
-INNER JOIN studentnotifications AS SN ON ND.Notification_ID = SN.Notification_ID
 WHERE ND.PC_Email = ?
 ORDER BY ND.Notification_Date DESC;";
     $fetchNotifications = $conn->prepare($fetchNotificationsQuery);
@@ -64,20 +63,20 @@ function getLiveJobListings()
     $fetchJob = $conn->prepare($fetchJobQuery);
     $fetchJob->execute();
     $result = $fetchJob->get_result();
-
-    while ($row = $result->fetch_assoc()) {
-        $row["jid"] = (int) $row["jid"];
-        $fetchJobDeptQuery = "
+    if ($result->num_rows > 0) {
+        while ($row = $result->fetch_assoc()) {
+            $row["jid"] = (int) $row["jid"];
+            $fetchJobDeptQuery = "
             SELECT d.Dept_name dname FROM department as d
             INNER JOIN jobdepartments as jd on d.Dept_id = jd.Dept_id
             WHERE jd.J_id = ?;
         ";
-        $fetchJobDept = $conn->prepare($fetchJobDeptQuery);
-        $fetchJobDept->bind_param("i", $row["jid"]);
-        $fetchJobDept->execute();
-        $resultDept = $fetchJobDept->get_result();
+            $fetchJobDept = $conn->prepare($fetchJobDeptQuery);
+            $fetchJobDept->bind_param("i", $row["jid"]);
+            $fetchJobDept->execute();
+            $resultDept = $fetchJobDept->get_result();
 
-        echo '<div class="sections">
+            echo '<div class="sections">
                 <div class="company-container">
                     <div class="company-logo-container">
                         <img src="../Data/Companies/Company_Logo/' . $row['clogo'] . '" alt="">
@@ -88,11 +87,11 @@ function getLiveJobListings()
                 <p class="position"><strong>Position:</strong> ' . $row['position'] . '</p>
                 <p class="department"><strong>Departments </strong>: ';
 
-        while ($rowDept = $resultDept->fetch_assoc()) {
-            echo $rowDept["dname"] . " ";
-        }
+            while ($rowDept = $resultDept->fetch_assoc()) {
+                echo $rowDept["dname"] . " ";
+            }
 
-        echo '</p>
+            echo '</p>
                
                 <form action="" method="post">
                     <input name="jid" type="hidden" value="' . $row["jid"] . '">
@@ -100,6 +99,11 @@ function getLiveJobListings()
                 </form>
                 <a href="./job-live-listing-analysis.php?jid=' . $row["jid"] . '"><button class="analysis-button">Analysis</button></a>
                 <a href="./job-edit.php?jid=' . $row["jid"] . '"><button class="edit-button">Edit Details</button></a>
+            </div>';
+        }
+    } else {
+        echo '<div class="sections">
+                No Live Listings
             </div>';
     }
 }
@@ -156,7 +160,7 @@ function getEligibleStudents()
 {
     global $conn;
     $jid = (int) $_GET["jid"];
-    $fetchJobEligibleQuery = "SELECT s.S_College_Email as semail,s.S_Fname as sfname,d.Dept_name as dname,ja.J_id as jid,ja.Interest as interest FROM student as s
+    $fetchJobEligibleQuery = "SELECT s.S_College_Email as semail,s.S_Fname as sfname,s.S_Lname as lfname,d.Dept_name as dname,ja.J_id as jid,ja.Interest as interest FROM student as s
 INNER JOIN jobapplication as ja ON s.S_College_Email=ja.S_College_Email
 INNER JOIN class as c ON c.Class_id=s.S_Class_id
 INNER JOIN department as d ON d.Dept_id=c.Dept_id
@@ -167,12 +171,12 @@ WHERE ja.J_id = ? LIMIT 5;";
     $result = $fetchJobEligible->get_result();
     while ($row = $result->fetch_assoc()) {
         echo '<tr>
-                <td>' . $row["sfname"] . '</td>
+                <td>' . $row["sfname"] . ' ' . $row["lfname"] . '</td>
                 <td>' . $row["dname"] . '</td>';
         if ($row['interest'] == 0) {
-            echo  '<td>Not Interested</td>';
+            echo  '<td>Not Applied</td>';
         } else {
-            echo '<td>Interested</td>';
+            echo '<td>Applied</td>';
         }
 
         echo '<td><a href="job-eligible-students-details.php?jid=' . $jid . '&semail=' . $row["semail"] . '">View More</a></td>
@@ -186,7 +190,7 @@ function getInterestedStudents()
 {
     global $conn;
     $jid = (int) $_GET["jid"];
-    $fetchJobEligibleQuery = "SELECT s.S_College_Email as semail,ja.placed as placed,s.S_Fname as sfname,d.Dept_name as dname,ja.J_id as jid,ja.Interest as interest,jp.J_Due_date as duedate FROM student as s
+    $fetchJobEligibleQuery = "SELECT s.S_College_Email as semail,ja.placed as placed,s.S_Fname as sfname,s.S_Lname as lfname,d.Dept_name as dname,ja.J_id as jid,ja.Interest as interest,jp.J_Due_date as duedate FROM student as s
 INNER JOIN jobapplication as ja ON s.S_College_Email=ja.S_College_Email
 INNER JOIN class as c ON c.Class_id=s.S_Class_id
 INNER JOIN department as d ON d.Dept_id=c.Dept_id
@@ -199,7 +203,7 @@ WHERE ja.J_id = ? AND ja.Interest = ? LIMIT 5;";
     $result = $fetchJobEligible->get_result();
     while ($row = $result->fetch_assoc()) {
         echo '<tr>
-                <td>' . $row["sfname"] . '</td>
+                <td>' . $row["sfname"] . ' ' . $row["lfname"] . '</td>
                 <td>' . $row["dname"] . '</td>';
         if ($row['placed'] == 0) {
             $retrieved_date = $row['duedate'];
@@ -214,7 +218,7 @@ WHERE ja.J_id = ? AND ja.Interest = ? LIMIT 5;";
             echo '<td>Placed</td>';
         }
 
-        echo '<td><a href="">View More</a></td>
+        echo '<td><a href="job-interested-students-details.php?jid=' . $jid . '&semail=' . $row["semail"] . '">View More</a></td>
                 <td><button class="remove-button">Remove</button></td>
             </tr>';
     }
@@ -224,26 +228,26 @@ function getEligibleStudentsAll()
 {
     global $conn;
     $jid = (int) $_GET["jid"];
-    $fetchJobEligibleQuery = "SELECT s.S_College_Email as semail,s.S_Fname as sfname,d.Dept_name as dname,ja.J_id as jid,ja.Interest as interest FROM student as s
+    $fetchJobEligibleQuery = "SELECT s.S_College_Email as semail,s.S_Fname as sfname,s.S_Lname as lfname,d.Dept_name as dname,ja.J_id as jid,ja.Interest as interest FROM student as s
 INNER JOIN jobapplication as ja ON s.S_College_Email=ja.S_College_Email
 INNER JOIN class as c ON c.Class_id=s.S_Class_id
 INNER JOIN department as d ON d.Dept_id=c.Dept_id
-WHERE ja.J_id = ? LIMIT 5;";
+WHERE ja.J_id = ?;";
     $fetchJobEligible = $conn->prepare($fetchJobEligibleQuery);
     $fetchJobEligible->bind_param("i", $jid);
     $fetchJobEligible->execute();
     $result = $fetchJobEligible->get_result();
     while ($row = $result->fetch_assoc()) {
         echo '<tr>
-                <td>' . $row["sfname"] . '</td>
+                <td>' . $row["sfname"] . ' ' . $row["lfname"] . '</td>
                 <td>' . $row["dname"] . '</td>';
         if ($row['interest'] == 0) {
-            echo  '<td>Not Interested</td>';
+            echo  '<td>Not Applied</td>';
         } else {
-            echo '<td>Interested</td>';
+            echo '<td>Applied</td>';
         }
 
-        echo '<td><a href="job-eligible-students-details.php?jid=' . $jid . '&semail=' . $row["semail"] . '">View More</a></td>
+        echo '<td><a href="job-interested-students-details.php?jid=' . $jid . '&semail=' . $row["semail"] . '">View More</a></td>
                 <td><button class="remove-button">Remove</button></td>
             </tr>';
     }
@@ -254,12 +258,12 @@ function getInterestedStudentsAll()
 {
     global $conn;
     $jid = (int) $_GET["jid"];
-    $fetchJobEligibleQuery = "SELECT s.S_College_Email as semail,ja.placed as placed,s.S_Fname as sfname,d.Dept_name as dname,ja.J_id as jid,ja.Interest as interest,jp.J_Due_date as duedate FROM student as s
+    $fetchJobEligibleQuery = "SELECT s.S_College_Email as semail,ja.placed as placed,s.S_Fname as sfname,s.S_Lname as lfname,d.Dept_name as dname,ja.J_id as jid,ja.Interest as interest,jp.J_Due_date as duedate FROM student as s
 INNER JOIN jobapplication as ja ON s.S_College_Email=ja.S_College_Email
 INNER JOIN class as c ON c.Class_id=s.S_Class_id
 INNER JOIN department as d ON d.Dept_id=c.Dept_id
 INNER JOIN jobplacements as jp ON jp.J_id = ja.J_id
-WHERE ja.J_id = ? AND ja.Interest = ? LIMIT 5;";
+WHERE ja.J_id = ? AND ja.Interest = ?;";
     $inte = 1;
     $fetchJobEligible = $conn->prepare($fetchJobEligibleQuery);
     $fetchJobEligible->bind_param("ii", $jid, $inte);
@@ -267,7 +271,7 @@ WHERE ja.J_id = ? AND ja.Interest = ? LIMIT 5;";
     $result = $fetchJobEligible->get_result();
     while ($row = $result->fetch_assoc()) {
         echo '<tr>
-                <td>' . $row["sfname"] . '</td>
+                <td>' . $row["sfname"] . ' ' . $row["lfname"] . '</td>
                 <td>' . $row["dname"] . '</td>';
         if ($row['placed'] == 0) {
             $retrieved_date = $row['duedate'];
@@ -282,7 +286,7 @@ WHERE ja.J_id = ? AND ja.Interest = ? LIMIT 5;";
             echo '<td>Placed</td>';
         }
 
-        echo '<td><a href="">View More</a></td>
+        echo '<td><a href="job-interested-students-details.php?jid=' . $jid . '&semail=' . $row["semail"] . '">View More</a></td>
                 <td><button class="remove-button">Remove</button></td>
             </tr>';
     }
@@ -340,17 +344,15 @@ function getInterestedStudentsDetails()
     $result1 = $fetchStudent->get_result();
     $row1 = $result1->fetch_assoc();
 
-    $fetchRoundsQuery = 'SELECT r.Round_no roundno,sr.RoundStatus roundstatus FROM rounds as r 
+    $fetchRoundsQuery = 'SELECT r.Round_no roundno, sr.R_id rid, sr.RoundStatus roundstatus FROM rounds as r 
 INNER JOIN studentrounds AS sr ON sr.R_id=r.R_id
 WHERE r.J_id = ? AND sr.S_College_Email= ?;';
 
     $fetchRounds = $conn->prepare($fetchRoundsQuery);
-    $fetchRounds->bind_param("is",$jid,$semail);
+    $fetchRounds->bind_param("is", $jid, $semail);
     $fetchRounds->execute();
     $result2 = $fetchRounds->get_result();
-    $row2 = $result2->fetch_assoc();
 
-    
     echo '<div class="section-details">
                         <p><strong>Name: </strong>' . $row1["name"] . '</p>
                         <p><strong>Department: </strong>' . $row1["dname"] . '</p>
@@ -360,15 +362,23 @@ WHERE r.J_id = ? AND sr.S_College_Email= ?;';
                         <p><strong>Personal Email: </strong>' . $row1["pemail"] . '</p>
                         <p><strong>Roll No.: </strong>' . $row1["rollno"] . '</p>
                         <p><strong>CGPA: </strong>' . $row1["cgpa"] . '</p>
-                        <form action="" method="post">
-                        <p>
+                        <br/>
+                        <form class="status-form" action="" method="post">
+                        <div>';
+
+    while ($row2 = $result2->fetch_assoc()) {
+        echo '<p class="status-form-inputs">
                             <strong>Round ' . $row2["roundno"] . ': </strong>
-                            <select name="round_1" id="" >
-                                <option value="pending">Pending</option>
-                                <option value="passed">Passed</option>
-                                <option value="rejected">Rejected</option>
+                            <select name="round_status[' . $row2["rid"] . ']" id="" >
+                                <option value="pending"' . ($row2["roundstatus"] == 'pending' ? ' selected' : '') . '>Pending</option>
+                                <option value="passed"' . ($row2["roundstatus"] == 'passed' ? ' selected' : '') . '>Passed</option>
+                                <option value="rejected"' . ($row2["roundstatus"] == 'rejected' ? ' selected' : '') . '>Rejected</option>
                             </select>
-                        </p>
+                        </p>';
+    }
+
+    echo ' </div>
+                    <button class="update-round-status" name="update-round-status"> Update Status </button>
                     </form>    
                     </div>
                     <div class="section-img">
@@ -380,15 +390,16 @@ WHERE r.J_id = ? AND sr.S_College_Email= ?;';
 }
 
 
-function fetchStudents($isDeleted, $sname = null, $departments = [], $gender = null) {
+function fetchStudents($isDeleted, $sname = null, $departments = [], $gender = null, $batch_year = null)
+{
     global $conn;
     $table = $isDeleted ? 'deletedstudents' : 'student';
-    $query = "SELECT s.S_College_Email as semail, s.S_Fname as fname, s.S_Lname as lname, c.Class_name as cname, d.Dept_name as dname 
+    $query = "SELECT s.S_College_Email as semail,S.S_Year_of_Admission as yoa, s.S_Fname as fname, s.S_Lname as lname, c.Class_name as cname, d.Dept_name as dname 
               FROM $table as s
               INNER JOIN class as c ON c.Class_id = s.S_Class_id
               INNER JOIN department as d ON d.Dept_id = c.Dept_id 
               WHERE 1=1";
-    
+
     $params = [];
     $types = "";
 
@@ -401,6 +412,13 @@ function fetchStudents($isDeleted, $sname = null, $departments = [], $gender = n
     if (!is_null($gender)) {
         $query .= " AND s.gender = ?";
         $params[] = $gender;
+        $types .= "s";
+    }
+
+    if (!is_null($batch_year)) {
+        $year_of_admission = $batch_year - 4;
+        $query .= " AND s.S_Year_of_Admission = ?";
+        $params[] = $year_of_admission;
         $types .= "s";
     }
 
@@ -421,15 +439,16 @@ function fetchStudents($isDeleted, $sname = null, $departments = [], $gender = n
     return $stmt->get_result();
 }
 
-function fetchStudentsAll($isDeleted, $sname = null, $departments = [], $gender = null) {
+function fetchStudentsAll($isDeleted, $sname = null, $departments = [], $gender = null, $batch_year = null)
+{
     global $conn;
     $table = $isDeleted ? 'deletedstudents' : 'student';
-    $query = "SELECT s.S_College_Email as semail, s.S_Fname as fname, s.S_Lname as lname, c.Class_name as cname, d.Dept_name as dname 
+    $query = "SELECT s.S_College_Email as semail,S.S_Year_of_Admission as yoa, s.S_Fname as fname, s.S_Lname as lname, c.Class_name as cname, d.Dept_name as dname 
               FROM $table as s
               INNER JOIN class as c ON c.Class_id = s.S_Class_id
               INNER JOIN department as d ON d.Dept_id = c.Dept_id 
               WHERE 1=1";
-    
+
     $params = [];
     $types = "";
 
@@ -442,6 +461,12 @@ function fetchStudentsAll($isDeleted, $sname = null, $departments = [], $gender 
     if (!is_null($gender)) {
         $query .= " AND s.gender = ?";
         $params[] = $gender;
+        $types .= "s";
+    }
+    if (!is_null($batch_year)) {
+        $year_of_admission = $batch_year - 4;
+        $query .= " AND s.S_Year_of_Admission = ?";
+        $params[] = $year_of_admission;
         $types .= "s";
     }
 
@@ -461,7 +486,8 @@ function fetchStudentsAll($isDeleted, $sname = null, $departments = [], $gender 
 }
 
 
-function getPlacementCoordinators(){
+function getPlacementCoordinators()
+{
     global $conn;
     $fetchPlacementCoordinatorsQuery = "SELECT p.PC_Email as pcemail,p.PC_Lname as lname,p.PC_Fname as fname,d.Dept_name as dname from placementcoordinator as p INNER JOIN department as d ON d.Dept_id = p.PC_Dept_id";
     $fetchPlacementCoordinators = $conn->prepare($fetchPlacementCoordinatorsQuery);
@@ -470,9 +496,9 @@ function getPlacementCoordinators(){
 
     while ($row = $result->fetch_assoc()) {
         echo '<tr>
-                <td>'.$row["fname"].' '.$row["lname"].'</td>
-                <td>'.$row["dname"].'</td>
-                <td><a href="./Placement-Coordinator-Details.php?pcemail='.$row["pcemail"].'">View more</a></td>
+                <td>' . $row["fname"] . ' ' . $row["lname"] . '</td>
+                <td>' . $row["dname"] . '</td>
+                <td><a href="./Placement-Coordinator-Details.php?pcemail=' . $row["pcemail"] . '">View more</a></td>
               </tr>';
     }
 }

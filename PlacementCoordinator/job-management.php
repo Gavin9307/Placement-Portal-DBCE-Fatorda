@@ -17,12 +17,12 @@ if (isset($_POST["delete-listing"])) {
         $deleteJob = $conn->prepare($deleteJobQuery);
         $deleteJob->bind_param("i", $_POST["jid"]);
         if ($deleteJob->execute()) {
-            echo "success";
+            // echo "success";
         } else {
-            echo "failed";
+            // echo "failed";
         }
     } else {
-        echo "failed";
+        // echo "failed";
     }
 }
 

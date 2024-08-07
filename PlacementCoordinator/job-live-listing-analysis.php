@@ -32,7 +32,7 @@ if (!isset($_GET["jid"])) {
 
             <div class="main-container">
                 <div class="main-container-header">
-                    <h2 class="main-container-heading"><a href="<?php echo './job-live-listing-analysis.php?jid='.$_GET["jid"]; ?>"><i class="fa-solid fa-arrow-left fa-lg" style="color: #000000;"></i></a>
+                    <h2 class="main-container-heading"><a href="<?php echo './job-management.php?jid='.$_GET["jid"]; ?>"><i class="fa-solid fa-arrow-left fa-lg" style="color: #000000;"></i></a>
                         Details</h2>
                     <!-- <div class="company-container">
                         <p>Google</p>

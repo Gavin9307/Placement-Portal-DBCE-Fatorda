@@ -5,14 +5,34 @@
             <h2>Placement Portal - Don Bosco College of Engineering</h2>
         </div>
         <ul class="right-part">
-            <li>Contact Us</li>
+            <a href="../student-support.php"><li>Contact Us</li></a>
             <div class="notifications">
-                <div class="dot">.</div><i class="fa-solid fa-bell"></i>
+             <a href="./notifications.php">
+                <?php 
+                    global $conn;
+                    $fetchNotificationsQuery = "SELECT ND.Message AS message
+                    FROM 
+                    notificationdetails AS ND
+                    INNER JOIN studentnotifications AS SN ON ND.Notification_ID = SN.Notification_ID
+                    WHERE 
+                    SN.S_College_Email = ? AND ND.Notification_Due_Date >= CURRENT_DATE;";
+                
+                    $fetchNotifications = $conn->prepare($fetchNotificationsQuery);
+                    $fetchNotifications->bind_param("s", $_SESSION["user_email"]);
+                    $fetchNotifications->execute();
+                    $result = $fetchNotifications->get_result();
+                
+                    if ($result->num_rows > 0) {
+                     echo '<div class="dot">.</div>';
+                    }
+                ?>
+                
+                <i class="fa-solid fa-bell"></i></a>  
             </div>
-            <li class="profile-container">
+           <a href="./my-profile.php"> <li class="profile-container">
                 <span>Gavin</span>
                 <img src="../Assets/profile.jpg" alt="">
-            </li>
+            </li></a>
         </ul>
     </div>
 </header>

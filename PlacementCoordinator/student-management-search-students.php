@@ -16,8 +16,9 @@ if (isset($_POST["student-search-button"])) {
     $sname = !empty($_POST['sname']) ? $_POST['sname'] : null;
     $departments = !empty($_POST['departments']) ? $_POST['departments'] : [];
     $gender = !empty($_POST['gender']) ? $_POST['gender'] : null;
+    $batch = !empty($_POST['batch_year']) ? $_POST['batch_year'] : null;
 
-    $studentsResult = fetchStudentsAll(false, $sname, $departments, $gender);
+    $studentsResult = fetchStudentsAll(false, $sname, $departments, $gender,$batch);
     $studentSearch = true;
 } else {
     $studentsResult = fetchStudentsAll(false);
@@ -47,68 +48,83 @@ if (isset($_POST["student-search-button"])) {
                 </div>
 
 
-                    <h3>Student Search</h3>
-                    <div class="form-adjust">
+                <h3>Student Search</h3>
+                <div class="form-adjust">
 
-                        <form action="" method="post">
-                            <div class="inputbox">
-                                <label for="">Student Name:</label>
-                                <input type="text" name="sname" placeholder="Enter Student Name">
-                            </div>
+                    <form action="" method="post">
+                        <div class="inputbox">
+                            <label for="">Student Name:</label>
+                            <input type="text" name="sname" placeholder="Enter Student Name">
+                        </div>
 
-                            <div class="departmentbox">
-                                <label for="">Department:</label>
-                                <div class="Checkbox">
-                                    <?php
-                                    $fetchDepartmentQuery = "SELECT Dept_name as dname FROM department;";
-                                    $fetchDepartment = $conn->prepare($fetchDepartmentQuery);
-                                    $fetchDepartment->execute();
-                                    $result = $fetchDepartment->get_result();
+                        <div class="departmentbox">
+                            <label for="">Department:</label>
+                            <div class="Checkbox">
+                                <?php
+                                $fetchDepartmentQuery = "SELECT Dept_name as dname FROM department;";
+                                $fetchDepartment = $conn->prepare($fetchDepartmentQuery);
+                                $fetchDepartment->execute();
+                                $result = $fetchDepartment->get_result();
 
-                                    while ($row = $result->fetch_assoc()) {
-                                        echo '<div>
+                                while ($row = $result->fetch_assoc()) {
+                                    echo '<div>
                                             <input name="departments[]" value="' . htmlspecialchars($row["dname"]) . '" type="checkbox">
                                             <label for="">' . htmlspecialchars($row["dname"]) . '</label>
                                           </div>';
-                                    }
-                                    ?>
-                                </div>
+                                }
+                                ?>
                             </div>
+                        </div>
 
-                            <div class="inputbox">
-                                <label for="">Gender:</label>
-                                <select name="gender" id="">
-                                    <option value="" selected>Select</option>
-                                    <option value="M">Male</option>
-                                    <option value="F">Female</option>
-                                </select>
-                            </div>
-                            <div class="search-button-container">
-                                <button name="student-search-button" class="search-button">Search</button>
-                            </div>
-                        </form>
+                        <div class="inputbox">
+                            <label for="batch_year">Batch Year:</label>
+                            <select name="batch_year" id="batch_year">
+                                <option value="" selected>Select Batch</option>
+                                <?php
+                                $currentYear = date('Y');
+                                for ($year = $currentYear + 4; $year >= 2000 + 4; $year--) {
+                                    echo '<option value="' . $year . '">' . $year . '</option>';
+                                }
+                                ?>
+                            </select>
+                        </div>
 
-                    </div>
-                    <div class="sections">
-                        <table>
-                            <tr>
-                                <th>Name</th>
-                                <th>Department</th>
-                                <th>Class</th>
-                                <th>Details</th>
-                            </tr>
-                            <?php
-                            while ($student = $studentsResult->fetch_assoc()) {
-                                echo '<tr>
+                        <div class="inputbox">
+                            <label for="">Gender:</label>
+                            <select name="gender" id="">
+                                <option value="" selected>Select</option>
+                                <option value="M">Male</option>
+                                <option value="F">Female</option>
+                            </select>
+                        </div>
+                        <div class="search-button-container">
+                            <button name="student-search-button" class="search-button">Search</button>
+                        </div>
+                    </form>
+
+                </div>
+                <div class="sections">
+                    <table>
+                        <tr>
+                            <th>Name</th>
+                            <th>Batch</th>
+                            <th>Department</th>
+                            <th>Class</th>
+                            <th>Details</th>
+                        </tr>
+                        <?php
+                        while ($student = $studentsResult->fetch_assoc()) {
+                            echo '<tr>
                                 <td>' . htmlspecialchars($student["fname"]) . ' ' . htmlspecialchars($student["lname"]) . '</td>
+                                <td>' . (int) htmlspecialchars($student["yoa"])+4 . '</td>
                                 <td>' . htmlspecialchars($student["dname"]) . '</td>
                                 <td>' . htmlspecialchars($student["cname"]) . '</td>
-                                href="student-management-view-student.php?semail='.$student["semail"].'"
+                                <td><a href="student-management-view-student.php?semail=' . $student["semail"] . '">View more</a></td>
                             </tr>';
-                            }
-                            ?>
-                        </table>
-                    </div>
+                        }
+                        ?>
+                    </table>
+                </div>
 
             </div>
         </div>

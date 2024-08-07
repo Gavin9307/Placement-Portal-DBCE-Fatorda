@@ -36,36 +36,36 @@ if (isset($_POST["update-button"])) {
 
     // Handle Attachment1 deletion
     if (isset($_POST['delete_attachment1']) && $_POST['delete_attachment1'] == 'yes') {
-        if (file_exists($attachment1)) {
-            unlink($attachment1);
+        if ($attachment1 && file_exists($uploadDir . $attachment1)) {
+            unlink($uploadDir . $attachment1);
         }
         $attachment1 = null;
     }
 
     // Handle Attachment2 deletion
     if (isset($_POST['delete_attachment2']) && $_POST['delete_attachment2'] == 'yes') {
-        if (file_exists($attachment2)) {
-            unlink($attachment2);
+        if ($attachment2 && file_exists($uploadDir . $attachment2)) {
+            unlink($uploadDir . $attachment2);
         }
         $attachment2 = null;
     }
 
     // Handle Attachment1 upload
     if (isset($_FILES["attachment1"]) && $_FILES["attachment1"]["error"] == 0) {
-        if (file_exists($attachment1)) {
-            unlink($attachment1);
+        if ($attachment1 && file_exists($uploadDir . $attachment1)) {
+            unlink($uploadDir . $attachment1);
         }
-        $attachment1 = $uploadDir . "notification_" . $nid . "_attachment_1." . pathinfo($_FILES["attachment1"]["name"], PATHINFO_EXTENSION);
-        move_uploaded_file($_FILES["attachment1"]["tmp_name"], $attachment1);
+        $attachment1 = "notification_" . $nid . "_attachment_1." . pathinfo($_FILES["attachment1"]["name"], PATHINFO_EXTENSION);
+        move_uploaded_file($_FILES["attachment1"]["tmp_name"], $uploadDir . $attachment1);
     }
 
     // Handle Attachment2 upload
     if (isset($_FILES["attachment2"]) && $_FILES["attachment2"]["error"] == 0) {
-        if (file_exists($attachment2)) {
-            unlink($attachment2);
+        if ($attachment2 && file_exists($uploadDir . $attachment2)) {
+            unlink($uploadDir . $attachment2);
         }
-        $attachment2 = $uploadDir . "notification_" . $nid . "_attachment_2." . pathinfo($_FILES["attachment2"]["name"], PATHINFO_EXTENSION);
-        move_uploaded_file($_FILES["attachment2"]["tmp_name"], $attachment2);
+        $attachment2 = "notification_" . $nid . "_attachment_2." . pathinfo($_FILES["attachment2"]["name"], PATHINFO_EXTENSION);
+        move_uploaded_file($_FILES["attachment2"]["tmp_name"], $uploadDir . $attachment2);
     }
 
     $updateNotiQuery = "UPDATE notificationdetails 
@@ -78,8 +78,6 @@ if (isset($_POST["update-button"])) {
     exit();
 }
 ?>
-
-
 
 <!DOCTYPE html>
 <html lang="en">
@@ -126,7 +124,7 @@ if (isset($_POST["update-button"])) {
                             <h3>Attachment 1:</h3>
                             <input type="file" name="attachment1">
                             <?php if ($row['Attachment1']): ?>
-                                <p>Current file: <a style="color:blue;" href="<?php echo '../Data/Notifications/' . basename($row['Attachment1']); ?>" target="_blank"><?php echo basename($row['Attachment1']); ?></a></p>
+                                <p>Current file: <a style="color:blue;" href="<?php echo $uploadDir . basename($row['Attachment1']); ?>" target="_blank"><?php echo basename($row['Attachment1']); ?></a></p>
                                 <p style="color:red;">Delete Attachment: <input style="width: 20px;" type="checkbox" name="delete_attachment1" value="yes"></p>
                             <?php endif; ?>
                         </div><br>
@@ -134,7 +132,7 @@ if (isset($_POST["update-button"])) {
                             <h3>Attachment 2:</h3>
                             <input type="file" name="attachment2">
                             <?php if ($row['Attachment2']): ?>
-                                <p>Current file: <a style="color:blue;" href="<?php echo '../Data/Notifications/' . basename($row['Attachment2']); ?>" target="_blank"><?php echo basename($row['Attachment2']); ?></a></p>
+                                <p>Current file: <a style="color:blue;" href="<?php echo $uploadDir . basename($row['Attachment2']); ?>" target="_blank"><?php echo basename($row['Attachment2']); ?></a></p>
                                 <p style="color:red;">Delete Attachment: <input style="width: 20px;" type="checkbox" name="delete_attachment2" value="yes"></p>
                             <?php endif; ?>
                         </div><br>

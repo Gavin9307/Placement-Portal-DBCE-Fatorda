@@ -298,7 +298,7 @@ function getEligibleStudentsDetails()
     global $conn;
     $jid = (int) $_GET['jid'];
     $semail = (string) $_GET['semail'];
-    $fetchStudentQuery = 'SELECT CONCAT_WS(" ",s.S_Fname,s.S_Mname,s.S_Lname) as name,s.S_Profile_pic as logo, s.S_Personal_Email as pemail,s.S_Phone_no as phno,s.S_Roll_no as rollno,c.Class_name as cname,d.Dept_name as dname,r.CGPA as cgpa FROM student AS s
+    $fetchStudentQuery = 'SELECT s.S_Fname as fname, CONCAT_WS(" ",s.S_Fname,s.S_Mname,s.S_Lname) as name,s.S_Profile_pic as logo, s.S_Personal_Email as pemail,s.S_Phone_no as phno,s.S_Roll_no as rollno,c.Class_name as cname,d.Dept_name as dname,r.CGPA as cgpa FROM student AS s
         INNER JOIN class AS c ON c.Class_id = s.S_Class_id
         INNER JOIN department AS d ON c.Dept_id = d.Dept_id
         INNER JOIN result AS r ON s.S_College_Email = r.S_College_Email
@@ -322,7 +322,7 @@ function getEligibleStudentsDetails()
                     <div class="section-img">
                         <img src="../Data/Students/Profile_Images/' . $row["logo"] . '" alt="">
                         <div class="button-container">
-                            <a href="#"><button class="send-message-button">Send Message</button></a>
+                            <a href="./notification-post-solo.php?semail='.$semail.'&sname='.$row["fname"].'"><button class="send-message-button">Send Message</button></a>
                         </div>
                     </div>';
 }
@@ -333,7 +333,7 @@ function getInterestedStudentsDetails()
     global $conn;
     $jid = (int) $_GET['jid'];
     $semail = (string) $_GET['semail'];
-    $fetchStudentQuery = 'SELECT CONCAT_WS(" ",s.S_Fname,s.S_Mname,s.S_Lname) as name,s.S_Profile_pic as logo, s.S_Personal_Email as pemail,s.S_Phone_no as phno,s.S_Roll_no as rollno,c.Class_name as cname,d.Dept_name as dname,r.CGPA as cgpa FROM student AS s
+    $fetchStudentQuery = 'SELECT s.S_Fname as fname,CONCAT_WS(" ",s.S_Fname,s.S_Mname,s.S_Lname) as name,s.S_Profile_pic as logo, s.S_Personal_Email as pemail,s.S_Phone_no as phno,s.S_Roll_no as rollno,c.Class_name as cname,d.Dept_name as dname,r.CGPA as cgpa FROM student AS s
         INNER JOIN class AS c ON c.Class_id = s.S_Class_id
         INNER JOIN department AS d ON c.Dept_id = d.Dept_id
         INNER JOIN result AS r ON s.S_College_Email = r.S_College_Email
@@ -384,7 +384,7 @@ WHERE r.J_id = ? AND sr.S_College_Email= ?;';
                     <div class="section-img">
                         <img src="../Data/Students/Profile_Images/' . $row1["logo"] . '" alt="">
                         <div class="button-container">
-                            <a href="#"><button class="send-message-button">Send Message</button></a>
+                            <a href="./notification-post-solo.php?semail='.$semail.'&sname='.$row1["fname"].'"><button class="send-message-button">Send Message</button></a>
                         </div>
                     </div>';
 }

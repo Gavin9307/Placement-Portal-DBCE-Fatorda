@@ -76,10 +76,10 @@ INNER JOIN jobposting as J ON J.C_id = C.C_id
 INNER JOIN jobplacements as P ON P.J_id = J.J_id
 INNER JOIN jobapplication as A ON A.J_id = P.J_id
 WHERE
-P.J_Due_date >= CURRENT_DATE AND J.J_id = ?";
+P.J_Due_date >= CURRENT_DATE AND J.J_id = ? AND A.S_College_Email=?";
 
     $fetchJobDetail = $conn->prepare($fetchJobDetailQuery);
-    $fetchJobDetail->bind_param("i", $job_id);
+    $fetchJobDetail->bind_param("is", $job_id,$_SESSION["user_email"]);
     $fetchJobDetail->execute();
     $result = $fetchJobDetail->get_result();
 

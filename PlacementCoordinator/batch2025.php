@@ -77,10 +77,10 @@ if ($client->isAccessTokenExpired()) {
 
 // Initialize the Google Sheets API Service
 $service = new Sheets($client);
-
 $driveService = new Drive($client);
 
-
+// **Define the spreadsheet ID**
+$spreadsheetId = '1-WaAX--E--eWShVlqYrjqdwGs1IGzJCjk7Z8eXQ1OGo'; 
 
 // Create database connection
 $conn = new mysqli('localhost', 'root', '', 'placementdbce');
@@ -88,97 +88,103 @@ if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
-// SQL query
-$sql = "SELECT 
-    COUNT(CASE WHEN d.Dept_name = 'CIVIL' THEN 1 END) as CIVIL,
-    COUNT(CASE WHEN d.Dept_name = 'MECH' THEN 1 END) as MECH,
-    COUNT(CASE WHEN d.Dept_name = 'ETC' THEN 1 END) as ETC,
-    COUNT(CASE WHEN d.Dept_name = 'COMP' THEN 1 END) as COMP
-FROM 
-    student as s
-INNER JOIN 
-    class as c ON c.Class_id = s.S_Class_id
-INNER JOIN 
-    department as d ON c.Dept_id = d.Dept_id
-WHERE 
-    s.S_Year_of_Admission = '2021';"; // Replace with your table name
-$result = $conn->query($sql);
-
-// Prepare data for Google Sheets as array
-$data = [];
-
-
-// Fetch the headers
-if ($result->num_rows > 0) {
-    $fields = $result->fetch_fields();
-    $headers = [];
-    foreach ($fields as $field) {
-        $headers[] = $field->name;
-    }
-    $data[] = $headers; 
-}
-
-// Fetch the rows
-while ($row = $result->fetch_assoc()) {
-    $data[] = array_values($row); 
-}
-
-$spreadsheetId = '1-WaAX--E--eWShVlqYrjqdwGs1IGzJCjk7Z8eXQ1OGo'; 
-$range = 'batch2025!A6:Z'; 
-
-// Specify the folder ID where the sheet should be stored
-$folderId = '1vHugh2jrY3yvGv9kef93RHx1aVMcnP3g'; 
-
-// Move the spreadsheet to the specified folder
-$file = new DriveFile();
-$driveService->files->update($spreadsheetId, $file, [
-    'addParents' => $folderId,
-    'removeParents' => 'root', 
-    'fields' => 'id, parents'
-]);
-
-
-// Clear the data
-try {
-    $requestBody = new Sheets\ClearValuesRequest();
-    $response = $service->spreadsheets_values->clear($spreadsheetId, $range, $requestBody);
-    echo "Data cleared successfully.";
-} catch (Exception $e) {
-    echo 'Error: ' . $e->getMessage();
-}
-
-
-
-
-
-// Prepare the request
-$body = new Sheets\ValueRange([
-    'values' => $data
-]);
-$params = [
-    'valueInputOption' => 'RAW' //parsing
+// Define queries
+$queries = [
+    "SELECT 
+        COUNT(CASE WHEN d.Dept_name = 'CIVIL' THEN 1 END) as CIVIL,
+        COUNT(CASE WHEN d.Dept_name = 'MECH' THEN 1 END) as MECH,
+        COUNT(CASE WHEN d.Dept_name = 'ETC' THEN 1 END) as ETC,
+        COUNT(CASE WHEN d.Dept_name = 'COMP' THEN 1 END) as COMP
+    FROM 
+        student as s 
+    INNER JOIN 
+        jobapplication as ja ON ja.S_College_Email = s.S_College_Email
+    INNER JOIN 
+        class as c ON c.Class_id = s.S_Class_id
+    INNER JOIN 
+        department as d ON c.Dept_id = d.Dept_id
+    WHERE
+    s.S_Year_of_Admission = '2021' AND ja.J_id = 1;",
+    
+    "SELECT 
+        COUNT(CASE WHEN d.Dept_name = 'CIVIL' THEN 1 END) as CIVIL,
+        COUNT(CASE WHEN d.Dept_name = 'MECH' THEN 1 END) as MECH,
+        COUNT(CASE WHEN d.Dept_name = 'ETC' THEN 1 END) as ETC,
+        COUNT(CASE WHEN d.Dept_name = 'COMP' THEN 1 END) as COMP
+    FROM 
+        student as s 
+    INNER JOIN 
+        jobapplication as ja ON ja.S_College_Email = s.S_College_Email
+    INNER JOIN 
+        class as c ON c.Class_id = s.S_Class_id
+    INNER JOIN 
+        department as d ON c.Dept_id = d.Dept_id
+    WHERE
+    s.S_Year_of_Admission = '2021' AND ja.J_id = 1 AND ja.Interest = 1;",
+    
+    "SELECT 
+        COUNT(CASE WHEN d.Dept_name = 'CIVIL' THEN 1 END) as CIVIL,
+        COUNT(CASE WHEN d.Dept_name = 'MECH' THEN 1 END) as MECH,
+        COUNT(CASE WHEN d.Dept_name = 'ETC' THEN 1 END) as ETC,
+        COUNT(CASE WHEN d.Dept_name = 'COMP' THEN 1 END) as COMP
+    FROM 
+        student as s 
+    INNER JOIN 
+        jobapplication as ja ON ja.S_College_Email = s.S_College_Email
+    INNER JOIN 
+        class as c ON c.Class_id = s.S_Class_id
+    INNER JOIN 
+        department as d ON c.Dept_id = d.Dept_id
+    WHERE
+    s.S_Year_of_Admission = '2021' AND ja.J_id = 1 AND ja.Interest = 0;",
+    
+    "SELECT 
+        COUNT(CASE WHEN d.Dept_name = 'CIVIL' THEN 1 END) as CIVIL,
+        COUNT(CASE WHEN d.Dept_name = 'MECH' THEN 1 END) as MECH,
+        COUNT(CASE WHEN d.Dept_name = 'ETC' THEN 1 END) as ETC,
+        COUNT(CASE WHEN d.Dept_name = 'COMP' THEN 1 END) as COMP
+    FROM 
+        student as s 
+    INNER JOIN 
+        jobapplication as ja ON ja.S_College_Email = s.S_College_Email
+    INNER JOIN 
+        class as c ON c.Class_id = s.S_Class_id
+    INNER JOIN 
+        department as d ON c.Dept_id = d.Dept_id
+    WHERE
+    s.S_Year_of_Admission = '2021' AND ja.J_id = 0;"
 ];
 
-// Updating  the sheet with new data
-try {
-    $response = $service->spreadsheets_values->update($spreadsheetId, $range, $body, $params);
-    printf("%d cells updated.", $response->getUpdatedCells());
-} catch (Exception $e) {
-    //echo 'Error: ' . $e->getMessage();
+// Specify starting rows for each query
+$startRows = [9, 10, 11, 12]; // Starting row numbers for each query
+
+// Loop through each query and update Google Sheets
+foreach ($queries as $index => $sql) {
+    $result = $conn->query($sql);
+    if ($result->num_rows > 0) {
+        $data = [];
+        while ($row = $result->fetch_assoc()) {
+            $data[] = array_values($row);
+        }
+
+        $range = 'batch2025!E' . $startRows[$index] . ':H' . $startRows[$index]; // Adjust range as needed
+
+        // Update the Google Sheet with the current query's data
+        try {
+            $body = new Sheets\ValueRange([
+                'values' => $data
+            ]);
+            $params = [
+                'valueInputOption' => 'RAW'
+            ];
+
+            $response = $service->spreadsheets_values->update($spreadsheetId, $range, $body, $params);
+            printf("%d cells updated for query %d.\n", $response->getUpdatedCells(), $index + 1);
+        } catch (Exception $e) {
+            echo 'Error: ' . $e->getMessage();
+        }
+    }
 }
 
 $conn->close();
-
-
-
-
-// Condition for redirection
-$shouldRedirect = true;
-
-if ($shouldRedirect) {
-    //returning to orignal page
-   //header("Location: /Placement-Portal-DBCE-Fatorda/PlacementCoordinator/analysis-and-report-yearly.php");
-
-    //exit();
-}
 ?>

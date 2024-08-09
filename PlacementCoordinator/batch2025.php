@@ -152,13 +152,65 @@ $queries = [
     INNER JOIN 
         department as d ON c.Dept_id = d.Dept_id
     WHERE
-    s.S_Year_of_Admission = '2021' AND ja.J_id = 0;"
+    s.S_Year_of_Admission = '2021' AND ja.J_id = 0;",
+
+    "WITH AggregatedPlacements AS (
+    SELECT
+        c.C_Name AS company_name,
+        c.C_Location AS location,
+        jp.Job_Post_Date AS interview_date,
+        d.Dept_Name AS dept_name,
+        COUNT(DISTINCT ja.S_College_Email) AS students_count,
+        jo.J_Offered_salary AS offered_salary
+    FROM
+        company AS c
+    INNER JOIN
+        jobposting AS jp ON jp.C_id = c.C_id
+    INNER JOIN
+        jobplacements AS jo ON jo.J_id = jp.J_id
+    INNER JOIN
+        jobdepartments AS jd ON jd.J_id = jp.J_id
+    INNER JOIN
+        jobapplication AS ja ON ja.J_id = jp.J_id
+    INNER JOIN
+        student AS s ON s.S_College_Email = ja.S_College_Email
+    INNER JOIN
+        class AS cl ON cl.Class_id = s.S_Class_id
+    INNER JOIN
+        department AS d ON cl.Dept_id = d.Dept_id
+    WHERE
+        ja.placed = 1
+        AND jp.Job_Post_Date BETWEEN '2024-01-01' AND '2024-12-31'
+    GROUP BY
+        c.C_Name, c.C_Location, jp.Job_Post_Date, jo.J_Offered_salary, d.Dept_Name
+)
+
+SELECT
+    ROW_NUMBER() OVER (ORDER BY ap.company_name, ap.interview_date) AS Sr_No,
+    ap.company_name AS `Company Name`,
+    ap.location AS Location,
+    ap.interview_date AS `Interview Date`,
+    COALESCE(SUM(CASE WHEN ap.dept_name = 'CIVIL' THEN ap.students_count ELSE 0 END), 0) AS CIVIL,
+    COALESCE(SUM(CASE WHEN ap.dept_name = 'MECH' THEN ap.students_count ELSE 0 END), 0) AS MECH,
+    COALESCE(SUM(CASE WHEN ap.dept_name = 'ETC' THEN ap.students_count ELSE 0 END), 0) AS ETC,
+    COALESCE(SUM(CASE WHEN ap.dept_name = 'COMP' THEN ap.students_count ELSE 0 END), 0) AS COMP,
+    COALESCE(SUM(ap.students_count), 0) AS Total,
+    ap.offered_salary AS `Salary Package in LPA (Lakhs per annum)`
+FROM
+    AggregatedPlacements ap
+GROUP BY
+    ap.company_name, ap.location, ap.interview_date, ap.offered_salary
+ORDER BY
+    ap.company_name, ap.interview_date;
+
+"
+
+
 ];
 
 // Specify starting rows for each query
-$startRows = [9, 10, 11, 12]; // Starting row numbers for each query
+$startRows = [9, 10, 11, 12, 18]; // Starting row numbers for each query
 
-// Loop through each query and update Google Sheets
 foreach ($queries as $index => $sql) {
     $result = $conn->query($sql);
     if ($result->num_rows > 0) {
@@ -167,16 +219,21 @@ foreach ($queries as $index => $sql) {
             $data[] = array_values($row);
         }
 
-        $range = 'batch2025!E' . $startRows[$index] . ':H' . $startRows[$index]; // Adjust range as needed
-
+        // Define the range for each query
+        if ($index == 4) { // This is for the new query at index 4
+            $range = 'batch2025!A' . $startRows[$index] . ':Z' . $startRows[$index];
+        } else {
+            $range = 'batch2025!E' . $startRows[$index] . ':H' . $startRows[$index]; // Adjust range as needed
+        }
         // Update the Google Sheet with the current query's data
         try {
             $body = new Sheets\ValueRange([
                 'values' => $data
             ]);
             $params = [
-                'valueInputOption' => 'RAW'
+                'valueInputOption' => 'USER_ENTERED'
             ];
+            
 
             $response = $service->spreadsheets_values->update($spreadsheetId, $range, $body, $params);
             printf("%d cells updated for query %d.\n", $response->getUpdatedCells(), $index + 1);

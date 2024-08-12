@@ -89,9 +89,6 @@
 .position {
     margin-bottom: 30px;
 }
-.sections {
-    padding-bottom: 100px;
-}
 .sections .analysis-button {
     margin-top: 10px;
     padding-block: 5px;
@@ -103,9 +100,6 @@
     cursor: pointer;
     background-color: var(--primary-blue);
     color: var(--primary-white);
-    position: absolute;
-    right: 200px; 
-    bottom: 20px;
 }
 #jobmanagement{
     color: var(--primary-blue);
@@ -123,9 +117,6 @@
     cursor: pointer;
     background-color: var(--primary-red);
     color: var(--primary-white);
-    position: absolute;
-    right: 675px; 
-    bottom: 20px;
 }
 
 .sections  .edit-button {
@@ -139,9 +130,6 @@
     cursor: pointer;
     background-color: var(--primary-blue);
     color: var(--primary-white);
-    position: absolute;
-    right: 25px;
-    bottom: 20px;
 } 
 .sections  table {
     width: 100%;
@@ -184,9 +172,6 @@
     cursor: pointer;
     background-color: var(--primary-blue);
     color: var(--primary-white);
-    position: absolute;
-    right: 350px; 
-    bottom: 20px;
 }
 
 .sections .start-button {
@@ -200,9 +185,6 @@
     cursor: pointer;
     background-color: var(--primary-blue);
     color: var(--primary-white);
-    position: absolute;
-    right: 350px; 
-    bottom: 20px;
 }
 
 .sections .add-rounds-button {
@@ -216,7 +198,10 @@
     cursor: pointer;
     background-color: var(--primary-blue);
     color: var(--primary-white);
-    position: absolute;
-    left: 20px; 
-    bottom: 20px;
+}
+
+.acceptresp-container{
+    display:flex;
+    justify-content: flex-end;
+    gap:10px;
 }

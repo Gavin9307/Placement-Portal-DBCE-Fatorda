@@ -104,9 +104,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['post-job'])) {
     }
 
     // Close the statements
-    $insertRoundQuery->close();
-    $fetchInterestedStudents->close();
-    $fetchRounds->close();
+    // $insertRoundQuery->close();
+    // $fetchInterestedStudents->close();
+    // $fetchRounds->close();
 }
 
 ?>

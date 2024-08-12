@@ -99,7 +99,7 @@ function getLiveJobListings()
                 echo $rowDept["dname"] . " ";
             }
 
-            echo '</p>
+            echo '</p><div class="acceptresp-container">
                 <form action="" method="post">
                     <input name="jid" type="hidden" value="' . $row["jid"] . '">
                     <button name="delete-listing" class="delete-button">Delete</button>
@@ -117,7 +117,7 @@ function getLiveJobListings()
             }
 
             echo '<a href="./job-live-listing-analysis.php?jid=' . $row["jid"] . '"><button class="analysis-button">Analysis</button></a>
-                <a href="./job-edit.php?jid=' . $row["jid"] . '"><button class="edit-button">Edit Details</button></a>
+                <a href="./job-edit.php?jid=' . $row["jid"] . '"><button class="edit-button">Edit Details</button></a></div>
             </div>';
         }
     } else {

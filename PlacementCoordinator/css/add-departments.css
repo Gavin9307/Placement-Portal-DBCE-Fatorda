@@ -1,0 +1,98 @@
+#wrapper {
+    position: relative;
+}
+
+/* Main Content */
+.container {
+    width: 100%;
+    display:flex ;
+}
+.main-container {
+    width: 75%;
+    padding: 25px;
+    margin-bottom: 50px;
+}
+.main-container-heading > a {
+    cursor: pointer;
+}
+.main-container-header  {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px;
+}
+
+.sections {
+    position: relative;
+    margin-top: 30px;
+    box-shadow: 5px 10px 12.3px 5px rgba(0, 0, 0, .25);
+    padding: 20px;
+    margin-bottom: 40px;
+}
+
+.form-adjust {
+    width: 60%;
+    margin: 0 auto;
+}
+
+.inputbox {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.inputbox input{
+    border: 1px solid var(--secondary-grey);
+    width: 350px;
+    padding: 10px;
+    border-radius: 5px;
+    margin-top: 5px;
+    outline: none;
+}
+.inputbox :focus {
+    border: 1px solid var(--primary-blue);
+}
+
+.inputbox input::placeholder{
+    color:grey;
+}
+.sections  table {
+    width: 100%;
+}
+.sections td {
+    padding: 8px;
+    text-align: center;
+}
+
+.add-button {
+    padding-block: 5px;
+    padding-inline: 25px;
+    border-radius: 5px;
+    border: none;
+    font-weight: 600;
+    font-size: 18px;
+    cursor: pointer;
+    background-color: var(--primary-blue);
+    color: var(--primary-white);  
+}
+.button-container {
+    margin-top:20px;
+    display:flex;
+    justify-content: flex-end;
+    gap:10px;
+}
+.remove-button {
+    border: none;
+    font-size: 16px;
+    cursor: pointer;
+    background-color: var(--primary-white);
+    color: var(--primary-red); 
+}
+.edit-button{
+    border: none;
+    font-size: 16px;
+    cursor: pointer;
+    background-color: var(--primary-white);
+    color: var(--primary-blue);  
+}

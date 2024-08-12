@@ -105,7 +105,7 @@ if (isset($_POST["d_student-search-button"])) {
                             <th>Name</th>
                             <th>Batch</th>
                             <th>Department</th>
-                            <th>Class</th>
+                            <th>CGPA</th>
                             <th>Details</th>
                         </tr>
                         <?php
@@ -114,7 +114,7 @@ if (isset($_POST["d_student-search-button"])) {
                                 <td>' . htmlspecialchars($student["fname"]) . ' ' . htmlspecialchars($student["lname"]) . '</td>
                                 <td>' . (int) htmlspecialchars($student["yoa"])+4 . '</td>
                                 <td>' . htmlspecialchars($student["dname"]) . '</td>
-                                <td>' . htmlspecialchars($student["cname"]) . '</td>
+                                <td>' . htmlspecialchars($student["cgpa"]) . '</td>
                                 <td><a href="student-management-view-student.php?semail='.$student["semail"].'">View more</a></td>
                             </tr>';
                         }

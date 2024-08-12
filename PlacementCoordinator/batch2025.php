@@ -251,11 +251,8 @@ SELECT
 FROM
     DepartmentAggregates da
 ORDER BY
-    da.company_name, da.interview_date;
-
+    ap.company_name, ap.interview_date;
 "
-
-
 ];
 
 // Specify starting rows for each query

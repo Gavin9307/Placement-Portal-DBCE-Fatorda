@@ -12,6 +12,17 @@ if (!isset($_GET["jid"])) {
     exit();
 }
 
+if (isset($_POST["getreport-button"])){
+   echo "SELECT s.S_Year_of_Admission + 4 as Batch, s.S_College_Email as College_Email, s.S_Personal_Email as Personal_Email,s.S_Fname as First_Name,s.S_Mname as Middle_Name,s.S_Lname as Last_Name,d.Dept_name as Department FROM student as s
+INNER JOIN jobapplication as ja ON s.S_College_Email=ja.S_College_Email
+INNER JOIN class as c ON c.Class_id=s.S_Class_id
+INNER JOIN department as d ON d.Dept_id=c.Dept_id
+INNER JOIN jobplacements as jp ON jp.J_id = ja.J_id
+WHERE ja.J_id = ".$_GET["jid"]." AND ja.Interest = 1;";
+
+    
+}
+
 ?>
 
 <!DOCTYPE html>
@@ -57,7 +68,9 @@ if (!isset($_GET["jid"])) {
                        
                     </table>
                 </div>
-                <button class="getreport-button">Get Report</button>
+                <form action="" method="post">
+                    <button name="getreport-button" class="getreport-button">Get Report</button>
+                </form>
             </div>
         </div>
 

@@ -133,7 +133,7 @@ function getLiveJobListings()
 function getCompletedJobListings()
 {
     global $conn;
-    $fetchJobQuery = "SELECT c.C_Name as cname, j.J_Due_date as duedate, SUM(ja.placed) as totalplaced
+    $fetchJobQuery = "SELECT c.C_Name as cname, j.J_Due_date as duedate, SUM(ja.placed) as totalplaced,J.J_id jid
         FROM company as c 
         INNER JOIN jobposting as jp ON jp.C_id=c.C_id
         INNER JOIN jobplacements as j ON jp.J_id=j.J_id
@@ -148,7 +148,7 @@ function getCompletedJobListings()
                         <td>' . $row["duedate"] . '</td>
                         <td>' . $row["cname"] . '</td>
                         <td>' . $row["totalplaced"] . '</td>
-                        <td><a href="">View more</a></td>
+                        <td><a href="./job-live-listing-analysis.php?jid=' . $row["jid"] . '">View more</a></td>
                     </tr>';
     }
 }
@@ -156,7 +156,7 @@ function getCompletedJobListings()
 function getCompletedJobListingsAll()
 {
     global $conn;
-    $fetchJobQuery = "SELECT c.C_Name as cname, j.J_Due_date as duedate, SUM(ja.placed) as totalplaced
+    $fetchJobQuery = "SELECT c.C_Name as cname, j.J_Due_date as duedate, SUM(ja.placed) as totalplaced,J.J_id jid
         FROM company as c 
         INNER JOIN jobposting as jp ON jp.C_id=c.C_id
         INNER JOIN jobplacements as j ON jp.J_id=j.J_id
@@ -171,7 +171,7 @@ function getCompletedJobListingsAll()
                         <td>' . $row["duedate"] . '</td>
                         <td>' . $row["cname"] . '</td>
                         <td>' . $row["totalplaced"] . '</td>
-                        <td><a href="">View more</a></td>
+                        <td><a href="./job-live-listing-analysis.php?jid=' . $row["jid"] . '">View more</a></td>
                     </tr>';
     }
 }

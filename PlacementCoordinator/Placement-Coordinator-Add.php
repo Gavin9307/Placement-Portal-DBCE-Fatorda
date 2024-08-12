@@ -54,6 +54,23 @@ if (!isset($_SESSION)) {
                                 <label for="pemail">Personal Email</label><br>
                                 <input type="text" name="pemail" >
                             </div>
+
+                            <div>
+                                <label for="pemail">Department</label><br>
+                                <select type="text" name="dept_id">
+                                    <option value="" selected>Choose Department</option>
+                                    <?php
+                                    $fetchDeptQuery = "SELECT * FROM `department`";
+                                    $fetchDept = $conn->prepare($fetchDeptQuery);
+                                    $fetchDept->execute();
+                                    $result = $fetchDept->get_result();
+
+                                    while ($row = $result->fetch_assoc()) {
+                                        echo '<option value="' . $row['Dept_id'] . '">' . $row["Dept_name"] . '</option >';
+                                    }
+                                    ?>
+                                </select>
+                            </div>
                         </div>
 
                         <h3>Change Password:</h3>

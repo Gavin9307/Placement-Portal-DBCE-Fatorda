@@ -13,7 +13,7 @@ if (!isset($_GET["pcemail"])) {
 }
 
 
-$fetchStudentQuery = "";
+$fetchStudentQuery = "select * from student";
 $fetchStudent = $conn->prepare($fetchStudentQuery);
 $fetchStudent->bind_param("s", $_SESSION["user_email"]);
 $fetchStudent->execute();

@@ -1,3 +1,14 @@
+<?php
+require "./conn.php";
+require "./restrict.php";
+include "./utility_functions.php";
+global $conn;
+if (!isset($_SESSION)) {
+    session_start();
+}
+
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -17,8 +28,8 @@
                     <h2>Placement Portal - Don Bosco College of Engineering</h2>
                 </div>
                 <ul class="right-part">
-                    <a href="./Students/"><li>Home</li></a>
-                    <a href="./index.html"><li>Dashboard</li></a>
+                    <a href="./index.php"><li>Home</li></a>
+                    <a href="./Students/dashboard.php"><li>Dashboard</li></a>
                 </ul>
             </div>
         </header>
@@ -28,18 +39,16 @@
                 <img src="./Assets/college-university-students.png" alt="">
                 <div class="main-right-container">
                     <h2>Contact Us</h2>
-                    <form action="">
-                        
-                        <label for="Name">Name</label><br>
+                    <form id="contact-form">
+                        <label for="name">Name</label><br>
                         <input class="user-input" placeholder="Student" type="text" id="name" required><br><br>
-                       
-                        <label for="email">Email</label><br>
-                        <input class="user-input" placeholder="example@dbcegoa.ac.in" type="email" id="email" required><br><br>
+
+                        <input hidden class="user-input" type="email" id="email" value="<?php echo $_SESSION["user_email"] ?>" >
                         
                         <label for="message">Message</label><br>
-                        <textarea class="user-input-message" placeholder="Enter your message" cols="30" rows="05" required></textarea><br><br>
+                        <textarea class="user-input-message" placeholder="Enter your message" cols="30" rows="5" id="message" required></textarea><br><br>
 
-                        <button>Submit</button>
+                        <button type="button" onclick="sendEmail()">Submit</button>
                     </form>
                 </div>
             </div>
@@ -48,4 +57,22 @@
         <?php include 'footer.php' ?>
 
     </div>
+
+    <script>
+        function sendEmail() {
+            const name = document.getElementById('name').value;
+            const email = document.getElementById('email').value;
+            const message = document.getElementById('message').value;
+            
+            
+            const recipient = 'recipient@example.com';
+            const subject = encodeURIComponent(`Contact Form Submission - ${email}`);
+            const body = encodeURIComponent(`Name: ${name}\nEmail: ${email}\nMessage: ${message}`);
+            
+            const mailtoLink = `mailto:${recipient}?subject=${subject}&body=${body}`;
+            
+            window.location.href = mailtoLink;
+        }
+    </script>
 </body>
+</html>

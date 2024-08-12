@@ -12,6 +12,8 @@ if (!isset($_GET["jid"])) {
     exit();
 }
 
+
+
 ?>
 
 <!DOCTYPE html>

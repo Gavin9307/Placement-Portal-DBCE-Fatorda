@@ -47,10 +47,12 @@ function getJobOffers($email)
 FROM company as C
 INNER JOIN jobposting as J ON J.C_id = C.C_id
 INNER JOIN jobplacements as P ON P.J_id = J.J_id
+INNER JOIN jobapplication as JA ON JA.J_id = P.J_id
 WHERE
-P.J_Due_date >= CURRENT_DATE;";
+P.J_Due_date >= CURRENT_DATE AND P.Accept_Responses=1 AND JA.S_College_Email = ?;";
 
     $fetchJob = $conn->prepare($fetchJobQuery);
+    $fetchJob->bind_param("s", $email);
     $fetchJob->execute();
     $result = $fetchJob->get_result();
 

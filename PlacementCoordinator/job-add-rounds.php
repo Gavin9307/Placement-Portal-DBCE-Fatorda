@@ -90,8 +90,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['post-job'])) {
 
                 $conn->commit();
                 echo "Student rounds inserted successfully.";
+                header("Location: ./job-management.php");
+
             } catch (Exception $e) {
-                $conn->rollback();
+                // $conn->rollback();
                 echo "Error: " . $e->getMessage();
             }
         } else {

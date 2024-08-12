@@ -47,6 +47,7 @@ if (!isset($_GET["jid"])) {
                         <tr>
                             <th>Name</th>
                             <th>Department</th>
+                            <th>Batch</th>
                             <th>Status</th>
                             <th>Details</th>
                             <th>Remove</th>

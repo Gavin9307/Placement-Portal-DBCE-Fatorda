@@ -25,6 +25,21 @@ if (isset($_POST["delete-listing"])) {
         // echo "failed";
     }
 }
+if (isset($_GET['responsestatus']) && isset($_GET['jid'])) {
+    $responsestatus = (int)$_GET['responsestatus'];
+    $jid = (int)$_GET['jid'];
+
+    // Update the Accept_Responses status in the database
+    $updateQuery = "UPDATE jobplacements SET Accept_Responses = ? WHERE J_id = ?";
+    $updateStmt = $conn->prepare($updateQuery);
+    $updateStmt->bind_param("ii", $responsestatus, $jid);
+
+    if ($updateStmt->execute()) {
+        echo "Accept Responses status updated successfully.";
+    } else {
+        echo "Failed to update status: " . $updateStmt->error;
+    }
+}
 
 ?>
 
@@ -81,5 +96,16 @@ if (isset($_POST["delete-listing"])) {
     </div>
 
 </body>
+
+<script>
+function confirmAddRounds(jid) {
+    if (confirm("Warning: Once rounds are added, Addiotional rounds cant be created?")) {
+        window.location.href = './job-add-rounds.php?jid=' + jid;
+        return true;
+    } else {
+        return false;
+    }
+}
+</script>
 
 </html>

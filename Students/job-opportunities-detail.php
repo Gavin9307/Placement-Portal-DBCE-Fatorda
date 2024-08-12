@@ -3,93 +3,13 @@ require "../restrict.php";
 require "../utility_functions.php";
 require "../conn.php";
 
-if (!isset($_GET["jid"])){
+if (!isset($_GET["jid"])) {
     header("Location: ./job-opportunities.php");
     exit();
 }
 global $conn;
 
 $modalTrigger = 'none';
-function applyStudentForJobRounds()
-{
-    global $conn;
-    $jid = (int) $_GET['jid'];
-    $semail = (string) $_SESSION['user_email'];
-
-    // Fetch all rid values for the given jid
-    $fetchRoundsQuery = 'SELECT R_id FROM rounds WHERE J_id = ?';
-    $fetchRounds = $conn->prepare($fetchRoundsQuery);
-    $fetchRounds->bind_param("i", $jid);
-    $fetchRounds->execute();
-    $result = $fetchRounds->get_result();
-
-    if ($result->num_rows > 0) {
-        $conn->begin_transaction();
-
-        try {
-            // Prepare the insert statement
-            $insertStudentRoundsQuery = 'INSERT INTO studentrounds (RoundStatus,S_College_email, R_id) VALUES (?, ?, ?)';
-            $rstatus = "pending";
-            $insertStudentRounds = $conn->prepare($insertStudentRoundsQuery);
-
-            // Loop through each rid and insert into studentrounds
-            while ($row = $result->fetch_assoc()) {
-                $rid = $row['R_id'];
-                $insertStudentRounds->bind_param("ssi",$rstatus, $semail, $rid);
-                $insertStudentRounds->execute();
-            }
-
-            $conn->commit();
-            echo "Student rounds inserted successfully.";
-        } catch (Exception $e) {
-            // $conn->rollback();
-            echo "Error: " . $e->getMessage();
-        }
-    } else {
-        echo "No rounds found for the given job ID.";
-    }
-
-}
-
-function deleteStudentFromJobRounds() {
-    global $conn;
-    $jid = (int) $_GET['jid'];
-    $semail = (string) $_SESSION['user_email'];
-
-    // Begin a transaction
-    $conn->begin_transaction();
-
-    try {
-        // Fetch all rid values for the given jid
-        $fetchRoundsQuery = 'SELECT R_id FROM rounds WHERE J_id = ?';
-        $fetchRounds = $conn->prepare($fetchRoundsQuery);
-        $fetchRounds->bind_param("i", $jid);
-        $fetchRounds->execute();
-        $result = $fetchRounds->get_result();
-
-        if ($result->num_rows > 0) {
-            // Prepare the delete statement
-            $deleteStudentRoundsQuery = 'DELETE FROM studentrounds WHERE S_College_email = ? AND R_id = ?';
-            $deleteStudentRounds = $conn->prepare($deleteStudentRoundsQuery);
-
-            // Loop through each rid and delete from studentrounds
-            while ($row = $result->fetch_assoc()) {
-                $rid = $row['R_id'];
-                $deleteStudentRounds->bind_param("si", $semail, $rid);
-                $deleteStudentRounds->execute();
-            }
-
-            $conn->commit();
-            echo "Student rounds deleted successfully.";
-        } else {
-            echo "No rounds found for the given job ID.";
-        }
-    } catch (Exception $e) {
-        // Rollback the transaction in case of an error
-        // $conn->rollback();
-        echo "Error: " . $e->getMessage();
-    }
-}
 
 if (isset($_GET["interest"])) {
     $interest = (int)$_GET["interest"];
@@ -112,40 +32,27 @@ if (isset($_GET["interest"])) {
         die("Execute failed: " . $Update->error);
     } else {
         // Set modal trigger to show the success modal
-        echo $interest;
         $modalTrigger = $interest == 1 ? 'interested' : 'notInterested';
     }
-
-    // Now, apply or delete student rounds based on interest
-    if ($interest == 1) {
-        applyStudentForJobRounds();
-    } else {
-        deleteStudentFromJobRounds();
-    }
 }
-
 
 ?>
 
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <?php include './head.php' ?>
     <link rel="stylesheet" href="./css/job-opportunities-detail.css">
     <title>Job Opportunities</title>
 </head>
-
 <body>
     <div id="wrapper">
         <?php include './header.php' ?>
-
         <div class="container">
             <?php include './sidebar.php' ?>
             <div class="main-container">
                 <h2 class="main-container-heading"><a href="./job-opportunities.php"><i class="fa-solid fa-arrow-left fa-lg" style="color: #000000;"></i></a>
                     Job Opportunities</h2>
-
                 <div class="sections">
                     <?php
                         getJobDetail($_GET['jid']);

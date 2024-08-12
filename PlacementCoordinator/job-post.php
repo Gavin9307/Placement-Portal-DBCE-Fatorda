@@ -117,37 +117,6 @@ WHERE 1=1";
                 $studentJobInsert->bind_param("sii", $studentEmail, $last_j_id, $interest);
                 $studentJobInsert->execute();
             }
-            if (!empty($_POST['round_location'])) {
-                $roundLocations = $_POST['round_location'];
-                $roundNos = $_POST['round-no'];
-                $roundLinks = $_POST['round_link'];
-                $roundTimes = $_POST['round_time'];
-                $roundDates = $_POST['round_date'];
-                $roundDescriptions = $_POST['round_description'];
-
-                // Prepare insert query for rounds
-                $insertRoundQuery = "INSERT INTO rounds (J_id, Round_no, Location, Time, Date, description,Link) VALUES (?, ?, ?, ?, ?, ?, ?)";
-                $insertRound = $conn->prepare($insertRoundQuery);
-
-                foreach ($roundLocations as $index => $location) {
-                    $roundNo = !empty($roundNos[$index]) ? $roundNos[$index] : null;
-                    $link = !empty($roundLinks[$index]) ? $roundLinks[$index] : " ";
-                    $time = !empty($roundTimes[$index]) ? $roundTimes[$index] : null;
-                    $date = !empty($roundDates[$index]) ? $roundDates[$index] : null;
-                    $description = !empty($roundDescriptions[$index]) ? $roundDescriptions[$index] : " ";
-
-                    // Bind parameters and execute query
-                    $insertRound->bind_param("issssss", $last_j_id,$roundNo,$location,$time, $date, $description,$link );
-                    $insertRound->execute();
-
-                    // $last_round_id = $conn->insert_id;
-                    // $insertStudentsQuery = "INSERT INTO studentrounds (S_College_Email, R_id, RoundStatus) VALUES (?, ?, ?)";
-                    // $insertStudent = $conn->prepare($insertStudentsQuery);
-                    // $RoundStatus = "pending";
-                    // $insertStudent->bind_param("sis",$studentEmail,$last_round_id,$RoundStatus);
-                    // $insertStudent->execute();
-                }
-            }
 
             $conn->commit();
 
@@ -285,11 +254,7 @@ WHERE 1=1";
                         </div>
                         <h3>More Details:</h3>
                         <textarea name="details" class="textarea-message" placeholder="Enter details" id=""></textarea>
-
-                        <div id="rounds-container">
-
-                        </div>
-                        <button type="button" id="add-round" class="add-round-button">Add Round</button>
+                        
                         <button type="submit" class="add-button" name="post-job">Post</button>
                     </form>
                 </div>
@@ -300,56 +265,6 @@ WHERE 1=1";
     </div>
 
     <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        let roundCount = 0;
-
-        function addRound() {
-            roundCount++;
-
-            const newRoundHTML = `
-                <div class="round-section" id="round-${roundCount}">
-                    <h3>Round ${roundCount}:</h3>
-                    <div class="form-adjust">
-                        <div class="inputbox">
-                            <label for="location-${roundCount}">Location:</label>
-                            <input required type="text" name="round_location[]" id="location-${roundCount}">
-                        </div>
-                        <div class="inputbox">
-                            <label for="link-${roundCount}">Link:</label>
-                            <input type="text" name="round_link[]" id="link-${roundCount}">
-                        </div>
-                        <div class="inputbox">
-                            <label for="time-${roundCount}">Time:</label>
-                            <input type="time" name="round_time[]" id="time-${roundCount}">
-                        </div>
-                        <div class="inputbox">
-                            <label for="date-${roundCount}">Date:</label>
-                            <input type="date" name="round_date[]" id="date-${roundCount}">
-                        </div>
-                        <input type="hidden" name="round-no[]" value="${roundCount}">
-                    </div>
-                    <h3>Details:</h3>
-                    <textarea name="round_description[]" id="description-${roundCount}" class="textarea-message" placeholder="Enter round details"></textarea>
-                    <button type="button" class="add-round-button delete-round-button" data-round-id="round-${roundCount}" style="background-color:red;color:white;margin-bottom:50px;margin-top:-60px">Delete Round</button>
-                </div>
-            `;
-
-            document.getElementById('rounds-container').insertAdjacentHTML('beforeend', newRoundHTML);
-        }
-
-        document.getElementById('add-round').addEventListener('click', addRound);
-
-        document.getElementById('rounds-container').addEventListener('click', function(event) {
-            if (event.target && event.target.classList.contains('delete-round-button')) {
-                const roundId = event.target.getAttribute('data-round-id');
-                const roundElement = document.getElementById(roundId);
-                if (roundElement) {
-                    roundElement.remove();
-                    roundCount--;
-                }
-            }
-        });
-    });
 
     document.addEventListener('DOMContentLoaded', function() {
         // Function to check if at least one checkbox is selected

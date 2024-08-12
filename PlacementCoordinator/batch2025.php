@@ -153,7 +153,6 @@ $queries = [
         department as d ON c.Dept_id = d.Dept_id
     WHERE
     s.S_Year_of_Admission = '2021' AND ja.J_id = 0;",
-
     "WITH AggregatedPlacements AS (
     SELECT
         c.C_Name AS company_name,
@@ -239,19 +238,19 @@ $queries = [
 
 SELECT
     ROW_NUMBER() OVER (ORDER BY da.company_name, da.interview_date) AS Sr_No,
-    da.company_name AS Company Name,
-    da.location AS Location,
-    da.interview_date AS Interview Date,
-    da.CIVIL,
-    da.MECH,
-    da.ETC,
-    da.COMP,
-    da.Total,
-    da.offered_salary AS Salary Package in LPA (Lakhs per annum)
+    da.company_name AS 'Company Name',
+    da.location AS 'Location',
+    da.interview_date AS 'Interview Date',
+    COALESCE(da.CIVIL, 0) AS CIVIL,
+    COALESCE(da.MECH, 0) AS MECH,
+    COALESCE(da.ETC, 0) AS ETC,
+    COALESCE(da.COMP, 0) AS COMP,
+    COALESCE(da.Total, 0) AS Total,
+    COALESCE(da.offered_salary, 0) AS 'Salary Package in LPA (Lakhs per annum)'
 FROM
     DepartmentAggregates da
 ORDER BY
-    ap.company_name, ap.interview_date;
+    da.company_name, da.interview_date;
 "
 ];
 
@@ -260,18 +259,29 @@ $startRows = [9, 10, 11, 12, 18]; // Starting row numbers for each query
 
 foreach ($queries as $index => $sql) {
     $result = $conn->query($sql);
+
+    if (!$result) {
+        echo "SQL Error for query $index: " . $conn->error . "\n";
+        continue;
+    }
+
     if ($result->num_rows > 0) {
         $data = [];
         while ($row = $result->fetch_assoc()) {
             $data[] = array_values($row);
         }
 
-        // Define the range for each query
-        if ($index == 4) { // This is for the new query at index 4
-            $range = 'batch2025!A' . $startRows[$index] . ':Z' . $startRows[$index];
+        // Calculate the number of rows to be written
+        $numRows = count($data);
+        $endRow = $startRows[$index] + $numRows - 1; // Calculate the end row
+
+        // Define the range dynamically based on the number of rows
+        if ($index == 4) { // Special handling for the 5th query
+            $range = 'batch2025!A' . $startRows[$index] . ':Z' . $endRow;
         } else {
-            $range = 'batch2025!E' . $startRows[$index] . ':H' . $startRows[$index]; // Adjust range as needed
+            $range = 'batch2025!E' . $startRows[$index] . ':H' . $endRow;
         }
+
         // Update the Google Sheet with the current query's data
         try {
             $body = new Sheets\ValueRange([
@@ -280,7 +290,6 @@ foreach ($queries as $index => $sql) {
             $params = [
                 'valueInputOption' => 'USER_ENTERED'
             ];
-            
 
             $response = $service->spreadsheets_values->update($spreadsheetId, $range, $body, $params);
             printf("%d cells updated for query %d.\n", $response->getUpdatedCells(), $index + 1);

@@ -178,30 +178,80 @@ $queries = [
         class AS cl ON cl.Class_id = s.S_Class_id
     INNER JOIN
         department AS d ON cl.Dept_id = d.Dept_id
-    WHERE
-        ja.placed = 1
-        AND jp.Job_Post_Date BETWEEN '2024-01-01' AND '2024-12-31'
+    WHERE ja.placed = 1 AND jp.Job_Post_Date BETWEEN '2024-01-01' AND '2024-12-31'
     GROUP BY
         c.C_Name, c.C_Location, jp.Job_Post_Date, jo.J_Offered_salary, d.Dept_Name
 )
 
+, DepartmentList AS (
+    SELECT DISTINCT Dept_Name
+    FROM department
+)
+
+, JobPostings AS (
+    SELECT DISTINCT
+        jp.J_id AS job_id,
+        c.C_Name AS company_name,
+        c.C_Location AS location,
+        jp.Job_Post_Date AS interview_date,
+        jo.J_Offered_salary AS offered_salary
+    FROM
+        jobposting AS jp
+    LEFT JOIN
+        company AS c ON c.C_id = jp.C_id
+    LEFT JOIN
+        jobplacements AS jo ON jo.J_id = jp.J_id
+)
+
+, JobDepartmentCross AS (
+    SELECT
+        jp.company_name,
+        jp.location,
+        jp.interview_date,
+        jp.offered_salary,
+        d.Dept_Name AS dept_name
+    FROM
+        JobPostings jp
+    CROSS JOIN
+        DepartmentList d
+)
+
+, DepartmentAggregates AS (
+    SELECT
+        j.company_name,
+        j.location,
+        j.interview_date,
+        j.offered_salary,
+        COALESCE(SUM(CASE WHEN j.dept_name = 'CIVIL' THEN ap.students_count ELSE 0 END), 0) AS CIVIL,
+        COALESCE(SUM(CASE WHEN j.dept_name = 'MECH' THEN ap.students_count ELSE 0 END), 0) AS MECH,
+        COALESCE(SUM(CASE WHEN j.dept_name = 'ETC' THEN ap.students_count ELSE 0 END), 0) AS ETC,
+        COALESCE(SUM(CASE WHEN j.dept_name = 'COMP' THEN ap.students_count ELSE 0 END), 0) AS COMP,
+        COALESCE(SUM(ap.students_count), 0) AS Total
+    FROM
+        JobDepartmentCross j
+    LEFT JOIN
+        AggregatedPlacements ap ON j.company_name = ap.company_name
+                              AND j.interview_date = ap.interview_date
+                              AND j.dept_name = ap.dept_name
+    GROUP BY
+        j.company_name, j.location, j.interview_date, j.offered_salary
+)
+
 SELECT
-    ROW_NUMBER() OVER (ORDER BY ap.company_name, ap.interview_date) AS Sr_No,
-    ap.company_name AS `Company Name`,
-    ap.location AS Location,
-    ap.interview_date AS `Interview Date`,
-    COALESCE(SUM(CASE WHEN ap.dept_name = 'CIVIL' THEN ap.students_count ELSE 0 END), 0) AS CIVIL,
-    COALESCE(SUM(CASE WHEN ap.dept_name = 'MECH' THEN ap.students_count ELSE 0 END), 0) AS MECH,
-    COALESCE(SUM(CASE WHEN ap.dept_name = 'ETC' THEN ap.students_count ELSE 0 END), 0) AS ETC,
-    COALESCE(SUM(CASE WHEN ap.dept_name = 'COMP' THEN ap.students_count ELSE 0 END), 0) AS COMP,
-    COALESCE(SUM(ap.students_count), 0) AS Total,
-    ap.offered_salary AS `Salary Package in LPA (Lakhs per annum)`
+    ROW_NUMBER() OVER (ORDER BY da.company_name, da.interview_date) AS Sr_No,
+    da.company_name AS Company Name,
+    da.location AS Location,
+    da.interview_date AS Interview Date,
+    da.CIVIL,
+    da.MECH,
+    da.ETC,
+    da.COMP,
+    da.Total,
+    da.offered_salary AS Salary Package in LPA (Lakhs per annum)
 FROM
-    AggregatedPlacements ap
-GROUP BY
-    ap.company_name, ap.location, ap.interview_date, ap.offered_salary
+    DepartmentAggregates da
 ORDER BY
-    ap.company_name, ap.interview_date;
+    da.company_name, da.interview_date;
 
 "
 

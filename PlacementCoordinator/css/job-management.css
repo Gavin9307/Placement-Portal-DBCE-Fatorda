@@ -89,9 +89,6 @@
 .position {
     margin-bottom: 30px;
 }
-.sections {
-    padding-bottom: 100px;
-}
 .sections .analysis-button {
     margin-top: 10px;
     padding-block: 5px;
@@ -103,9 +100,6 @@
     cursor: pointer;
     background-color: var(--primary-blue);
     color: var(--primary-white);
-    position: absolute;
-    right: 200px; 
-    bottom: 20px;
 }
 #jobmanagement{
     color: var(--primary-blue);
@@ -209,4 +203,5 @@
 .acceptresp-container{
     display:flex;
     justify-content: flex-end;
+    gap:10px;
 }

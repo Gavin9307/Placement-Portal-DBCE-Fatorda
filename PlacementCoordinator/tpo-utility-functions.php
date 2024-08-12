@@ -108,16 +108,16 @@ function getLiveJobListings()
             // Only show start/stop buttons if no rounds are associated
             if (!$hasRounds) {
                 if ($row["acceptresponses"] == 1) {
-                    echo '<a href="./job-management.php?jid=' . $row["jid"] . '&responsestatus=0"><button class="stop-button">Stop Accepting Responses</button></a>';
+                    echo '<div class="acceptresp-container"><div><a href="./job-management.php?jid=' . $row["jid"] . '&responsestatus=0"><button class="stop-button">Stop Accepting Responses</button></a></div>';
                 } else {
-                    echo '<a href="./job-management.php?jid=' . $row["jid"] . '&responsestatus=1"><button class="start-button">Accept Responses</button></a>';
+                    echo '<div><a href="./job-management.php?jid=' . $row["jid"] . '&responsestatus=1"><button class="start-button">Accept Responses</button></a></div>';
                     // Only show "Add Rounds" button if "Start Accepting Responses" button is visible
-                    echo '<a href="#" onclick="return confirmAddRounds(' . $row["jid"] . ');"><button class="add-rounds-button">Add Rounds</button></a>';
+                    echo '<div><a href="#" onclick="return confirmAddRounds(' . $row["jid"] . ');"><button class="add-rounds-button">Add Rounds</button></a></div>';
                 }
             }
 
-            echo '<a href="./job-live-listing-analysis.php?jid=' . $row["jid"] . '"><button class="analysis-button">Analysis</button></a>
-                <a href="./job-edit.php?jid=' . $row["jid"] . '"><button class="edit-button">Edit Details</button></a>
+            echo '<div><a href="./job-live-listing-analysis.php?jid=' . $row["jid"] . '"><button class="analysis-button">Analysis</button></a></div>
+                <div><a href="./job-edit.php?jid=' . $row["jid"] . '"><button class="edit-button">Edit Details</button></a></div></div>
             </div>';
         }
     } else {

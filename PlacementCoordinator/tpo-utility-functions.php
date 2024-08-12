@@ -529,3 +529,18 @@ function getPlacementCoordinators()
               </tr>';
     }
 }
+
+
+function getQuestions(){
+    global $conn;
+    $fetchQuestionsQuery = 'SELECT * from questions';
+    $fetchQuestions = $conn->prepare($fetchQuestionsQuery);
+    $fetchQuestions->execute();
+    $result = $fetchQuestions->get_result();
+    while($row = $result->fetch_assoc()) {
+        echo ' <tr>
+                <td>'.$row["Question_Text"].'</td>
+                <td><a href="./job-post-questions.php?qid='.$row["Question_ID"].'&remove=1" class="remove-button">Remove</a></td>
+            </tr>';
+    }
+}

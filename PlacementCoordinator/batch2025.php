@@ -202,10 +202,7 @@ GROUP BY
     ap.company_name, ap.location, ap.interview_date, ap.offered_salary
 ORDER BY
     ap.company_name, ap.interview_date;
-
 "
-
-
 ];
 
 // Specify starting rows for each query

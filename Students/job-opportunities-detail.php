@@ -80,16 +80,15 @@ function deleteStudentFromJobRounds() {
             }
 
             $conn->commit();
-            // echo "Student rounds deleted successfully.";
+            echo "Student rounds deleted successfully.";
         } else {
-            // echo "No rounds found for the given job ID.";
+            echo "No rounds found for the given job ID.";
         }
     } catch (Exception $e) {
         // Rollback the transaction in case of an error
         // $conn->rollback();
         echo "Error: " . $e->getMessage();
     }
-
 }
 
 if (isset($_GET["interest"])) {
@@ -97,16 +96,10 @@ if (isset($_GET["interest"])) {
     $jid = (int)$_GET["jid"];
     $email = $_SESSION['user_email'];
 
+    // Update the Interest first
     $UpdateQuery = "UPDATE jobapplication J
                     SET J.Interest = ?
                     WHERE J.J_id = ? AND J.S_College_Email = ?;";
-
-    if ($interest==1){
-        applyStudentForJobRounds();
-    }
-    else {
-        deleteStudentFromJobRounds();
-    }
 
     $Update = $conn->prepare($UpdateQuery);
     if (!$Update) {
@@ -114,13 +107,23 @@ if (isset($_GET["interest"])) {
     }
 
     $Update->bind_param("iis", $interest, $jid, $email);
+
     if (!$Update->execute()) {
-        die ("Execute failed: " . $Update->error);
+        die("Execute failed: " . $Update->error);
     } else {
         // Set modal trigger to show the success modal
+        echo $interest;
         $modalTrigger = $interest == 1 ? 'interested' : 'notInterested';
     }
+
+    // Now, apply or delete student rounds based on interest
+    if ($interest == 1) {
+        applyStudentForJobRounds();
+    } else {
+        deleteStudentFromJobRounds();
+    }
 }
+
 
 ?>
 

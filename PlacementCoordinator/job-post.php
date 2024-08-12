@@ -75,7 +75,7 @@ WHERE 1=1";
 
         if (!empty($selectedDepartments)) {
             $departmentConditions = array_map(function ($dept) use ($conn) {
-                return "dname = '" . $conn->real_escape_string($dept) . "'";
+                return "D.Dept_name = '". $conn->real_escape_string($dept) . "'";
             }, $selectedDepartments);
             $studentQuery .= " AND (" . implode(" OR ", $departmentConditions) . ")";
         }

@@ -97,9 +97,9 @@
 
                 <h3>Other Reports:</h3>
                 <div class="button-container-2">
-                    <a href="./notification-post.php"><button class="add-button">Company Report</button></a>
-                    <a href="./notification-post.php"><button class="add-button">Student Report</button></a>
-                    <a href="./notification-post.php"><button class="add-button">Alumini Report</button></a>
+                    <a href="./analysis-and-report-company-report.php"><button class="add-button">Company Report</button></a>
+                    <a href="./analysis-and-report-student-report.php"><button class="add-button">Student Report</button></a>
+                    <a href="./alumni-report.php"><button class="add-button">Alumini Report</button></a>
                 </div>
             </div>
         </div>

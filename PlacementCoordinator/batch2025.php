@@ -282,8 +282,11 @@ foreach ($queries as $index => $sql) {
             $range = 'batch2025!E' . $startRows[$index] . ':H' . $endRow;
         }
 
-        // Update the Google Sheet with the current query's data
+        // Clear the specified range before updating the Google Sheet with the current query's data
         try {
+            $clearRange = $index == 4 ? 'batch2025!A' . $startRows[$index] . ':Z' . ($startRows[$index] + 999) : 'batch2025!E' . $startRows[$index] . ':H' . ($startRows[$index] + 999);
+            $clearResponse = $service->spreadsheets_values->clear($spreadsheetId, $clearRange, new \Google_Service_Sheets_ClearValuesRequest());
+
             $body = new Sheets\ValueRange([
                 'values' => $data
             ]);

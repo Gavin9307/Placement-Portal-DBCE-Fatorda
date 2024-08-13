@@ -8,23 +8,46 @@ if (!isset($_SESSION)) {
 }
 
 if (isset($_POST["delete-listing"])) {
+    $jobId = $_POST["jid"];
+    
+    // Begin transaction
+    $conn->begin_transaction();
 
-    $deleteJobQuery = "DELETE FROM jobdepartments WHERE J_id = ?";
-    $deleteJob = $conn->prepare($deleteJobQuery);
-    $deleteJob->bind_param("i", $_POST["jid"]);
-    if ($deleteJob->execute()) {
-        $deleteJobQuery = "DELETE FROM jobplacements WHERE J_id = ?";
-        $deleteJob = $conn->prepare($deleteJobQuery);
-        $deleteJob->bind_param("i", $_POST["jid"]);
-        if ($deleteJob->execute()) {
-            // echo "success";
-        } else {
-            // echo "failed";
+    try {
+        // Step 1: Delete from jobquestions
+        $deleteJobQuestionsQuery = "DELETE FROM jobquestions WHERE Job_ID = ?";
+        $deleteJobQuestions = $conn->prepare($deleteJobQuestionsQuery);
+        $deleteJobQuestions->bind_param("i", $jobId);
+        if (!$deleteJobQuestions->execute()) {
+            throw new Exception("Failed to delete from jobquestions.");
         }
-    } else {
-        // echo "failed";
+
+        // Step 2: Delete from jobdepartments
+        $deleteJobDepartmentsQuery = "DELETE FROM jobdepartments WHERE J_id = ?";
+        $deleteJobDepartments = $conn->prepare($deleteJobDepartmentsQuery);
+        $deleteJobDepartments->bind_param("i", $jobId);
+        if (!$deleteJobDepartments->execute()) {
+            throw new Exception("Failed to delete from jobdepartments.");
+        }
+
+        // Step 3: Delete from jobplacements
+        $deleteJobPlacementsQuery = "DELETE FROM jobplacements WHERE J_id = ?";
+        $deleteJobPlacements = $conn->prepare($deleteJobPlacementsQuery);
+        $deleteJobPlacements->bind_param("i", $jobId);
+        if (!$deleteJobPlacements->execute()) {
+            throw new Exception("Failed to delete from jobplacements.");
+        }
+
+        // Commit transaction
+        $conn->commit();
+        echo "Job listing successfully deleted.";
+    } catch (Exception $e) {
+        // Rollback transaction
+        $conn->rollback();
+        echo "Failed to delete job listing: " . $e->getMessage();
     }
 }
+
 if (isset($_GET['responsestatus']) && isset($_GET['jid'])) {
     $responsestatus = (int)$_GET['responsestatus'];
     $jid = (int)$_GET['jid'];
@@ -63,6 +86,7 @@ if (isset($_GET['responsestatus']) && isset($_GET['jid'])) {
                 <div class="main-container-header">
                     <h2 class="main-container-heading"><a href="./dashboard.html"><a href="./dashboard.php"><i class="fa-solid fa-arrow-left fa-lg" style="color: #000000;"></i></a></a>
                         Job Management</h2>
+                    <a href="./job-post-questions.php"><button class="add-questions">Add Questions</button></a>
                     <a href="./job-post.php"><button class="add-button">Post a Job</button></a>
                 </div>
                 <h3>Live Listings</h3>

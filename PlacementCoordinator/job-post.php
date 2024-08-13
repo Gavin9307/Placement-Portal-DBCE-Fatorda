@@ -3,9 +3,11 @@ require "../conn.php";
 require "../restrict.php";
 include "./tpo-utility-functions.php";
 global $conn;
+
 if (!isset($_SESSION)) {
     session_start();
 }
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST["post-job"])) {
     $pcEmail = $_SESSION['user_email'];
     $minCgpa = !empty($_POST['min-cgpa']) ? (float) $_POST['min-cgpa'] : NULL;
@@ -17,7 +19,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST["post-job"])) {
     $companyId = !empty($_POST['company']) ? (int) $_POST['company'] : NULL;
     $dueDate = !empty($_POST['due-date']) ? $_POST['due-date'] : NULL;
     $backAllowed = !empty($_POST['has_backlogs']) ? (int) $_POST['has_backlogs'] : NULL;
-    // $isPlaced = !empty($_POST['is_placed']) ? $_POST['is_placed'] : NULL;
     $percentage10 = !empty($_POST['percentage_10']) ? (float) $_POST['percentage_10'] : NULL;
     $percentage12 = !empty($_POST['percentage_12']) ? (float) $_POST['percentage_12'] : NULL;
     $gender = !empty($_POST['gender']) ? $_POST['gender'] : NULL;
@@ -57,21 +58,35 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST["post-job"])) {
             $insertJobDept->execute();
         }
 
+        // Handle selected questions
+        if (isset($_POST['questions'])) {
+            $selectedQuestions = $_POST['questions'];
+            $insertJobQuestionQuery = "INSERT INTO jobquestions (Job_ID, Question_ID) VALUES (?, ?)";
+            $insertJobQuestion = $conn->prepare($insertJobQuestionQuery);
+
+            foreach ($selectedQuestions as $questionId) {
+                $q = (int)$questionId;
+                $insertJobQuestion->bind_param("ii", $last_j_id, $q);
+                $insertJobQuestion->execute();
+            }
+        }
+
+        // Insert students into job application based on the criteria
         $studentQuery = "SELECT 
-    S.PLACED AS placed, 
-    R.CGPA AS cgpa,
-    S.S_College_Email AS student_email,
-    S.S_10th_Perc AS per10,
-    S.S_12th_Perc AS per12,
-    S.Gender AS gender,
-    D.Dept_name AS dname,
-    R.has_backlogs AS backs
-FROM
-    result R 
-    INNER JOIN student S ON S.S_College_Email = R.S_College_Email 
-    INNER JOIN class C ON C.Class_id = S.S_Class_id 
-    INNER JOIN department D ON D.Dept_id = C.Dept_id
-WHERE 1=1";
+            S.PLACED AS placed, 
+            R.CGPA AS cgpa,
+            S.S_College_Email AS student_email,
+            S.S_10th_Perc AS per10,
+            S.S_12th_Perc AS per12,
+            S.Gender AS gender,
+            D.Dept_name AS dname,
+            R.has_backlogs AS backs
+        FROM
+            result R 
+            INNER JOIN student S ON S.S_College_Email = R.S_College_Email 
+            INNER JOIN class C ON C.Class_id = S.S_Class_id 
+            INNER JOIN department D ON D.Dept_id = C.Dept_id
+        WHERE 1=1";
 
         if (!empty($selectedDepartments)) {
             $departmentConditions = array_map(function ($dept) use ($conn) {
@@ -81,22 +96,22 @@ WHERE 1=1";
         }
 
         if (!is_null($minCgpa)) {
-            $studentQuery .= " AND cgpa >= $minCgpa";
+            $studentQuery .= " AND cgpa >= ?";
         }
         if (!is_null($maxCgpa)) {
-            $studentQuery .= " AND cgpa <= $maxCgpa";
+            $studentQuery .= " AND cgpa <= ?";
         }
         // if (!is_null($isPlaced)) {
         //     $studentQuery .= " AND placed = '$isPlaced'";
         // }
         if (!is_null($percentage10)) {
-            $studentQuery .= " AND S.S_10th_Perc >= $percentage10";
+            $studentQuery .= " AND S.S_10th_Perc >= ?";
         }
         if (!is_null($percentage12)) {
-            $studentQuery .= " AND S.S_12th_Perc >= $percentage12";
+            $studentQuery .= " AND S.S_12th_Perc >= ?";
         }
         if (!is_null($gender)) {
-            $studentQuery .= " AND gender = '$gender'";
+            $studentQuery .= " AND gender = ?";
         }
         if (!is_null($backAllowed)) {
             if ($backAllowed == 0) {
@@ -105,8 +120,20 @@ WHERE 1=1";
                 $studentQuery .= " AND R.has_backlogs IN (0, 1)";
             }
         }
-        // echo $studentQuery;
-        $studentsResult = $conn->query($studentQuery);
+
+        $stmt = $conn->prepare($studentQuery);
+        $params = [];
+        if (!is_null($minCgpa)) $params[] = $minCgpa;
+        if (!is_null($maxCgpa)) $params[] = $maxCgpa;
+        if (!is_null($percentage10)) $params[] = $percentage10;
+        if (!is_null($percentage12)) $params[] = $percentage12;
+        if (!is_null($gender)) $params[] = $gender;
+        if (!is_null($minCgpa) || !is_null($maxCgpa) || !is_null($percentage10) || !is_null($percentage12) || !is_null($gender)) {
+            $stmt->bind_param(str_repeat('d', count($params)), ...$params);
+        }
+        $stmt->execute();
+        $studentsResult = $stmt->get_result();
+
         if ($studentsResult->num_rows > 0) {
             $studentJobInsertQuery = "INSERT INTO jobapplication (S_College_Email, J_id, Interest) VALUES (?, ?, ?)";
             $studentJobInsert = $conn->prepare($studentJobInsertQuery);
@@ -119,8 +146,10 @@ WHERE 1=1";
             }
 
             $conn->commit();
-
             echo "Job successfully posted.";
+        } else {
+            $conn->rollback();
+            echo "No students match the criteria.";
         }
     } catch (Exception $e) {
         $conn->rollback();
@@ -128,17 +157,13 @@ WHERE 1=1";
     }
 }
 ?>
-
-
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <?php include './head.php' ?>
     <link rel="stylesheet" href="./css/job-post.css">
     <title>Post a Job</title>
 </head>
-
 <body>
     <div id="wrapper">
         <?php include './header.php' ?>
@@ -241,7 +266,7 @@ WHERE 1=1";
                             </div>
                             <div class="inputbox">
                                 <label for="">Offered Salary:</label>
-                                <input type="numeber" name="offered-salary">
+                                <input type="number" name="offered-salary">
                             </div>
                             <div class="inputbox">
                                 <label for="">No. of Posts</label>
@@ -254,7 +279,14 @@ WHERE 1=1";
                         </div>
                         <h3>More Details:</h3>
                         <textarea name="details" class="textarea-message" placeholder="Enter details" id=""></textarea>
-                        
+                        <h3>Additional Questions :</h3>
+                        <table>
+                            <tr>
+                                <th>Questions</th>
+                                <th>Add</th>
+                            </tr>
+                            <?php getQuestionsToPost(); ?>
+                        </table>
                         <button type="submit" class="add-button" name="post-job">Post</button>
                     </form>
                 </div>
@@ -265,7 +297,6 @@ WHERE 1=1";
     </div>
 
     <script>
-
     document.addEventListener('DOMContentLoaded', function() {
         // Function to check if at least one checkbox is selected
         function validateCheckboxes() {
@@ -285,7 +316,6 @@ WHERE 1=1";
             }
         });
     });
-</script>
+    </script>
 </body>
-
 </html>

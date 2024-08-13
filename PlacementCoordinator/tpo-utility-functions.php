@@ -533,7 +533,7 @@ function getPlacementCoordinators()
 
 function getQuestions(){
     global $conn;
-    $fetchQuestionsQuery = 'SELECT * from questions';
+    $fetchQuestionsQuery = 'SELECT * from questions WHERE Is_Deleted = FALSE';
     $fetchQuestions = $conn->prepare($fetchQuestionsQuery);
     $fetchQuestions->execute();
     $result = $fetchQuestions->get_result();
@@ -541,6 +541,25 @@ function getQuestions(){
         echo ' <tr>
                 <td>'.$row["Question_Text"].'</td>
                 <td><a href="./job-post-questions.php?qid='.$row["Question_ID"].'&remove=1" class="remove-button">Remove</a></td>
+            </tr>';
+    }
+}
+
+
+function getQuestionsToPost(){
+    global $conn;
+    $fetchQuestionsQuery = 'SELECT * FROM Questions WHERE Is_Deleted = FALSE';
+    $fetchQuestions = $conn->prepare($fetchQuestionsQuery);
+    $fetchQuestions->execute();
+    $result = $fetchQuestions->get_result();
+
+    while ($row = $result->fetch_assoc()) {
+        $questionId = htmlspecialchars($row["Question_ID"]);
+        $questionText = htmlspecialchars($row["Question_Text"]);
+
+        echo '<tr>
+                <td>' . $questionText . '</td>
+                <td><input type="checkbox" name="questions[]" value="' . $questionId . '"></td>
             </tr>';
     }
 }

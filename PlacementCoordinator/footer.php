@@ -8,9 +8,9 @@
         <div class="right-footer-part">
             <h4>Follow us</h4>
             <div class="social-icons-list">
-                <a href="https://www.linkedin.com/school/don-bosco-college-of-engineering-fatorda-goa/"><i class="ico fa-brands fa-square-facebook fa-3x"></i></a>
+                <a href="https://www.facebook.com/p/Don-Bosco-College-of-EngineeringFatorda-Goa-100063749630574/"><i class="ico fa-brands fa-square-facebook fa-3x"></i></a>
                 <a href="https://www.instagram.com/dbce_fatorda/"><i class="ico fa-brands fa-square-instagram fa-3x"></i></a>
-                <a href="https://www.facebook.com/p/Don-Bosco-College-of-EngineeringFatorda-Goa-100063749630574/"><i class="ico fa-brands fa-linkedin fa-3x"></i></a>
+                <a href="https://www.linkedin.com/school/don-bosco-college-of-engineering-fatorda-goa/"><i class="ico fa-brands fa-linkedin fa-3x"></i></a>
             </div>
         </div>
     </div>

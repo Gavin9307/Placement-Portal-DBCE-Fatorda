@@ -79,6 +79,4 @@ if ($client->isAccessTokenExpired()) {
 $service = new Sheets($client);
 $driveService = new Drive($client);
 
-// **Define the spreadsheet ID**
-$spreadsheetId = '1-WaAX--E--eWShVlqYrjqdwGs1IGzJCjk7Z8eXQ1OGo'; 
 

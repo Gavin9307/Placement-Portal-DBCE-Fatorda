@@ -19,7 +19,9 @@ if (isset($_POST["question-add-button"])) {
 
 if (isset($_GET["remove"])) {
     $qid = (int) $_GET["qid"];
-    $removeQuestionQuery = "DELETE FROM questions WHERE Question_ID=?";
+    $removeQuestionQuery = "UPDATE Questions
+    SET Is_Deleted = TRUE 
+    WHERE Question_ID=?";
     $removeQuestion = $conn->prepare($removeQuestionQuery);
     $removeQuestion->bind_param("i", $qid);
     $removeQuestion->execute();

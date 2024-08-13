@@ -162,7 +162,7 @@ header("Location: ./GoogleSheetsReports/StudentsReport.php?sql=" . urlencode($sq
                         <select name="" id="">
                             <option value="">Date: Latest to Oldest</option>
                             <option value="">Date: Oldest to Latest</option>
-                            <option value="">Department()</option>
+                            <option value="">Department</option>
                             <option value="">Offered Salary: High to Low</option>
                             <option value="">Offered Salary: Low to High</option>
                         </select>
@@ -173,6 +173,7 @@ header("Location: ./GoogleSheetsReports/StudentsReport.php?sql=" . urlencode($sq
                     <table>
                         <tr>
                             <th>Name</th>
+                            <th>Department</th>
                             <th>Company</th>
                             <th>Offered Salary</th>
                             <th>Joining Date</th>
@@ -180,6 +181,7 @@ header("Location: ./GoogleSheetsReports/StudentsReport.php?sql=" . urlencode($sq
                         </tr>
                         <tr>
                             <td>Nimish</td>
+                            <td>Comp</td>
                             <td>Google</td>
                             <td>30,000</td>
                             <td>2/3/2024</td>
@@ -187,6 +189,7 @@ header("Location: ./GoogleSheetsReports/StudentsReport.php?sql=" . urlencode($sq
                         </tr>
                         <tr>
                             <td>Patric</td>
+                            <td>Comp</td>
                             <td>Facebook</td>
                             <td>20,000</td>
                             <td>30/3/2024</td>
@@ -194,6 +197,7 @@ header("Location: ./GoogleSheetsReports/StudentsReport.php?sql=" . urlencode($sq
                         </tr>
                         <tr>
                             <td>Gavin</td>
+                            <td>Comp</td>
                             <td>Google</td>
                             <td>50,000</td>
                             <td>12/11/2024</td>
@@ -201,6 +205,7 @@ header("Location: ./GoogleSheetsReports/StudentsReport.php?sql=" . urlencode($sq
                         </tr>
                         <tr>
                             <td>Stephen</td>
+                            <td>Civil</td>
                             <td>Reliance</td>
                             <td>40,000</td>
                             <td>24/5/2024</td>

@@ -40,11 +40,13 @@ if (isset($_GET["interest"])) {
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <?php include './head.php' ?>
     <link rel="stylesheet" href="./css/job-opportunities-detail.css">
     <title>Job Opportunities</title>
 </head>
+
 <body>
     <div id="wrapper">
         <?php include './header.php' ?>
@@ -55,8 +57,8 @@ if (isset($_GET["interest"])) {
                     Job Opportunities</h2>
                 <div class="sections">
                     <?php
-                        getJobDetail($_GET['jid']);
-                    ?>
+                    getJobDetail($_GET['jid']);
+                    ?>  
                 </div>
             </div>
         </div>
@@ -114,4 +116,5 @@ if (isset($_GET["interest"])) {
         <?php include './footer.php' ?>
     </div>
 </body>
+
 </html>

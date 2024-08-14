@@ -1,24 +1,23 @@
 <?php
 
 // Include the Composer autoloader
-require __DIR__ . './GoogleSheetsReports/vendor/autoload.php';
+require __DIR__ . '/GoogleSheetsReports/vendor/autoload.php';
 
 use Google\Client;
 use Google\Service\Sheets;
 use Google\Service\Drive;
-use Google\Service\Drive\DriveFile;
 
 // Initialize the Google Client
 $client = new Client();
 $client->setApplicationName('XAMPP to Google Sheets');
-$client->setScopes([Sheets::SPREADSHEETS, Sheets::DRIVE]);
-$client->setAuthConfig('D:/STEPHEN/Downloads/client_secret_230758258420-13mvvjsanoatlbc2o97b5p5u8509rjp7.apps.googleusercontent.com.json');
+$client->setScopes([Sheets::SPREADSHEETS, Drive::DRIVE]);
+$client->setAuthConfig(__DIR__ . '/client_secret.json');
 $client->setAccessType('offline');
 $client->setPrompt('select_account consent');
-$client->setRedirectUri('http://localhost:8080/'); // or your redirect URI
+$client->setRedirectUri('http://localhost:8080/'); // Adjust based on your setup
 
 // Load previously authorized credentials from a file.
-$tokenPath = './GoogleSheetsReports/token.json';
+$tokenPath = __DIR__ . '/GoogleSheetsReports/token.json'; // Adjust path if needed
 if (file_exists($tokenPath)) {
     $accessToken = json_decode(file_get_contents($tokenPath), true);
     $client->setAccessToken($accessToken);
@@ -30,7 +29,7 @@ if ($client->isAccessTokenExpired()) {
     if ($client->getRefreshToken()) {
         $client->fetchAccessTokenWithRefreshToken($client->getRefreshToken());
     } else {
-        // Check if the script is run from the command line
+        // Handle authorization based on the environment (CLI or web server)
         if (php_sapi_name() == 'cli') {
             // Request authorization from the user.
             $authUrl = $client->createAuthUrl();
@@ -42,10 +41,13 @@ if ($client->isAccessTokenExpired()) {
             $accessToken = $client->fetchAccessTokenWithAuthCode($authCode);
             $client->setAccessToken($accessToken);
 
-            // Check to see if there was an error.
-            if (array_key_exists('error', $accessToken)) {
-                throw new Exception(join(', ', $accessToken));
+            // Save the token to a file.
+            if (!file_exists(dirname($tokenPath))) {
+                mkdir(dirname($tokenPath), 0700, true);
             }
+            file_put_contents($tokenPath, json_encode($client->getAccessToken()));
+            echo "Authorization complete. Token saved.";
+            exit();
         } else {
             // For web server environments, redirect to the authorization URL
             if (!isset($_GET['code'])) {
@@ -67,16 +69,8 @@ if ($client->isAccessTokenExpired()) {
             }
         }
     }
-
-    // Save the token to a file (token.json).
-    if (!file_exists(dirname($tokenPath))) {
-        mkdir(dirname($tokenPath), 0700, true);
-    }
-    file_put_contents($tokenPath, json_encode($client->getAccessToken()));
 }
 
 // Initialize the Google Sheets API Service
 $service = new Sheets($client);
 $driveService = new Drive($client);
-
-

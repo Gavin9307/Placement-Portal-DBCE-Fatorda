@@ -1,3 +1,5 @@
 PlacementCoordinator/GoogleSheetsReports
 composer.phar
 /vendor/
+
+PlacementCoordinator/client_secret.json

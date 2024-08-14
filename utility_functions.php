@@ -100,7 +100,20 @@ P.J_Due_date >= CURRENT_DATE AND J.J_id = ? AND A.S_College_Email = ?";
                     <p>Job Description:
                         ' . $row['description'] . '
                     </p>
-                    </p>';
+                    </p>
+                    <p class="" style= " margin-top:20px;"><strong>Additional Questions:</strong></p>
+                    <form action="">
+                        <div class="add-questions">
+                            <div class="inputbox">
+                                <label for="">Do you have a Pan Card?</label>
+                                <input type="text">
+                            </div>
+                            <div class="inputbox">
+                                <label for="">Do you have any relatives working in our Company?</label>
+                                <input type="text">
+                            </div>
+                        </div>
+                    </form>';
 
         if ($row['interest'] == 0) {
             echo '<div class="interest-button-container">
@@ -333,7 +346,7 @@ function getNotifications()
                         </div>
                         <p class="subject"><strong>Subject:</strong> ' . $row["subject"] . '</p>
                         <p class= "message"><strong>Message:</strong> ' . $row["message"] . '</p>';
-    
+
             if ($row['attach1'] != NULL) {
                 echo '<a href="../Data/Notifications/' . $row['attach1'] . '"><button class="attachment1">Attachment 1</button></a>';
             }
@@ -343,7 +356,6 @@ function getNotifications()
             echo  '</div>';
         }
     } else {
-       echo '<div class="sections">No Notifications </div>';
+        echo '<div class="sections">No Notifications </div>';
     }
-    
 }

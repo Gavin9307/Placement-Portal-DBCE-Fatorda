@@ -93,6 +93,32 @@
     justify-content: flex-end;
     gap: 20px;
 }
+.add-questions{
+    
+}
+.inputbox{
+    margin-top: 10px;
+    display:flex;
+    flex-direction: column;
+}
+.inputbox:nth-of-type(1){
+    margin-top: 0px;
+}
+
+.inputbox input{
+    border: 1px solid var(--secondary-grey);
+    padding: 10px;
+    border-radius: 5px;
+    margin-top: 5px;
+    outline: none;
+}
+.inputbox :focus {
+    border: 1px solid var(--primary-blue);
+}
+
+.inputbox input::placeholder{
+    color:grey;
+}
 /* The Modal (background) */
 .modal {
     display: none; /* Hidden by default */

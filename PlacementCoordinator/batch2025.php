@@ -1,7 +1,7 @@
 <?php
 
 // Include the Composer autoloader
-require __DIR__ . './GoogleSheetsReports/vendor/autoload.php';
+require __DIR__ . '/GoogleSheetsReports/vendor/autoload.php';
 
 use Google\Client;
 use Google\Service\Sheets;
@@ -12,13 +12,13 @@ use Google\Service\Drive\DriveFile;
 $client = new Client();
 $client->setApplicationName('XAMPP to Google Sheets');
 $client->setScopes([Sheets::SPREADSHEETS, Sheets::DRIVE]);
-$client->setAuthConfig('D:/STEPHEN/Downloads/client_secret_230758258420-13mvvjsanoatlbc2o97b5p5u8509rjp7.apps.googleusercontent.com.json');
+$client->setAuthConfig(__DIR__ . '/client_secret.json');
 $client->setAccessType('offline');
 $client->setPrompt('select_account consent');
 $client->setRedirectUri('http://localhost:8080/'); // or your redirect URI
 
 // Load previously authorized credentials from a file.
-$tokenPath = './GoogleSheetsReports/token.json';
+$tokenPath = __DIR__ . '/GoogleSheetsReports/token.json';
 if (file_exists($tokenPath)) {
     $accessToken = json_decode(file_get_contents($tokenPath), true);
     $client->setAccessToken($accessToken);
@@ -79,7 +79,7 @@ if ($client->isAccessTokenExpired()) {
 $service = new Sheets($client);
 $driveService = new Drive($client);
 
-// **Define the spreadsheet ID**
+// *Define the spreadsheet ID*
 $spreadsheetId = '1-WaAX--E--eWShVlqYrjqdwGs1IGzJCjk7Z8eXQ1OGo'; 
 
 // Create database connection

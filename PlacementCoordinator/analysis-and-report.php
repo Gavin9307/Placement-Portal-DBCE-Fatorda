@@ -56,7 +56,18 @@
                             <input type="date">
                         </div>
                     </div>
+                    <div class="batch-container">
 
+                                <label for=""><strong>Batch:</strong></label>
+                                <select name="" id="">
+                                    <option value="">2025</option>
+                                    <option value="">2024</option>
+                                    <option value="">2023</option>
+                                    <option value="">2022</option>
+                                    <option value="">2021</option>
+                                </select>
+
+                            </div>
                     <div class="departmentbox">
                         <label for=""><strong>Department</strong></label>
                         <div class="Checkbox">

@@ -54,7 +54,6 @@
     width: 50%;
     margin: 0 auto;
 }
-
 .datebox {
     display: flex;
     justify-content: space-between;
@@ -67,6 +66,15 @@
     padding: 10px;
     border-radius: 5px;
     margin-top: 5px;
+    outline: none;  
+}
+
+.batch-container select {
+    border: 1px solid var(--secondary-grey);
+    padding: 10px;
+    width:465px;
+    border-radius: 5px;
+    margin-bottom: 20px;
     outline: none;  
 }
 .departmentbox {

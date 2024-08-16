@@ -31,12 +31,21 @@
                                     <input type="date">
                                 </div>
                             </div>
+                            <div class="batch-container">
 
-                            <div class="inputbox">
-                                <div>
+                                <label for=""><strong>Batch:</strong></label>
+                                <select name="" id="">
+                                    <option value="">2025</option>
+                                    <option value="">2024</option>
+                                    <option value="">2023</option>
+                                    <option value="">2022</option>
+                                    <option value="">2021</option>
+                                </select>
+
+                            </div>
+                            <div class="batch-container">
                                     <label for=""><strong>Company:</strong></label>
-                                    <input type="text" placeholder="Company">
-                                </div>
+                                    <input type="text" placeholder="Company">      
                             </div>
                             <div class="getreportbutton">
                                 <a href=" "><button class="add-button">Get Report</button></a>

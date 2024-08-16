@@ -2,8 +2,7 @@
 require "../conn.php";
 require "../restrict.php";
 include "./tpo-utility-functions.php";
-include "./report-utility.php"; // This includes the necessary Google Sheets API setup
-global $conn;
+include "./report-utility.php"; // Includes Google Sheets API setup
 
 if (!isset($_SESSION)) {
     session_start();
@@ -15,7 +14,7 @@ if (!isset($_GET["jid"])) {
 }
 
 if (isset($_POST["getreport-button"])) {
-    $sql =  "SELECT s.S_Year_of_Admission + 4 as Batch, 
+    $sql = "SELECT s.S_Year_of_Admission + 4 as Batch, 
        s.S_College_Email as 'College Email', 
        s.S_Personal_Email as 'Personal Email',
        s.S_Fname as 'First Name', 
@@ -27,8 +26,7 @@ INNER JOIN jobapplication as ja ON s.S_College_Email=ja.S_College_Email
 INNER JOIN class as c ON c.Class_id=s.S_Class_id
 INNER JOIN department as d ON d.Dept_id=c.Dept_id
 INNER JOIN jobplacements as jp ON jp.J_id = ja.J_id
-WHERE ja.J_id = ".$_GET["jid"]." AND ja.Interest = 1;
-";
+WHERE ja.J_id = ".$_GET["jid"]." AND ja.Interest = 1;";
 
     $result = $conn->query($sql);
     $spreadsheetId = '1fGnnbnpsG2Ep1brwKAGLwqVPpWybbwuBBK9j8Sxuc64'; 
@@ -55,7 +53,6 @@ WHERE ja.J_id = ".$_GET["jid"]." AND ja.Interest = 1;
     }
 
     // Specify the spreadsheet ID and range
-    $spreadsheetId = '1fGnnbnpsG2Ep1brwKAGLwqVPpWybbwuBBK9j8Sxuc64';
     $range = 'Sheet1!A7:Z'; // Adjust range as needed to cover all possible cells
 
     // Clear the existing content in the range
@@ -85,10 +82,9 @@ WHERE ja.J_id = ".$_GET["jid"]." AND ja.Interest = 1;
 
     // Download the updated sheet as a PDF or Excel file
     try {
-        // Set the export MIME type (application/pdf for PDF, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet for Excel)
         $exportMimeType = 'application/pdf'; // or use 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' for Excel
 
-        $exportedFile = $driveService->files->export($spreadsheetId, $exportMimeType, array('alt' => 'media'));
+        $exportedFile = $driveService->files->export($spreadsheetId, $exportMimeType, ['alt' => 'media']);
 
         // Set the appropriate headers for file download
         header('Content-Type: ' . $exportMimeType);
@@ -101,9 +97,6 @@ WHERE ja.J_id = ".$_GET["jid"]." AND ja.Interest = 1;
         echo 'Error downloading sheet: ' . $e->getMessage();
     }
 }
-
-
-
 ?>
 
 <!DOCTYPE html>

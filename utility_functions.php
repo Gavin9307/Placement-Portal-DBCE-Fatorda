@@ -71,62 +71,71 @@ P.J_Due_date >= CURRENT_DATE AND P.Accept_Responses=1 AND JA.S_College_Email = ?
     }
 }
 
-function getJobDetail($job_id)
-{
-    global $conn;
-    $fetchJobDetailQuery = "SELECT C.C_Name as cname, C.C_Logo clogo, P.J_Due_date duedate, P.J_Position position, P.J_Description description, A.Interest interest
-FROM company as C
-INNER JOIN jobposting as J ON J.C_id = C.C_id
-INNER JOIN jobplacements as P ON P.J_id = J.J_id
-INNER JOIN jobapplication as A ON A.J_id = P.J_id
-WHERE
-P.J_Due_date >= CURRENT_DATE AND J.J_id = ? AND A.S_College_Email = ?";
+// function getJobDetail($job_id)
+// {
+//     global $conn;
+//     $fetchJobDetailQuery = "SELECT C.C_Name as cname, C.C_Logo clogo, P.J_Due_date duedate, P.J_Position position, P.J_Description description, A.Interest interest
+// FROM company as C
+// INNER JOIN jobposting as J ON J.C_id = C.C_id
+// INNER JOIN jobplacements as P ON P.J_id = J.J_id
+// INNER JOIN jobapplication as A ON A.J_id = P.J_id
+// WHERE
+// P.J_Due_date >= CURRENT_DATE AND J.J_id = ? AND A.S_College_Email = ?";
 
-    $fetchJobDetail = $conn->prepare($fetchJobDetailQuery);
-    $fetchJobDetail->bind_param("is", $job_id, $_SESSION["user_email"]);
-    $fetchJobDetail->execute();
-    $result = $fetchJobDetail->get_result();
+//     $fetchJobDetail = $conn->prepare($fetchJobDetailQuery);
+//     $fetchJobDetail->bind_param("is", $job_id, $_SESSION["user_email"]);
+//     $fetchJobDetail->execute();
+//     $result = $fetchJobDetail->get_result();
 
-    while ($row = $result->fetch_assoc()) {
-        echo '<div class="company-container">
-                        <div class="company-logo-container">
-                            <img src="../Data/Companies/Company_Logo/' . $row['clogo'] . '" alt="">
-                            <p>' . $row['cname'] . '</p>
-                        </div>
-                        <p><strong>Due Date:</strong> ' . $row['duedate'] . '</p>
-                    </div>
-                   <p class="position"><strong>Position:</strong> ' . $row['position'] . '</p>
-                    <p class=""><strong>Details:</strong>
-                    <p>Job Description:
-                        ' . $row['description'] . '
-                    </p>
-                    </p>
-                    <p class="" style= " margin-top:20px;"><strong>Additional Questions:</strong></p>
-                    <form action="">
-                        <div class="add-questions">
-                            <div class="inputbox">
-                                <label for="">Do you have a Pan Card?</label>
-                                <input type="text">
-                            </div>
-                            <div class="inputbox">
-                                <label for="">Do you have any relatives working in our Company?</label>
-                                <input type="text">
-                            </div>
-                        </div>
-                    </form>';
+//     while ($row = $result->fetch_assoc()) {
+//         echo '<div class="company-container">
+//                         <div class="company-logo-container">
+//                             <img src="../Data/Companies/Company_Logo/' . $row['clogo'] . '" alt="">
+//                             <p>' . $row['cname'] . '</p>
+//                         </div>
+//                         <p><strong>Due Date:</strong> ' . $row['duedate'] . '</p>
+//                     </div>
+//                    <p class="position"><strong>Position:</strong> ' . $row['position'] . '</p>
+//                     <p class=""><strong>Details:</strong>
+//                     <p>Job Description:
+//                         ' . $row['description'] . '
+//                     </p>
+//                     </p>
+//                     <p class="" style= " margin-top:20px;"><strong>Additional Questions:</strong></p>
+//                     <form action="">
+//                         <div class="add-questions">';
+//                         $fetchQuestionsQuery = "SELECT Q.Question_Text as question_text 
+//                         FROM jobquestions as JQ
+//                         INNER JOIN Questions as Q ON JQ.Question_ID = Q.Question_ID
+//                         WHERE JQ.Job_ID = ?";
+//                         $fetchQuestions = $conn->prepare($fetchQuestionsQuery);
+//                         $fetchQuestions->bind_param("i", $job_id);
+//                         $fetchQuestions->execute();
+//                         $questionsResult = $fetchQuestions->get_result();
+//                         while ($questionRow = $questionsResult->fetch_assoc()) {
+//                           echo  '<div class="inputbox">
+//                                 <label for="">' . htmlspecialchars($questionRow['question_text']) . '</label>
+//                                 <input type="text" name="answers[]">
+//                             </div>';
+//                         }
+                    
+//                       echo  '</div>
+//                     ';
 
-        if ($row['interest'] == 0) {
-            echo '<div class="interest-button-container">
-                                <a href="./job-opportunities-detail.php?jid=' . $job_id . '&interest=1"><button id="myBtn" class="interested">Mark as Interested</button></a>
-                                <a href="./job-opportunities-detail.php?jid=' . $job_id . '&interest=0"><button class="not-interested">Not Interested</button></a>
-                              </div>';
-        } else {
-            echo '<div class="interest-button-container">
-                                <a href="./job-opportunities-detail.php?jid=' . $job_id . '&interest=0"><button class="interested">Mark as Not Interested</button></a>
-                              </div>';
-        }
-    }
-}
+//         if ($row['interest'] == 0) {
+//             echo '<div class="interest-button-container">
+//                                 <a href="./job-opportunities-detail.php?jid=' . $job_id . '&interest=1"><button id="myBtn" class="interested">Mark as Interested</button></a>
+//                                 <a href="./job-opportunities-detail.php?jid=' . $job_id . '&interest=0"><button class="not-interested">Not Interested</button></a>
+//                               </div>';
+//         } else {
+//             echo '<div class="interest-button-container">
+//                                 <a href="./job-opportunities-detail.php?jid=' . $job_id . '&interest=0"><button class="interested">Mark as Not Interested</button></a>
+//                               </div>';
+//         }
+//     }
+// }
+
+
 
 function getApplications()
 {

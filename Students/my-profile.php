@@ -57,10 +57,10 @@ if (isset($_SESSION["user_type"]) && isset($_SESSION["user_email"])) {
 }
 
 if (isset($_POST["update_profile"])) {
-    $updateQuery = "UPDATE student as s SET s.S_Fname = ?,s.S_Mname = ?,s.S_Lname = ?,s.S_Personal_Email = ?,s.S_Address = ?,s.S_Phone_no = ?,s.S_10th_Perc = ?,s.S_12th_Perc = ?
+    $updateQuery = "UPDATE student as s SET s.S_Fname = ?,s.S_Mname = ?,s.S_Lname = ?,s.S_Personal_Email = ?,s.S_Address = ?,s.S_Phone_no = ?,s.S_10th_Perc = ?,s.S_12th_Perc = ?,s.S_Resume = ?,s.S_10th_Marksheet = ?,s.S_12th_Marksheet = ?
     WHERE s.S_College_Email = ?";
     $result = $conn->prepare($updateQuery);
-    $result->bind_param("ssssssdds", $_POST["fname"], $_POST["mname"], $_POST["lname"], $_POST["pemail"], $_POST["addr"], $_POST["phno"], $_POST["per10"], $_POST["per12"], $_SESSION["user_email"]);
+    $result->bind_param("ssssssddssss", $_POST["fname"], $_POST["mname"], $_POST["lname"], $_POST["pemail"], $_POST["addr"], $_POST["phno"], $_POST["per10"], $_POST["per12"],$_POST["resume"],$_POST["marksheet_10"],$_POST["marksheet_12"], $_SESSION["user_email"]);
     $result->execute();
 
     $updateResultQuery = "UPDATE result as r 
@@ -223,6 +223,22 @@ if (isset($_POST["upload_pic"])) {
                             <div>
                                 <label for="per12">12th Percentage</label><br>
                                 <input type="number" name="per12" step="0.01" min="0" max="100" value="' . $StudentPercentage_12 . '">
+                            </div>
+                        </div>
+                        <div class="form-adjust">
+                            <div>
+                                <label for="resume">Resume (PDF Link)</label><br>
+                                <input type="text" name="resume" value="' . $StudentResume . '">
+                            </div>
+
+                            <div>
+                                <label for="marksheet_10">10th Marksheet (PDF Link)</label><br>
+                                <input type="text" name="marksheet_10" value="' . $StudentMarksheet_10 . '">
+                            </div>
+
+                            <div>
+                                <label for="marksheet_12">12th Marksheet / Diploma (PDF Link)</label><br>
+                                <input type="text" name="marksheet_12" value="' . $StudentMarksheet_12 . '">
                             </div>
                         </div>';
                         ?>

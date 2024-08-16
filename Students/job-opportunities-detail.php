@@ -166,11 +166,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         if ($row['interest'] == 0) {
                             echo '<div class="interest-button-container">
                                     <button type="submit" id="myBtn" class="interested">Mark as Interested</button>
-                                    <a href="./job-opportunities-detail.php?jid=' . $job_id . '&interest=0">Not Interested</a>
+                                    <a href="./job-opportunities-detail.php?jid=' . $job_id . '&interest=0" class="not-interested">Not Interested</a>
                                   </div>';
                         } else {
                             echo '<div class="interest-button-container">
-                                    <a href="./job-opportunities-detail.php?jid=' . $job_id . '&interest=0">Not Interested</a>
+                                    <a href="./job-opportunities-detail.php?jid=' . $job_id . '&interest=0" class="not-interested">Not Interested</a>
                                   </div>';
                         }
                     }

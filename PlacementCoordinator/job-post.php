@@ -30,7 +30,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST["post-job"])) {
         $insertJobQuery = "INSERT INTO jobplacements (J_Backlogs_allowed, J_Description, J_Due_date, J_No_of_posts, J_Offered_salary, J_Position, J_Req_cgpa)
                            VALUES (?, ?, ?, ?, ?, ?, ?)";
         $insertJob = $conn->prepare($insertJobQuery);
-        $insertJob->bind_param("ississi", $backAllowed, $moreDetails, $dueDate, $noPosts, $offeredSalary, $position, $maxCgpa);
+        $insertJob->bind_param("ississi", $backAllowed, $moreDetails, $dueDate, $noPosts, $offeredSalary, $position, $minCgpa);
         $insertJob->execute();
 
         $last_j_id = $conn->insert_id;

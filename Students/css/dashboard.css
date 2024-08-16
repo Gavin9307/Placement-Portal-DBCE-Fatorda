@@ -24,6 +24,7 @@
 }
 
 .main-container {
+    min-height: 700px;
     width: 75%;
     padding: 25px;
     margin-bottom: 50px;
@@ -70,8 +71,10 @@ hr {
 }
 
 .sub-table-row img {
-    width: 60px;
+    width: 70px;
+    height: 70px;
 }
 .sub-table-row p {
-    margin-left: 350px;
+    margin-left: 200px;
+    width: 200px;
 }

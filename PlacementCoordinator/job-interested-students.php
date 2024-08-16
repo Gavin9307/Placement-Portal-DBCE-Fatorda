@@ -14,19 +14,57 @@ if (!isset($_GET["jid"])) {
 }
 
 if (isset($_POST["getreport-button"])) {
-    $sql = "SELECT s.S_Year_of_Admission + 4 as Batch, 
-       s.S_College_Email as 'College Email', 
-       s.S_Personal_Email as 'Personal Email',
-       s.S_Fname as 'First Name', 
-       s.S_Mname as 'Middle Name', 
-       s.S_Lname as 'Last Name', 
-       d.Dept_name as 'Department'
-FROM student as s
-INNER JOIN jobapplication as ja ON s.S_College_Email=ja.S_College_Email
-INNER JOIN class as c ON c.Class_id=s.S_Class_id
-INNER JOIN department as d ON d.Dept_id=c.Dept_id
-INNER JOIN jobplacements as jp ON jp.J_id = ja.J_id
-WHERE ja.J_id = ".$_GET["jid"]." AND ja.Interest = 1;";
+    $jobId = intval($_GET["jid"]);
+
+    // Fetch the list of questions for the job
+    $questionsQuery = "
+        SELECT q.Question_ID, q.Question_Text
+        FROM jobquestions jq
+        INNER JOIN questions q ON jq.Question_ID = q.Question_ID
+        WHERE jq.Job_ID = $jobId;
+    ";
+    
+    $questionsResult = $conn->query($questionsQuery);
+
+    if ($questionsResult === FALSE) {
+        echo "Error fetching questions: " . $conn->error;
+        exit();
+    }
+
+    $caseStatements = [];
+    $questionTexts = [];
+    
+    while ($row = $questionsResult->fetch_assoc()) {
+        $questionText = $row['Question_Text'];
+        $caseStatements[] = "MAX(CASE WHEN q.Question_Text = '$questionText' THEN sr.Response_Text END) AS `$questionText`";
+        $questionTexts[] = $questionText;
+    }
+
+    $caseStatementList = implode(", ", $caseStatements);
+
+    // Construct the final SQL query
+    $sql = "
+        SELECT s.S_Year_of_Admission + 4 AS Batch, 
+               s.S_College_Email AS 'College Email', 
+               s.S_Personal_Email AS 'Personal Email',
+               s.S_Fname AS 'First Name', 
+               s.S_Mname AS 'Middle Name', 
+               s.S_Lname AS 'Last Name', 
+               d.Dept_name AS 'Department',
+               $caseStatementList
+        FROM student AS s
+        INNER JOIN jobapplication AS ja ON s.S_College_Email = ja.S_College_Email
+        INNER JOIN class AS c ON c.Class_id = s.S_Class_id
+        INNER JOIN department AS d ON d.Dept_id = c.Dept_id
+        INNER JOIN jobplacements AS jp ON jp.J_id = ja.J_id
+        INNER JOIN studentresponses AS sr ON sr.Student_Email = s.S_College_Email 
+            AND sr.Job_ID = ja.J_id
+        INNER JOIN jobquestions AS jq ON jq.Job_ID = ja.J_id 
+            AND jq.Question_ID = sr.Question_ID
+        INNER JOIN questions AS q ON q.Question_ID = jq.Question_ID
+        WHERE ja.J_id = $jobId AND ja.Interest = 1
+        GROUP BY s.S_Year_of_Admission, s.S_College_Email, s.S_Personal_Email, s.S_Fname, s.S_Mname, s.S_Lname, d.Dept_name;
+    ";
 
     $result = $conn->query($sql);
     $spreadsheetId = '1fGnnbnpsG2Ep1brwKAGLwqVPpWybbwuBBK9j8Sxuc64'; 
@@ -36,11 +74,11 @@ WHERE ja.J_id = ".$_GET["jid"]." AND ja.Interest = 1;";
     // Check if data is retrieved from the database
     if ($result->num_rows > 0) {
         // Fetch the headers
-        $fields = $result->fetch_fields();
-        $headers = [];
-        foreach ($fields as $field) {
-            $headers[] = $field->name;
-        }
+        $headers = array_merge([
+            'Batch', 'College Email', 'Personal Email', 
+            'First Name', 'Middle Name', 'Last Name', 
+            'Department'
+        ], $questionTexts);
         $data[] = $headers;
 
         // Fetch the rows
@@ -98,6 +136,7 @@ WHERE ja.J_id = ".$_GET["jid"]." AND ja.Interest = 1;";
     }
 }
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">

@@ -26,6 +26,7 @@ header {
     top: -55px;
     left: 7px;
     color: red;
+    cursor: pointer;
 }
 .left-part > img {
     width: 68px;

@@ -5,6 +5,7 @@
             <h2>Placement Portal - Don Bosco College of Engineering</h2>
         </div>
         <ul class="right-part">
+            <a href="./dashboard.php"><li>Dashboard</li></a>
             <a href="../student-support.php"><li>Contact Us</li></a>
             <div class="notifications">
              <a href="./notifications.php">

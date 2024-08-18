@@ -24,11 +24,34 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update-round-status']
         $updateRoundStatus->execute();
     }
 
-    echo "<script>
-        setTimeout(function() {
-            window.location.href = window.location.href;
-        }, 2000);
-    </script>";
+    $fetchTotalRoundQuery = "SELECT * FROM rounds WHERE J_id = ?";
+    $fetchTotalRound = $conn->prepare($fetchTotalRoundQuery);
+    $fetchTotalRound->bind_param("i", $jid);
+    $fetchTotalRound->execute();
+    $resultTotalRounds = $fetchTotalRound->get_result();
+    $totalRounds = $resultTotalRounds->num_rows;
+
+    $fetchPassedRoundQuery = "SELECT * FROM rounds AS r INNER JOIN studentrounds AS sr ON r.R_id = sr.R_id WHERE r.J_id = ? AND sr.S_College_Email = ? AND RoundStatus = 'passed';";
+    $fetchPassedRound = $conn->prepare($fetchPassedRoundQuery);
+    $fetchPassedRound->bind_param("is", $jid, $semail);
+    $fetchPassedRound->execute();
+    $resultPassedRounds = $fetchPassedRound->get_result();
+    $PassedRounds = $resultPassedRounds->num_rows;
+
+    if ($totalRounds != 0 && $totalRounds == $PassedRounds) {
+        $updatePlacedStatusQuery = "UPDATE jobapplication SET placed = 1 WHERE J_id = ? AND S_College_Email = ?";
+        $updatePlacedStatus = $conn->prepare($updatePlacedStatusQuery);
+        $updatePlacedStatus->bind_param("is", $jid, $semail);
+        $updatePlacedStatus->execute();
+    }else {
+        $updatePlacedStatusQuery = "UPDATE jobapplication SET placed = 0 WHERE J_id = ? AND S_College_Email = ?";
+        $updatePlacedStatus = $conn->prepare($updatePlacedStatusQuery);
+        $updatePlacedStatus->bind_param("is", $jid, $semail);
+        $updatePlacedStatus->execute();
+    }
+
+    header("Location: ./job-interested-students-details.php?jid=$jid&semail=$semail");
+    exit();
 }
 
 ?>
@@ -66,7 +89,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update-round-status']
                 <div class="sections">
                     <?php getInterestedStudentsDetails(); ?>
 
-                    
+
                 </div>
 
             </div>

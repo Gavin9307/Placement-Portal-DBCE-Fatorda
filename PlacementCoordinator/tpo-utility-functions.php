@@ -233,12 +233,12 @@ WHERE ja.J_id = ? AND ja.Interest = ? LIMIT 5;";
             $date_from_db = new DateTime($retrieved_date);
             $current_date = new DateTime();
             if ($date_from_db > $current_date) {
-                echo '<td>Pending</td>';
+                echo '<td  style="color:#ebaf0c">Pending</td>';
             } else {
-                echo '<td>Rejected</td>';
+                echo '<td  style="color:red">Rejected</td>';
             }
         } else {
-            echo '<td>Placed</td>';
+            echo '<td  style="color:green">Placed</td>';
         }
 
         echo '<td><a href="job-interested-students-details.php?jid=' . $jid . '&semail=' . $row["semail"] . '">View More</a></td>
@@ -303,12 +303,12 @@ WHERE ja.J_id = ? AND ja.Interest = ?;";
             $date_from_db = new DateTime($retrieved_date);
             $current_date = new DateTime();
             if ($date_from_db > $current_date) {
-                echo '<td>Pending</td>';
+                echo '<td  style="color:#ebaf0c">Pending</td>';
             } else {
-                echo '<td>Rejected</td>';
+                echo '<td  style="color:red">Rejected</td>';
             }
         } else {
-            echo '<td>Placed</td>';
+            echo '<td  style="color:green">Placed</td>';
         }
 
         echo '<td><a href="job-interested-students-details.php?jid=' . $jid . '&semail=' . $row["semail"] . '">View More</a></td>

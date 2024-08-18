@@ -8,6 +8,10 @@ $rememberMe = false;
 
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_GET["login"])) {
     global $conn;
+    if(!isset($_POST["usertype"])){
+        $error = "Please select user type";
+        goto passfail;
+    }
     $email = htmlspecialchars($_POST["email"]);
     $password = htmlspecialchars($_POST["password"]);
     $usertype = htmlspecialchars($_POST["usertype"]);

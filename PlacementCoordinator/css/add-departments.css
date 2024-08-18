@@ -1,8 +1,10 @@
 #wrapper {
     position: relative;
 }
-
-/* Main Content */
+#departments{
+    color: var(--primary-blue);
+    background-color: var(--primary-white);
+}
 .container {
     width: 100%;
     display:flex ;

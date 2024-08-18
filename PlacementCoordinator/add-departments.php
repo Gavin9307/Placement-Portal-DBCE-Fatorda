@@ -8,33 +8,74 @@ if (!isset($_SESSION)) {
     session_start();
 }
 
+if(isset($_GET["edit"]) && isset($_GET["did"])){
+    $dept_id = $_GET["did"];
+    $fetchDeptQuery = "SELECT Dept_name FROM department WHERE Dept_id=?";
+    $stmt = $conn->prepare($fetchDeptQuery);
+    $stmt->bind_param("i", $dept_id);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    if ($row = $result->fetch_assoc()) {
+        $dept_name = $row["Dept_name"];
+    }
 
-$studentSearch = false;
-$d_studentSearch = false;
-
-if (isset($_POST["student-search-button"])) {
-    $sname = !empty($_POST['sname']) ? $_POST['sname'] : null;
-    $departments = !empty($_POST['departments']) ? $_POST['departments'] : [];
-    $gender = !empty($_POST['gender']) ? $_POST['gender'] : null;
-    $batch = !empty($_POST['batch_year']) ? $_POST['batch_year'] : null;
-
-    $studentsResult = fetchStudents(false, $sname, $departments, $gender,$batch);
-    $studentSearch = true;
-} else {
-    $studentsResult = fetchStudents(false);
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        $new_dept_name = $_POST["sname"];
+        if (!empty($new_dept_name)) {
+            $updateDeptQuery = "UPDATE department SET Dept_name=? WHERE Dept_id=?";
+            $stmt = $conn->prepare($updateDeptQuery);
+            $stmt->bind_param("si", $new_dept_name, $dept_id);
+            if ($stmt->execute()) {
+                echo "<script>alert('Department updated successfully!'); window.location.href='./add-departments.php';</script>";
+            } else {
+                echo "<script>alert('Error updating department!');</script>";
+            }
+        } else {
+            echo "<script>alert('Department name cannot be empty!');</script>";
+        }
+    }
 }
 
-if (isset($_POST["d_student-search-button"])) {
-    $d_sname = !empty($_POST['d_sname']) ? $_POST['d_sname'] : null;
-    $d_departments = !empty($_POST['d_departments']) ? $_POST['d_departments'] : [];
-    $d_gender = !empty($_POST['d_gender']) ? $_POST['d_gender'] : null;
-    $d_batch = !empty($_POST['d_batch_year']) ? $_POST['d_batch_year'] : null;
-    $d_studentsResult = fetchStudents(true, $d_sname, $d_departments, $d_gender,$d_batch);
-    $d_studentSearch = true;
-} else {
-    $d_studentsResult = fetchStudents(true);
+if(isset($_GET["delete"]) && isset($_GET["did"])){
+    $dept_id = $_GET["did"];
+    $deleteDeptQuery = "DELETE FROM department WHERE Dept_id=?";
+    $stmt = $conn->prepare($deleteDeptQuery);
+    $stmt->bind_param("i", $dept_id);
+    if ($stmt->execute()) {
+        echo "<script>alert('Department deleted successfully!'); window.location.href='./add-departments.php';</script>";
+    } else {
+        echo "<script>alert('Error deleting department!');</script>";
+    }
 }
 
+// Handling Add Department
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && !isset($_GET["edit"])) {
+    $new_dept_name = $_POST["sname"];
+    if (!empty($new_dept_name)) {
+        // Check if the department name already exists
+        $checkDeptQuery = "SELECT COUNT(*) as count FROM department WHERE Dept_name=?";
+        $stmt = $conn->prepare($checkDeptQuery);
+        $stmt->bind_param("s", $new_dept_name);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $row = $result->fetch_assoc();
+
+        if ($row['count'] > 0) {
+            echo "<script>alert('Department name already exists!');</script>";
+        } else {
+            $insertDeptQuery = "INSERT INTO department (Dept_name) VALUES (?)";
+            $stmt = $conn->prepare($insertDeptQuery);
+            $stmt->bind_param("s", $new_dept_name);
+            if ($stmt->execute()) {
+                echo "<script>alert('Department added successfully!'); window.location.href='./add-departments.php';</script>";
+            } else {
+                echo "<script>alert('Error adding department!');</script>";
+            }
+        }
+    } else {
+        echo "<script>alert('Department name cannot be empty!');</script>";
+    }
+}
 ?>
 
 <!DOCTYPE html>
@@ -42,8 +83,15 @@ if (isset($_POST["d_student-search-button"])) {
 
 <head>
     <?php include './head.php' ?>
-    <link rel="stylesheet" href="./css/job-post-questions.css">
-    <title>Add Departments </title>
+    <link rel="stylesheet" href="./css/add-departments.css">
+    <title>Add Departments</title>
+    <script>
+        function confirmDelete(deptId) {
+            if (confirm("Are you sure you want to delete this department?\nAll DATA ASSOCIATED WITH THIS DEPARTMENT WILL BE DELETED (JOBS,STUDENTS,PLACEMENT COORDINATORS)\nThis action cannot be undone.")) {
+                window.location.href = './add-departments.php?delete=1&did=' + deptId;
+            }
+        }
+    </script>
 </head>
 
 <body>
@@ -63,53 +111,42 @@ if (isset($_POST["d_student-search-button"])) {
                     </h2>
                 </div>
 
-                <h3>Add Department</h3>
+                <h3><?php echo isset($dept_name) ? 'Edit Department' : 'Add Department'; ?></h3>
                 <div class="form-adjust">
                     <form action="" method="post">
                         <div class="inputbox">
                             <label for=""><b>Department Name:</b></label>
-                            <input type="text" name="sname" placeholder="Department">
+                            <input type="text" name="sname" placeholder="Department" value="<?php echo isset($dept_name) ? $dept_name : ''; ?>">
                         </div>
-
-
-
                         <div class="button-container">
-                            <button name="student-search-button" class="add-button">Add</button>
+                            <button name="student-search-button" class="add-button"><?php echo isset($dept_name) ? 'Update' : 'Add'; ?></button>
                         </div>
                     </form>
                 </div>
+
                 <div class="sections">
                     <table>
                         <tr>
                             <th>Department Name</th>
                             <th>Edit Department Name</th>
-                            <th>Remove</th>
+                            <th>Remove Department</th>
                         </tr>
-                        <tr>
-                            <td>COMP</td>
-                            <td><button class="edit-button">Edit</button></td>
-                            <td><button class="remove-button">Remove</button></td>
-                        </tr>
-                        <tr>
-                            <td>MECH</td>
-                            <td><button class="edit-button">Edit</button></td>
-                            <td><button class="remove-button">Remove</button></td>
-                        </tr>
-                        <tr>
-                            <td>ECS</td>
-                            <td><button class="edit-button">Edit</button></td>
-                            <td><button class="remove-button">Remove</button></td>
-                        </tr>
-                        <tr>
-                            <td>CIVIL</td>
-                            <td><button class="edit-button">Edit</button></td>
-                            <td><button class="remove-button">Remove</button></td>
-                        </tr>
+                        <?php
+                            global $conn;
+                            $fetchDepartmentQuery = "SELECT Dept_name,Dept_id FROM department;";
+                            $fetchDepartment = $conn->prepare($fetchDepartmentQuery);
+                            $fetchDepartment->execute();
+                            $result = $fetchDepartment->get_result();
+                            while ($row = $result->fetch_assoc()){
+                                echo '<tr>
+                                            <td>'.$row["Dept_name"].'</td>
+                                            <td><a href="./add-departments.php?edit=1&did='.$row["Dept_id"].'"><button class="edit-button">Edit</button></a></td>
+                                            <td><button class="remove-button" style="color:red" onclick="confirmDelete('.$row["Dept_id"].')">Remove</button></td>
+                                        </tr>';
+                            }
+                        ?>
                     </table>
-                </div>
-               <!--<div class="button-container">
-                    <a href="./student-management-search-students.php"><button class="viewmore-button">View More</button></a>
-                </div> -->                         
+                </div>                   
             </div>
         </div>
 

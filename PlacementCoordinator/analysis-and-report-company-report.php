@@ -177,7 +177,8 @@ if (isset($_POST["submit"]))
     
     // Specify starting rows for each query
     $startRows = [9, 10, 11, 12, 18]; // Starting row numbers for each query
-    
+    $spreadsheetId = '1-WaAX--E--eWShVlqYrjqdwGs1IGzJCjk7Z8eXQ1OGo'; 
+
     foreach ($queries as $index => $sql) {
         $result = $conn->query($sql);
     
@@ -279,7 +280,7 @@ if (isset($_POST["submit"]))
                                     <input type="text" placeholder="Company">      
                             </div>
                             <div class="getreportbutton">
-                                <a href=" "><button class="add-button">Get Report</button></a>
+                                <button class="add-button" name="submit" type="submit">Get Report</button>
                             </div>
                         </form>
                     </div>

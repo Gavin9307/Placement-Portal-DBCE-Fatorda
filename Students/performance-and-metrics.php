@@ -8,15 +8,21 @@ if (!isset($_SESSION)) {
     session_start();
 }
 
+// Assuming the email is stored in the session
+$student_email = $_SESSION['user_email'];
+
 // Fetch the number of jobs the student was eligible for
 $query_eligible = "SELECT COUNT(jp.J_id) as eligible_count 
                    FROM jobplacements as jp
                    INNER JOIN jobdepartments as jd ON jd.J_id = jp.J_id
                    INNER JOIN jobapplication as ja ON ja.J_id = jp.J_id
                    WHERE jd.Dept_id = 1 
-                   AND ja.S_College_Email = '2114066@dbcegoa.ac.in'";
-$result_eligible = mysqli_query($conn, $query_eligible);
-$row_eligible = mysqli_fetch_assoc($result_eligible);
+                   AND ja.S_College_Email = ?";
+$stmt_eligible = $conn->prepare($query_eligible);
+$stmt_eligible->bind_param("s", $student_email);
+$stmt_eligible->execute();
+$result_eligible = $stmt_eligible->get_result();
+$row_eligible = $result_eligible->fetch_assoc();
 $was_eligible_count = $row_eligible['eligible_count'];
 
 // Fetch the total number of jobs available in the department
@@ -34,6 +40,55 @@ $was_not_eligible_count = $total_jobs - $was_eligible_count;
 // Convert PHP variables to JSON
 $was_eligible_json = json_encode($was_eligible_count);
 $was_not_eligible_json = json_encode($was_not_eligible_count);
+
+
+// Prepare the SQL queries for pending, accepted, and rejected applications
+$sql_pending = "SELECT COUNT(*) AS pending_applications
+                FROM jobapplication AS ja
+                INNER JOIN student AS s ON ja.S_College_Email = s.S_College_Email
+                INNER JOIN jobplacements as jp ON jp.J_id = ja.J_id
+                WHERE s.S_College_Email = ? 
+                  AND ja.placed = 0 
+                  AND jp.J_Due_date <= CURRENT_DATE";
+
+$sql_accepted = "SELECT COUNT(*) AS accepted_applications
+                 FROM jobapplication AS ja
+                 INNER JOIN student AS s ON ja.S_College_Email = s.S_College_Email
+                 WHERE s.S_College_Email = ? 
+                   AND ja.placed = 1";
+
+$sql_rejected = "SELECT COUNT(*) AS rejected_applications
+                 FROM jobapplication AS ja
+                 INNER JOIN student AS s ON ja.S_College_Email = s.S_College_Email
+                 INNER JOIN jobplacements as jp ON jp.J_id = ja.J_id
+                 WHERE s.S_College_Email = ? 
+                   AND ja.placed = 0 
+                   AND jp.J_Due_date > CURRENT_DATE";
+
+// Prepare and execute the pending applications query
+$stmt_pending = $conn->prepare($sql_pending);
+$stmt_pending->bind_param("s", $student_email);
+$stmt_pending->execute();
+$result_pending = $stmt_pending->get_result();
+$row_pending = $result_pending->fetch_assoc();
+$pendingCount = $row_pending['pending_applications'];
+
+// Prepare and execute the accepted applications query
+$stmt_accepted = $conn->prepare($sql_accepted);
+$stmt_accepted->bind_param("s", $student_email);
+$stmt_accepted->execute();
+$result_accepted = $stmt_accepted->get_result();
+$row_accepted = $result_accepted->fetch_assoc();
+$acceptedCount = $row_accepted['accepted_applications'];
+
+// Prepare and execute the rejected applications query
+$stmt_rejected = $conn->prepare($sql_rejected);
+$stmt_rejected->bind_param("s", $student_email);
+$stmt_rejected->execute();
+$result_rejected = $stmt_rejected->get_result();
+$row_rejected = $result_rejected->fetch_assoc();
+$rejectedCount = $row_rejected['rejected_applications'];
+
 ?>
 
 <!DOCTYPE html>
@@ -58,10 +113,43 @@ $was_not_eligible_json = json_encode($was_not_eligible_count);
                     Performance and Metrics</h2>
                 <div class="section-1">
                     <div class="section">
-                        <h3>Stats:</h3><br>
-                        <p>Total Applications:</p><br>
-                        <p>Interviews Attended:</p><br>
-                        <P>Rejections:</P><br>
+                        <h3> Application Stats:</h3>
+                        <canvas id="newPieChartId" width="250" height="150"></canvas>
+                        <script>
+                            const pendingCount = <?php echo $pendingCount; ?>;
+                            const acceptedCount = <?php echo $acceptedCount; ?>;
+                            const rejectedCount = <?php echo $rejectedCount; ?>;
+
+                            const cty = document.getElementById('newPieChartId').getContext('2d');
+                            const newPieChart = new Chart(cty, {
+                                type: 'pie',
+                                data: {
+                                    labels: ['Pending', 'Accepted', 'Rejected'],
+                                    datasets: [{
+                                        data: [pendingCount, acceptedCount, rejectedCount],
+                                        backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56'],
+                                        hoverBackgroundColor: ['#FF6384', '#36A2EB', '#FFCE56']
+                                    }]
+                                },
+                                options: {
+                                    responsive: true,
+                                    plugins: {
+                                        legend: {
+                                            position: 'top',
+                                        },
+                                        tooltip: {
+                                            enabled: true,
+                                        }
+                                    },
+                                    animation: {
+                                        animateScale: true,
+                                        animateRotate: true
+                                    }
+                                }
+                            });
+                        </script>
+
+
                     </div>
                     <div class="section">
                         <h3>Jobs Posted:</h3>
@@ -87,14 +175,66 @@ $was_not_eligible_json = json_encode($was_not_eligible_count);
                                         tooltip: {
                                             enabled: true,
                                         }
+                                    },
+                                    animation: {
+                                        animateScale: true,
+                                        animateRotate: true
                                     }
                                 }
                             });
                         </script>
+
+
                     </div>
                 </div>
                 <div class="sections">
-                    <p>ueryhuwh</p>
+                    <canvas id="myLineChart" style="width: 100%;height:300px;"></canvas>
+                    <script>
+                        const ctz = document.getElementById('myLineChart').getContext('2d');
+                        const myLineChart = new Chart(ctz, {
+                            type: 'line',
+                            data: {
+                                labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
+                                datasets: [{
+                                    label: 'My First Dataset',
+                                    data: [65, 59, 80, 81, 56, 55, 40],
+                                    fill: false, // Set to true if you want the area under the line to be filled
+                                    borderColor: 'rgb(75, 192, 192)',
+                                    tension: 0.1 // Adjust the curve of the line
+                                }]
+                            },
+                            options: {
+                                responsive: true,
+                                plugins: {
+                                    legend: {
+                                        position: 'top',
+                                    },
+                                    tooltip: {
+                                        enabled: true,
+                                    }
+                                },
+                                scales: {
+                                    x: {
+                                        beginAtZero: true,
+                                        title: {
+                                            display: true,
+                                            text: 'Months'
+                                        }
+                                    },
+                                    y: {
+                                        beginAtZero: true,
+                                        title: {
+                                            display: true,
+                                            text: 'Value'
+                                        }
+                                    }
+                                },
+                                animation: {
+                                    duration: 1000
+                                }
+                            }
+                        });
+                    </script>
                 </div>
             </div>
         </div>

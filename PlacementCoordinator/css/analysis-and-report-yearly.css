@@ -68,6 +68,21 @@
     margin-top: 5px;
     outline: none;  
 }
+.batch-container {
+    display: flex;
+    align-items: center;
+    gap: 10px; /* Space between label and select */
+}
+
+.batch-container label {
+    white-space: nowrap; /* Prevent the label from wrapping */
+    margin-right: 10px;
+}
+
+.batch-container select {
+    flex: 1; /* Makes the select box take up the remaining space */
+    min-width: 0; /* Allows flexbox to control the width */
+}
 
 .batch-container select {
     border: 1px solid var(--secondary-grey);

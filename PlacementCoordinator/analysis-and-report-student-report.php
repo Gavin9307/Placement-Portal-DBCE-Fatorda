@@ -20,53 +20,75 @@
                 <h3>Student Report</h3>
 
                 <div class="sections">
-                    <form action="">
-                        <div class="form-adjust">
-                            <div class="datebox">
-                                <div>
-                                    <label for=""><strong>From:</strong></label>
-                                    <input type="date">
-                                </div>
-                                <div>
-                                    <label for=""><strong>To:</strong></label>
-                                    <input type="date">
-                                </div>
+                    <div class="form-adjust">
+                        <form action="">
+                        <div class="datebox">
+                            <div>
+                                <label for=""><strong>From:</strong></label>
+                                <input type="date">
                             </div>
-
-                            <div class="inputbox">
-
-                                <div class="inpbox">
-                                    <label for=""><strong>Department:</strong></label>
-                                    <select name="" id="">
-                                        <option value="">MECH</option>
-                                        <option value="">COMP</option>
-                                        <option value="">ETC</option>
-                                        <option value="">CIVIL</option>
-                                    </select>
-                                </div>
-                                <div class="inpbox">
-                                    <label for=""><strong>Class:</strong></label>
-                                    <select name="" id="">
-                                        <option value="">FE</option>
-                                        <option value="">SE</option>
-                                        <option value="">TE</option>
-                                        <option value="">BE</option>
-                                    </select>
-                                </div>
-                                <div class="inpbox">
-                                    <label for=""><strong>Gender:</strong></label>
-                                    <select name="" id="">
-                                        <option value="">Male</option>
-                                        <option value="">Female</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="getreportbutton">
-                                <a href=" "><button class="add-button">Get Report</button></a>
+                            <div>
+                                <label for=""><strong>To:</strong></label>
+                                <input type="date">
                             </div>
                         </div>
-                    </form>
+                        <div class="batch-container">
 
+                            <label for=""><strong>Batch:</strong></label>
+                            <select name="" id="">
+                                <option value="">2025</option>
+                                <option value="">2024</option>
+                                <option value="">2023</option>
+                                <option value="">2022</option>
+                                <option value="">2021</option>
+                            </select>
+                        
+                        </div>
+                        <div class="batch-container">
+                        <label for=""><strong>Class:</strong></label>
+                            <select name="" id="">
+                                <option value="">TE COMP</option>
+                                <option value="">TE CIVIL</option>
+                                <option value="">TE ECS</option>
+                                <option value="">TE MECH</option>
+                                <option value="">BE COMP</option>
+                            </select>
+                        </div>
+                        <div class="batch-container">
+                        <label for=""><strong>Gender:</strong></label>
+                            <select name="" id="">
+                                <option value="" disabled selected>select</option>
+                                <option value="">Male</option>
+                                <option value="">Female</option>
+                                <option value="">Other</option>
+                                
+                            </select>
+                        </div>
+                        <div class="departmentbox">
+                            <label for=""><strong>Department</strong></label>
+                            <div class="Checkbox">
+                                <div>
+                                    <input type="checkbox">
+                                    <label for="">ECS</label>
+                                </div>
+
+                                <div><input type="checkbox">
+                                    <label for="">COMP</label>
+                                </div>
+                                <div><input type="checkbox">
+                                    <label for="">MECH</label>
+                                </div>
+                                <div><input type="checkbox">
+                                    <label for="">CIVIL</label>
+                                </div>
+
+
+                            </div>
+                        </div>
+
+
+                    </form>
+                </div>
                 </div>
 
                 <div class="sections-1">

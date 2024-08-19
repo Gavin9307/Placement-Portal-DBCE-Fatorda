@@ -45,6 +45,7 @@
                 </div> -->
                 <h3>Yearly Placement Drive Reports</h3>
                 <div class="sections">
+                <form action="">
                 <div class="form-adjust">
                     <div class="datebox">
                         <div>
@@ -91,6 +92,8 @@
                     </div>
                     <a href="./analysis-and-report-yearly.php"><button class="add-button">Get Report</button></a>
                 </div>
+                </form>
+
                 </div>
                 <h3>Other Reports:</h3>
                 <div class="button-container-2">

@@ -63,35 +63,40 @@
     margin-top: 5px;
     outline: none;  
 }
-
-.inputbox {
+.batch-container {
     display: flex;
-    gap:15px;
-    flex-direction: column;
-    margin-bottom: 15px;
-    margin-left:30px; 
-}
-.inpbox{
-    display:flex;
     justify-content: space-between;
-    margin-right: 50px;
+    align-items: center;
+    margin-top: 20px;
+    margin-bottom: 20px;
 }
-
-.inputbox select {
+.batch-container label {
+    white-space: nowrap; /* Prevent the label from wrapping */   
+}
+.batch-container select {
+    flex: 1; /* Makes the select box take up the remaining space */
+    min-width: 0; /* Allows flexbox to control the width */
+}
+.batch-container select {
     border: 1px solid var(--secondary-grey);
-    width: 250px;
     padding: 10px;
     border-radius: 5px;
-    margin-top: 5px;
-    outline: none;
+    margin-top:5px;
+    outline: none;  
 }
-.inputbox :focus {
-    border: 1px solid var(--primary-blue);
+.departmentbox {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
 }
 
-.inputbox input::placeholder{
-    color:grey;
+.Checkbox{
+    width: 350px;
+    display:flex;
+    justify-content: space-between;
 }
+
 .add-button {
     padding-block: 5px;
     padding-inline: 25px;

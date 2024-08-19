@@ -87,7 +87,34 @@
 label {
     margin-top:8px;
 }
-
+.batch-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+.batch-container label {
+    white-space: nowrap; /* Prevent the label from wrapping */   
+}
+.batch-container select,input {
+    flex: 1; /* Makes the select box take up the remaining space */
+    min-width: 0; /* Allows flexbox to control the width */
+}
+.batch-container select {
+    border: 1px solid var(--secondary-grey);
+    padding: 10px;
+    border-radius: 5px;
+    margin-top:5px;
+    outline: none;  
+}
+.batch-container input {
+    border: 1px solid var(--secondary-grey);
+    padding: 10px;
+    border-radius: 5px;
+    margin-top:5px;
+    outline: none;  
+}
 .inputbox input,select {
     width: 250px;
     padding: 10px;
@@ -95,28 +122,24 @@ label {
     outline: none;
 }
 .salary-container{
-    display:flex;
+    display: flex;
     justify-content: space-between;
     margin-bottom: 20px;
 }
-.minsal{
-    display:flex;
+
+.minsal, .maxsal{
+    display: flex;
 }
-.minsal input{
-    width:150px;
+
+.minsal input, .maxsal input{
+    width: 150px;
     padding: 10px;
     border-radius: 5px;
-    outline: none;
+    border: 1px solid var(--secondary-grey);
+    outline: none; /* Remove outline on focus */
+    box-shadow: none; /* Remove any box-shadow */
 }
-.maxsal{
-    display:flex;
-}
-.maxsal input{
-    width:150px;
-    padding: 10px;
-    border-radius: 5px;
-    outline: none;
-}
+
 .add-button {
     padding-block: 5px;
     padding-inline: 25px;

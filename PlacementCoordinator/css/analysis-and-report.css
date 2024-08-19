@@ -99,13 +99,25 @@
     margin-top: 5px;
     outline: none;  
 }
-
+.batch-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+.batch-container label {
+    white-space: nowrap; /* Prevent the label from wrapping */   
+}
+.batch-container select {
+    flex: 1; /* Makes the select box take up the remaining space */
+    min-width: 0; /* Allows flexbox to control the width */
+}
 .batch-container select {
     border: 1px solid var(--secondary-grey);
     padding: 10px;
-    width:465px;
     border-radius: 5px;
-    margin-bottom: 20px;
+    margin-top:5px;
     outline: none;  
 }
 .departmentbox {

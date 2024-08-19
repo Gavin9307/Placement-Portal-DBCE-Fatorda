@@ -53,13 +53,17 @@
                                 </div>
 
                             </div>
-                            <div class="inputbox">
-                                <label for=""><strong>Gender:</strong></label>
-                                <select name="" id="">
-                                    <option value="">Male</option>
-                                    <option value="">Female</option>
-                                </select>
-                            </div>
+                            <div class="batch-container">
+                        <label for=""><strong>Gender:</strong></label>
+                            <select name="" id="">
+                                <option value="" disabled selected>select</option>
+                                <option value="">Male</option>
+                                <option value="">Female</option>
+                                <option value="">Other</option>
+                                
+                            </select>
+                        </div>
+                
                             <div class="salary-container">
                                 <div class="minsal">
                                 <label for=""><strong>Min Salary:</strong></label>
@@ -70,11 +74,10 @@
                                 <input type="number" placeholder="20,00,000">
                                 </div>
                             </div>
-                            <div class="inputbox">
-                                <label for=""><strong>Company:</strong></label>
-                                <input type="text" placeholder="Company">
+                            <div class="batch-container">
+                                    <label for=""><strong>Company:</strong></label>
+                                    <input type="text" placeholder="Company">      
                             </div>
-
                             <div class="getreportbutton">
                                 <a href="./GoogleSheetsReports/export_to_google_sheets.php"><button class="add-button">Get Report</button></a>
                             </div>

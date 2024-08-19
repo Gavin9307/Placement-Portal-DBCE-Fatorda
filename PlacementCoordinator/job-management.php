@@ -46,6 +46,8 @@ if (isset($_POST["delete-listing"])) {
         $conn->rollback();
         echo "Failed to delete job listing: " . $e->getMessage();
     }
+    header("Location: ./job-management.php");
+    exit();
 }
 
 if (isset($_GET['responsestatus']) && isset($_GET['jid'])) {

@@ -38,14 +38,15 @@ WHERE PC_Email= ?;";
             <a href="./notifications.php"><button id="notifications">Send Notifications</button></a>
             <a href="./Placement-Coordinator.php"><button id="placementcoordinator">Placement Coordinators</button></a>
             <a href="./analysis-and-report.php"><button id="analysisreport">Analysis & Reports</button></a>
+            <a href="./add-departments.php"><button id="departments">Department Management</button></a>
         </div>
     </div>
 </div>';
 } else {
-    // Handle case where results are not obtained
+    // Case where results are not obtained
     }
 } else {
-    // Handle case where session variables are not set
+    // Case where session variables are not set
     // Restricted
     echo "Session variables not set.";
 }

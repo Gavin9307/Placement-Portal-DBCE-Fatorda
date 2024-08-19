@@ -1,7 +1,10 @@
 #wrapper {
     position: relative;
 }
-
+#jobmanagement{
+    color: var(--primary-blue);
+    background-color: var(--primary-white);
+}
 /* Main Content */
 .container {
     width: 100%;

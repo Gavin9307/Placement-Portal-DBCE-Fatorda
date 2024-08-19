@@ -2,7 +2,9 @@
 require "../conn.php";
 require "../restrict.php";
 include "./tpo-utility-functions.php";
+include "./report-utility.php";
 global $conn;
+
 if (!isset($_SESSION)) {
     session_start();
 }
@@ -15,53 +17,52 @@ if (isset($_POST["submit"])) {
 
     // Construct SQL query
     $sql = "SELECT 
-    ROW_NUMBER() OVER (ORDER BY s.S_Fname, s.S_Lname) AS 'Sr. No',
-    c.C_Name AS 'Company Name', 
-    jp.Job_Post_Date AS 'interview_date',
-    COALESCE(s.PLACED, 0) AS PLACED,
-    CASE 
-        WHEN d.Dept_name = 'COMP' THEN COALESCE(s.PLACED, 0)
-        ELSE 0
-    END AS no_of_students_in_comp,
-    CASE 
-        WHEN d.Dept_name = 'ECS' THEN COALESCE(s.PLACED, 0)
-        ELSE 0
-    END AS no_of_students_in_ecs,
-    CASE 
-        WHEN d.Dept_name = 'CIVIL' THEN COALESCE(s.PLACED, 0)
-        ELSE 0
-    END AS no_of_students_in_civil,
-    CASE 
-        WHEN d.Dept_name = 'MECH' THEN COALESCE(s.PLACED, 0)
-        ELSE 0
-    END AS no_of_students_in_mech,
-    COALESCE(
-        CASE WHEN d.Dept_name = 'COMP' THEN s.PLACED ELSE NULL END, 0
-    ) + COALESCE(
-        CASE WHEN d.Dept_name = 'ECS' THEN s.PLACED ELSE NULL END, 0
-    ) + COALESCE(
-        CASE WHEN d.Dept_name = 'CIVIL' THEN s.PLACED ELSE NULL END, 0
-    ) + COALESCE(
-        CASE WHEN d.Dept_name = 'MECH' THEN s.PLACED ELSE NULL END, 0
-    ) AS total,
-    COALESCE(jb.J_Offered_salary, 0) AS offered_salary
-    
-FROM 
-    student s
-INNER JOIN 
-    jobapplication j ON j.S_College_Email = s.S_College_Email
-INNER JOIN 
-    jobposting jp ON jp.J_id = j.J_id
-INNER JOIN 
-    company c ON c.C_id = jp.C_id
-INNER JOIN 
-    jobplacements jb ON jb.J_id = j.J_id
-INNER JOIN 
-    class cl ON cl.Class_id = s.S_Class_id
-INNER JOIN 
-    department d ON d.Dept_id = cl.Dept_id
-WHERE 
-    1=1";
+        ROW_NUMBER() OVER (ORDER BY s.S_Fname, s.S_Lname) AS 'Sr. No',
+        c.C_Name AS 'Company Name', 
+        jp.Job_Post_Date AS 'interview_date',
+        COALESCE(s.PLACED, 0) AS PLACED,
+        CASE 
+            WHEN d.Dept_name = 'COMP' THEN COALESCE(s.PLACED, 0)
+            ELSE 0
+        END AS no_of_students_in_comp,
+        CASE 
+            WHEN d.Dept_name = 'ECS' THEN COALESCE(s.PLACED, 0)
+            ELSE 0
+        END AS no_of_students_in_ecs,
+        CASE 
+            WHEN d.Dept_name = 'CIVIL' THEN COALESCE(s.PLACED, 0)
+            ELSE 0
+        END AS no_of_students_in_civil,
+        CASE 
+            WHEN d.Dept_name = 'MECH' THEN COALESCE(s.PLACED, 0)
+            ELSE 0
+        END AS no_of_students_in_mech,
+        COALESCE(
+            CASE WHEN d.Dept_name = 'COMP' THEN s.PLACED ELSE NULL END, 0
+        ) + COALESCE(
+            CASE WHEN d.Dept_name = 'ECS' THEN s.PLACED ELSE NULL END, 0
+        ) + COALESCE(
+            CASE WHEN d.Dept_name = 'CIVIL' THEN s.PLACED ELSE NULL END, 0
+        ) + COALESCE(
+            CASE WHEN d.Dept_name = 'MECH' THEN s.PLACED ELSE NULL END, 0
+        ) AS total,
+        COALESCE(jb.J_Offered_salary, 0) AS offered_salary
+    FROM 
+        student s
+    INNER JOIN 
+        jobapplication j ON j.S_College_Email = s.S_College_Email
+    INNER JOIN 
+        jobposting jp ON jp.J_id = j.J_id
+    INNER JOIN 
+        company c ON c.C_id = jp.C_id
+    INNER JOIN 
+        jobplacements jb ON jb.J_id = j.J_id
+    INNER JOIN 
+        class cl ON cl.Class_id = s.S_Class_id
+    INNER JOIN 
+        department d ON d.Dept_id = cl.Dept_id
+    WHERE 
+        1=1";
 
     if ($fromDate && $toDate) {
         $sql .= " AND jp.Job_Post_Date BETWEEN '$fromDate' AND '$toDate'";
@@ -72,9 +73,65 @@ WHERE
         $sql .= " AND d.Dept_name IN ('$departmentList')";
     }
 
-    header("Location: ./GoogleSheetsReports/StudentsReport.php?sql=" . urlencode($sql));
+    $result = $conn->query($sql);
+    $spreadsheetId = '1GR8Z5zLN2CK-xmkXQnZRmvHicHavRvfAeicXTfZjfbc'; 
+
+   
+    $data = [];
+
+   
+    $questionTexts = []; 
+
+    
+    if ($result->num_rows > 0) {
+        //edit the headers
+        $headers = array_merge([
+            'Batch', 'College Email', 'Personal Email', 
+            'First Name', 'Middle Name', 'Last Name', 
+            'Department'
+        ], $questionTexts);
+
+        $data[] = $headers;
+
+        // Fetch the rows
+        while ($row = $result->fetch_assoc()) {
+            $data[] = array_values($row);
+        }
+    } else {
+        echo "No data found.";
+        exit();
+    }
+
+   
+    $range = 'Sheet1!A7:Z'; 
+
+    
+    try {
+        $clearResponse = $service->spreadsheets_values->clear($spreadsheetId, $range, new \Google_Service_Sheets_ClearValuesRequest());
+    } catch (Exception $e) {
+        echo 'Error clearing sheet: ' . $e->getMessage();
+        exit();
+    }
+
+    
+    $body = new \Google_Service_Sheets_ValueRange([
+        'values' => $data
+    ]);
+    $params = [
+        'valueInputOption' => 'USER_ENTERED' // or 'RAW' depending on your need
+    ];
+
+   
+    try {
+        $response = $service->spreadsheets_values->update($spreadsheetId, $range, $body, $params);
+        printf("%d cells updated.", $response->getUpdatedCells());
+    } catch (Exception $e) {
+        echo 'Error updating sheet: ' . $e->getMessage();
+        exit();
+    }
 }
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">

@@ -106,14 +106,8 @@
     margin-top: 20px;
     margin-bottom: 20px;
 }
-.batch-container label {
-    white-space: nowrap; /* Prevent the label from wrapping */   
-}
 .batch-container select {
-    flex: 1; /* Makes the select box take up the remaining space */
-    min-width: 0; /* Allows flexbox to control the width */
-}
-.batch-container select {
+    width: 350px;
     border: 1px solid var(--secondary-grey);
     padding: 10px;
     border-radius: 5px;

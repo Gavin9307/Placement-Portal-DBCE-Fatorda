@@ -9,6 +9,33 @@ if (!isset($_SESSION)) {
     session_start();
 }
 
+if(isset($_POST["get-filter-report"])){
+    $sql = "SELECT COUNT(DISTINCT ja.S_College_Email)
+            FROM jobapplication as ja 
+            INNER JOIN jobplacements as jp ON jp.J_id = ja.J_id
+            INNER JOIN student as s ON s.S_College_Email = ja.S_College_Email
+            INNER JOIN jobdepartments as jd ON jd.J_id = ja.J_id
+            WHERE jp.J_Due_date < CURRENT_DATE";
+
+    // Check if a batch year is selected
+    if (!empty($_POST['d_batch_year'])) {
+        $batch_year = (int)$_POST['d_batch_year'] - 4;
+        $sql .= " AND s.S_Year_of_Admission = '$batch_year'";
+    }
+
+    // Check if any departments are selected
+    if (!empty($_POST['departments'])) {
+        $departments = $_POST['departments'];
+        $departmentList = implode("','", array_map('htmlspecialchars', $departments));
+        $sql .= " AND jd.Dept_name IN ('$departmentList')";
+    }
+
+    $interestedSql = $sql .= " AND ja.interest=1;";
+    $rejectedSql = $sql .= " AND ja.interest=1 AND ja.placed = 0;";
+    $passedSql = $sql .= " AND ja.interest=1 AND ja.placed = 1;";
+
+}
+
 
 ?>
 
@@ -36,18 +63,7 @@ if (!isset($_SESSION)) {
                 <div class="sections">
                     <div class="form-adjust">
                         <form action="" method="post">
-                            <!-- <div class="datebox">
-                                <div>
-                                    <label for="from_date"><strong>From:</strong></label>
-                                    <input type="date" name="from_date" id="from_date">
-                                </div>
-                                <div>
-                                    <label for="to_date"><strong>To:</strong></label>
-                                    <input type="date" name="to_date" id="to_date">
-                                </div>
-                            </div> -->
                             <div class="batch-container">
-
                                 <label for=""><strong>Batch: </strong></label>
                                 <select name="d_batch_year" id="d_batch_year">
                                     <option value="" selected>Select Batch</option>
@@ -58,7 +74,6 @@ if (!isset($_SESSION)) {
                                     }
                                     ?>
                                 </select>
-
                             </div>
                             <div class="departmentbox">
                                 <label for=""><strong>Department: </strong></label>
@@ -79,8 +94,7 @@ if (!isset($_SESSION)) {
                                     ?>
                                 </div>
                             </div>
-                            <a href="./analysis-and-report-yearly.php"><button class="add-button">Get Report</button></a>
-
+                            <button name="get-filter-report" class="add-button">Get Report</button>
                         </form>
                     </div>
                 </div>
@@ -132,30 +146,7 @@ if (!isset($_SESSION)) {
                             <td>2/3/2024</td>
                             <td><a href="">View more</a></td>
                         </tr>
-                        <tr>
-                            <td>Patric</td>
-                            <td>Comp</td>
-                            <td>Facebook</td>
-                            <td>20,000</td>
-                            <td>30/3/2024</td>
-                            <td><a href="">View more</a></td>
-                        </tr>
-                        <tr>
-                            <td>Gavin</td>
-                            <td>Comp</td>
-                            <td>Google</td>
-                            <td>50,000</td>
-                            <td>12/11/2024</td>
-                            <td><a href="">View more</a></td>
-                        </tr>
-                        <tr>
-                            <td>Stephen</td>
-                            <td>Civil</td>
-                            <td>Reliance</td>
-                            <td>40,000</td>
-                            <td>24/5/2024</td>
-                            <td><a href="">View more</a></td>
-                        </tr>
+                        
                     </table>
                     <div class="button-container-1">
                         <div class="dropdown">

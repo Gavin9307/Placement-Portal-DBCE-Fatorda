@@ -249,12 +249,35 @@ S.S_College_Email = ? AND R.J_id = ?;";
 
     if ($totalRoundsCount == $totalRoundsPassedCount) {
         echo '</div>';
-        echo '<div class="sections">
+        $fetchOfferLetter = "SELECT Offer_Letter FROM jobapplication where S_College_Email = ? and J_id = ?";
+        $OfferLetter = $conn->prepare($fetchOfferLetter);
+        $OfferLetter->bind_param("si",$_SESSION["user_email"],$jid);
+        $OfferLetter->execute();
+        $result = $OfferLetter->get_result();
+        $row = $result->fetch_assoc();
+        if (isset($row["Offer_Letter"])){
+            echo '<div class="sections">
                     <div class="offer-letter-container">
-                        <p style="white-space: pre;"><strong>Offer Letter:</strong> <span class="offer-letter">offerletter.pdf </span>  <i class="fa-solid fa-upload fa-sm" style="color: #0C07E4;"></i>  <i class="fa-solid fa-xmark fa-lg" style="color: #FB1616;"></i> </p>
-                        <a href=""><button>Submit</button></a>
+                        <form method="post" action="./my-applications-details.php?jid='.$_GET["jid"].'">
+                        <strong>Offer Letter: </strong>
+                        <input name="offer" type="text" value="'.$row["Offer_Letter"].'">
+                        <button name="update-offer">Submit</button>
+                        </form>
                     </div>
                 </div>';
+        }
+        else{
+            echo '<div class="sections">
+                    <div class="offer-letter-container">
+                        <form method="post" action="./my-applications-details.php?jid='.$_GET["jid"].'>
+                        <strong>Offer Letter: </strong>
+                        <input name="offer" type="text" value="">
+                        <button name="update-offer">Submit</button>
+                        </form>
+                    </div>
+                </div>';
+        }
+        
     } else {
         echo '</div>';
     }

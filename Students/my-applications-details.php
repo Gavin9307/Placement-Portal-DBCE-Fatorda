@@ -8,6 +8,17 @@
     }
     global $conn;
 
+    if (isset($_POST["update-offer"])){
+        $jid = $_GET["jid"];
+        $offer = empty($_POST["offer"]) ? "":$_POST["offer"];
+        $updateQuery = "UPDATE jobapplication SET Offer_Letter = ? WHERE J_id = ? AND S_College_Email = ?";
+        $Update = $conn->prepare($updateQuery);
+        $Update->bind_param("sis",$offer,$jid,$_SESSION["user_email"]);
+        $Update->execute();
+        header("Location: ./my-applications-details.php?jid=".$_GET['jid']."");
+        exit();
+    }
+
 ?>
 
 

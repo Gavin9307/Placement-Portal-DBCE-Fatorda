@@ -22,6 +22,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST["post-job"])) {
     $percentage10 = !empty($_POST['percentage_10']) ? (float) $_POST['percentage_10'] : NULL;
     $percentage12 = !empty($_POST['percentage_12']) ? (float) $_POST['percentage_12'] : NULL;
     $gender = !empty($_POST['gender']) ? $_POST['gender'] : NULL;
+    $isPlaced = !empty($_POST['is_placed'])? $_POST['is_placed'] : NULL;
 
     $conn->begin_transaction();
 
@@ -208,14 +209,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST["post-job"])) {
                                 <label for="">Max CGPA</label>
                                 <input type="number" name="max-cgpa" step="0.1" placeholder="0.0" min="0" max="10">
                             </div>
-                            <!-- <div class="inputbox">
+                            <div class="inputbox">
                                 <label for="">Placed</label>
                                 <select name="is_placed">
                                     <option value="" selected>Select</option>
-                                    <option value="Yes">Yes</option>
-                                    <option value="No">No</option>
+                                    <option value="1">Yes</option>
+                                    <option value="0">No</option>
                                 </select>
-                            </div> -->
+                            </div>
                             <div class="inputbox">
                                 <label for="">Backlogs</label>
                                 <select name="has_backlogs">

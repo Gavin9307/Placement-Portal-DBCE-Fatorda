@@ -2,134 +2,14 @@
 require "../conn.php";
 require "../restrict.php";
 include "./tpo-utility-functions.php";
-include "./report-utility.php";
+// include "./report-utility.php";
 global $conn;
 
 if (!isset($_SESSION)) {
     session_start();
 }
 
-if (isset($_POST["submit"])) {
-    // Initialize variables
-    $fromDate = $_GET['from_date'] ?? null;
-    $toDate = $_GET['to_date'] ?? null;
-    $departments = $_GET['departments'] ?? [];
 
-    // Construct SQL query
-    $sql = "SELECT 
-        ROW_NUMBER() OVER (ORDER BY s.S_Fname, s.S_Lname) AS 'Sr. No',
-        c.C_Name AS 'Company Name', 
-        jp.Job_Post_Date AS 'interview_date',
-        COALESCE(s.PLACED, 0) AS PLACED,
-        CASE 
-            WHEN d.Dept_name = 'COMP' THEN COALESCE(s.PLACED, 0)
-            ELSE 0
-        END AS no_of_students_in_comp,
-        CASE 
-            WHEN d.Dept_name = 'ECS' THEN COALESCE(s.PLACED, 0)
-            ELSE 0
-        END AS no_of_students_in_ecs,
-        CASE 
-            WHEN d.Dept_name = 'CIVIL' THEN COALESCE(s.PLACED, 0)
-            ELSE 0
-        END AS no_of_students_in_civil,
-        CASE 
-            WHEN d.Dept_name = 'MECH' THEN COALESCE(s.PLACED, 0)
-            ELSE 0
-        END AS no_of_students_in_mech,
-        COALESCE(
-            CASE WHEN d.Dept_name = 'COMP' THEN s.PLACED ELSE NULL END, 0
-        ) + COALESCE(
-            CASE WHEN d.Dept_name = 'ECS' THEN s.PLACED ELSE NULL END, 0
-        ) + COALESCE(
-            CASE WHEN d.Dept_name = 'CIVIL' THEN s.PLACED ELSE NULL END, 0
-        ) + COALESCE(
-            CASE WHEN d.Dept_name = 'MECH' THEN s.PLACED ELSE NULL END, 0
-        ) AS total,
-        COALESCE(jb.J_Offered_salary, 0) AS offered_salary
-    FROM 
-        student s
-    INNER JOIN 
-        jobapplication j ON j.S_College_Email = s.S_College_Email
-    INNER JOIN 
-        jobposting jp ON jp.J_id = j.J_id
-    INNER JOIN 
-        company c ON c.C_id = jp.C_id
-    INNER JOIN 
-        jobplacements jb ON jb.J_id = j.J_id
-    INNER JOIN 
-        class cl ON cl.Class_id = s.S_Class_id
-    INNER JOIN 
-        department d ON d.Dept_id = cl.Dept_id
-    WHERE 
-        1=1";
-
-    if ($fromDate && $toDate) {
-        $sql .= " AND jp.Job_Post_Date BETWEEN '$fromDate' AND '$toDate'";
-    }
-
-    if (!empty($departments)) {
-        $departmentList = implode("','", $departments);
-        $sql .= " AND d.Dept_name IN ('$departmentList')";
-    }
-
-    $result = $conn->query($sql);
-    $spreadsheetId = '1GR8Z5zLN2CK-xmkXQnZRmvHicHavRvfAeicXTfZjfbc'; 
-
-   
-    $data = [];
-
-   
-    $questionTexts = []; 
-
-    
-    if ($result->num_rows > 0) {
-        //edit the headers
-        $headers = array_merge([
-            'Batch', 'College Email', 'Personal Email', 
-            'First Name', 'Middle Name', 'Last Name', 
-            'Department'
-        ], $questionTexts);
-
-        $data[] = $headers;
-
-        // Fetch the rows
-        while ($row = $result->fetch_assoc()) {
-            $data[] = array_values($row);
-        }
-    } else {
-        echo "No data found.";
-        exit();
-    }
-
-   
-    $range = 'Sheet1!A7:Z'; 
-
-    
-    try {
-        $clearResponse = $service->spreadsheets_values->clear($spreadsheetId, $range, new \Google_Service_Sheets_ClearValuesRequest());
-    } catch (Exception $e) {
-        echo 'Error clearing sheet: ' . $e->getMessage();
-        exit();
-    }
-
-    
-    $body = new \Google_Service_Sheets_ValueRange([
-        'values' => $data
-    ]);
-    $params = [
-        'valueInputOption' => 'USER_ENTERED' // or 'RAW' depending on your need
-    ];
-
-   
-    try {
-        $response = $service->spreadsheets_values->update($spreadsheetId, $range, $body, $params);
-        printf("%d cells updated.", $response->getUpdatedCells());
-    } catch (Exception $e) {
-        echo 'Error updating sheet: ' . $e->getMessage();
-        exit();
-    }
-}
 ?>
 
 
@@ -156,7 +36,7 @@ if (isset($_POST["submit"])) {
                 <div class="sections">
                     <div class="form-adjust">
                         <form action="" method="post">
-                            <div class="datebox">
+                            <!-- <div class="datebox">
                                 <div>
                                     <label for="from_date"><strong>From:</strong></label>
                                     <input type="date" name="from_date" id="from_date">
@@ -165,45 +45,42 @@ if (isset($_POST["submit"])) {
                                     <label for="to_date"><strong>To:</strong></label>
                                     <input type="date" name="to_date" id="to_date">
                                 </div>
-                            </div>
+                            </div> -->
                             <div class="batch-container">
 
-                                <label for=""><strong>Batch:</strong></label>
-                                <select name="" id="">
-                                    <option value="">2025</option>
-                                    <option value="">2024</option>
-                                    <option value="">2023</option>
-                                    <option value="">2022</option>
-                                    <option value="">2021</option>
+                                <label for=""><strong>Batch: </strong></label>
+                                <select name="d_batch_year" id="d_batch_year">
+                                    <option value="" selected>Select Batch</option>
+                                    <?php
+                                    $currentYear = date('Y');
+                                    for ($year = $currentYear + 4; $year >= 2016 + 4; $year--) {
+                                        echo '<option value="' . $year . '">' . $year . '</option>';
+                                    }
+                                    ?>
                                 </select>
 
                             </div>
-
                             <div class="departmentbox">
-                                <label><strong>Department</strong></label>
+                                <label for=""><strong>Department: </strong></label>
                                 <div class="Checkbox">
-                                    <div>
-                                        <input type="checkbox" name="departments[]" value="ECS" id="ecs">
-                                        <label for="ecs">ECS</label>
-                                    </div>
-                                    <div>
-                                        <input type="checkbox" name="departments[]" value="COMP" id="comp">
-                                        <label for="comp">COMP</label>
-                                    </div>
-                                    <div>
-                                        <input type="checkbox" name="departments[]" value="MECH" id="mech">
-                                        <label for="mech">MECH</label>
-                                    </div>
-                                    <div>
-                                        <input type="checkbox" name="departments[]" value="CIVIL" id="civil">
-                                        <label for="civil">CIVIL</label>
-                                    </div>
+                                    <?php
+                                    global $conn;
+                                    $fetchDepartmentQuery = "SELECT Dept_name as dname FROM department;";
+                                    $fetchDepartment = $conn->prepare($fetchDepartmentQuery);
+                                    $fetchDepartment->execute();
+                                    $result = $fetchDepartment->get_result();
+
+                                    while ($row = $result->fetch_assoc()) {
+                                        echo '<div>
+                                            <input name="departments[]" value="' . htmlspecialchars($row["dname"]) . '" type="checkbox">
+                                            <label for="">' . htmlspecialchars($row["dname"]) . '</label>
+                                        </div>';
+                                    }
+                                    ?>
                                 </div>
                             </div>
+                            <a href="./analysis-and-report-yearly.php"><button class="add-button">Get Report</button></a>
 
-                            <div class="getreportbutton">
-                                <button class="add-button" name="submit" type="submit">Get Report</button>
-                            </div>
                         </form>
                     </div>
                 </div>

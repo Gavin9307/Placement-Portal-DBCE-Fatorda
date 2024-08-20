@@ -25,7 +25,21 @@
     color: var(--primary-blue);
     background-color: var(--primary-white);
 }
-
+.add-button {
+    margin-top: 10px;  
+    padding-block: 5px;
+    padding-inline: 25px;
+    border-radius: 5px;
+    border: none;
+    font-weight: 600;
+    font-size: 18px;
+    cursor: pointer;
+    background-color: var(--primary-blue);
+    color: var(--primary-white);
+    position: absolute;
+    right: 25px;
+    bottom: 20px;
+} 
 
 .main-container {
     width: 75%;
@@ -70,26 +84,17 @@
 }
 .batch-container {
     display: flex;
+    justify-content: space-between;
     align-items: center;
-    gap: 10px; /* Space between label and select */
+    margin-top: 20px;
+    margin-bottom: 20px;
 }
-
-.batch-container label {
-    white-space: nowrap; /* Prevent the label from wrapping */
-    margin-right: 10px;
-}
-
 .batch-container select {
-    flex: 1; /* Makes the select box take up the remaining space */
-    min-width: 0; /* Allows flexbox to control the width */
-}
-
-.batch-container select {
+    width: 350px;
     border: 1px solid var(--secondary-grey);
     padding: 10px;
-    width:465px;
     border-radius: 5px;
-    margin-bottom: 20px;
+    margin-top:5px;
     outline: none;  
 }
 .departmentbox {
@@ -102,17 +107,6 @@
     width: 350px;
     display:flex;
     justify-content: space-between;
-}
-.add-button {
-    padding-block: 5px;
-    padding-inline: 25px;
-    border-radius: 5px;
-    border: none;
-    font-weight: 600;
-    font-size: 18px;
-    cursor: pointer;
-    background-color: var(--primary-blue);
-    color: var(--primary-white);  
 }
 .getreportbutton {
     display:flex;

@@ -27,17 +27,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit_feedback'])) {
 }
 
 // Fetch existing feedback
-$fetchFeedbackQuery = "SELECT f.Message as message, f.Rating as rating FROM company as c
-    INNER JOIN feedback as f on c.C_id = f.C_id
-    INNER JOIN jobposting as jp on jp.C_id = c.C_id
-    WHERE f.S_College_Email = ? ;";
-$fetchFeedback = $conn->prepare($fetchFeedbackQuery);
-$fetchFeedback->bind_param("s", $_SESSION["user_email"]);
-$fetchFeedback->execute();
-$result = $fetchFeedback->get_result();
-$row = $result->fetch_assoc();
-$message = $row["message"];
-$rating = (int) $row["rating"];
+    $fetchFeedbackQuery = "SELECT f.Message as message, f.Rating as rating FROM company as c
+        INNER JOIN feedback as f on c.C_id = f.C_id
+        INNER JOIN jobposting as jp on jp.C_id = c.C_id
+        WHERE f.S_College_Email = ? ;";
+    $fetchFeedback = $conn->prepare($fetchFeedbackQuery);
+    $fetchFeedback->bind_param("s", $_SESSION["user_email"]);
+    $fetchFeedback->execute();
+    $result = $fetchFeedback->get_result();
+    $row = $result->fetch_assoc();
+    $message = $row["message"];
+    $rating = (int) $row["rating"];
 ?>
 
 <!DOCTYPE html>

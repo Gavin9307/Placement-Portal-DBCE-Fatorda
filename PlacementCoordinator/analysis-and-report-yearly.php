@@ -8,7 +8,38 @@ global $conn;
 if (!isset($_SESSION)) {
     session_start();
 }
+// Assuming the email is stored in the session
+$student_email = $_SESSION['user_email'];
 
+// Fetch the number of jobs the student was eligible for
+$query_eligible = "SELECT COUNT(jp.J_id) as eligible_count 
+                   FROM jobplacements as jp
+                   INNER JOIN jobdepartments as jd ON jd.J_id = jp.J_id
+                   INNER JOIN jobapplication as ja ON ja.J_id = jp.J_id
+                   WHERE jd.Dept_id = 1 
+                   AND ja.S_College_Email = ?";
+$stmt_eligible = $conn->prepare($query_eligible);
+$stmt_eligible->bind_param("s", $student_email);
+$stmt_eligible->execute();
+$result_eligible = $stmt_eligible->get_result();
+$row_eligible = $result_eligible->fetch_assoc();
+$was_eligible_count = $row_eligible['eligible_count'];
+
+// Fetch the total number of jobs available in the department
+$query_total = "SELECT COUNT(jp.J_id) as total_jobs 
+                FROM jobplacements as jp
+                INNER JOIN jobdepartments as jd ON jd.J_id = jp.J_id
+                WHERE jd.Dept_id = 1";
+$result_total = mysqli_query($conn, $query_total);
+$row_total = mysqli_fetch_assoc($result_total);
+$total_jobs = $row_total['total_jobs'];
+
+// Calculate the number of jobs the student was not eligible for
+$was_not_eligible_count = $total_jobs - $was_eligible_count;
+
+// Convert PHP variables to JSON
+$was_eligible_json = json_encode($was_eligible_count);
+$was_not_eligible_json = json_encode($was_not_eligible_count);
 
 ?>
 
@@ -20,6 +51,7 @@ if (!isset($_SESSION)) {
     <?php include './head.php' ?>
     <link rel="stylesheet" href="./css/analysis-and-report-yearly.css">
     <title>Analysis and Reports</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 
 <body>
@@ -89,12 +121,72 @@ if (!isset($_SESSION)) {
                     <div class="sections-1">
                         <p><strong>Total Number of students</strong>: 100</p>
                         <p><strong>Total Number of students Placed</strong>: 20</p>
-                        <iframe class="responsive-iframe" seamless frameborder="0" scrolling="no" src="https://docs.google.com/spreadsheets/d/e/2PACX-1vQwj2XQEskPgLtqr0YpmTsA4eb36sbaUt16rtthRpDURHxbVRPVZVkr-icApfmjR0Lv0WiMdjeGzFEV/pubchart?oid=1931950964&amp;format=interactive"></iframe>
+                        <canvas id="myPieChart" ></canvas>
+                        <script>
+                            const ctx = document.getElementById('myPieChart').getContext('2d');
+                            const myPieChart = new Chart(ctx, {
+                                type: 'pie',
+                                data: {
+                                    labels: ['Was Eligible', 'Was Not Eligible'],
+                                    datasets: [{
+                                        data: [<?php echo $was_eligible_json; ?>, <?php echo $was_not_eligible_json; ?>],
+                                        backgroundColor: ['#FF6384', '#36A2EB'],
+                                        hoverBackgroundColor: ['#FF6384', '#36A2EB']
+                                    }]
+                                },
+                                options: {
+                                    responsive: true,
+                                    
+                                    plugins: {
+                                        legend: {
+                                            position: 'top',
+                                        },
+                                        tooltip: {
+                                            enabled: true,
+                                        }
+                                    },
+                                    animation: {
+                                        animateScale: true,
+                                        animateRotate: true
+                                    }
+                                }
+                            });
+                        </script>
                     </div>
                     <div class="sections-1">
                         <p><strong>Total Number of Companies</strong>: 20</p>
                         <p><strong>Companies That hired</strong>: 8</p>
-                        <iframe class="responsive-iframe" seamless frameborder="0" scrolling="no" src="https://docs.google.com/spreadsheets/d/e/2PACX-1vQwj2XQEskPgLtqr0YpmTsA4eb36sbaUt16rtthRpDURHxbVRPVZVkr-icApfmjR0Lv0WiMdjeGzFEV/pubchart?oid=1931950964&amp;format=interactive"></iframe>
+                        <canvas id="myPieChart1" style="width: 50%; height: 150px;"></canvas>
+                        <script>
+                            const cty = document.getElementById('myPieChart1').getContext('2d');
+                            const myPieChart1 = new Chart(cty, {
+                                type: 'pie',
+                                data: {
+                                    labels: ['Was Eligible', 'Was Not Eligible'],
+                                    datasets: [{
+                                        data: [<?php echo $was_eligible_json; ?>, <?php echo $was_not_eligible_json; ?>],
+                                        backgroundColor: ['#FF6384', '#36A2EB'],
+                                        hoverBackgroundColor: ['#FF6384', '#36A2EB']
+                                    }]
+                                },
+                                options: {
+                                    responsive: true,
+                                    
+                                    plugins: {
+                                        legend: {
+                                            position: 'top',
+                                        },
+                                        tooltip: {
+                                            enabled: true,
+                                        }
+                                    },
+                                    animation: {
+                                        animateScale: true,
+                                        animateRotate: true
+                                    }
+                                }
+                            });
+                        </script>
                     </div>
 
 

@@ -61,7 +61,7 @@
 .section-container {
     display:flex;
     flex-direction:row;
-    justify-content: space-between;
+    justify-content: space-evenly;
 }
 
 .form-adjust {
@@ -158,8 +158,7 @@
 }
 
 .sections-1 {
-    width: 100%;
-    height: 100%;
+    width: 400px;
 }
 
 .responsive-iframe {

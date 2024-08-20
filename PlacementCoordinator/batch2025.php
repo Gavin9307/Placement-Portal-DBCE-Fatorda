@@ -91,20 +91,16 @@ if ($conn->connect_error) {
 // Define queries
 $queries = [
     "SELECT 
-        COUNT(CASE WHEN d.Dept_name = 'CIVIL' THEN 1 END) as CIVIL,
-        COUNT(CASE WHEN d.Dept_name = 'MECH' THEN 1 END) as MECH,
-        COUNT(CASE WHEN d.Dept_name = 'ETC' THEN 1 END) as ETC,
-        COUNT(CASE WHEN d.Dept_name = 'COMP' THEN 1 END) as COMP
-    FROM 
-        student as s 
-    INNER JOIN 
-        jobapplication as ja ON ja.S_College_Email = s.S_College_Email
-    INNER JOIN 
-        class as c ON c.Class_id = s.S_Class_id
-    INNER JOIN 
-        department as d ON c.Dept_id = d.Dept_id
-    WHERE
-    s.S_Year_of_Admission = '2021' AND ja.J_id = 1;",
+    COUNT(CASE WHEN d.Dept_name = 'CIVIL' THEN 1 END) AS 'CIVIL',
+    COUNT(CASE WHEN d.Dept_name = 'MECH' THEN 1 END) AS 'MECH',
+    COUNT(CASE WHEN d.Dept_name = 'ETC' THEN 1 END) AS 'ETC',
+    COUNT(CASE WHEN d.Dept_name = 'COMP' THEN 1 END) AS 'COMP'
+FROM 
+    student AS s
+INNER JOIN 
+    class AS cl ON s.S_Class_id = cl.Class_id
+INNER JOIN 
+    department AS d ON cl.Dept_id = d.Dept_id;",
     
     "SELECT 
         COUNT(CASE WHEN d.Dept_name = 'CIVIL' THEN 1 END) as CIVIL,

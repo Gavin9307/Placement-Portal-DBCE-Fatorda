@@ -1,3 +1,97 @@
+<?php
+require "../conn.php";
+require "../restrict.php";
+include "./tpo-utility-functions.php";
+include "./report-utility.php";
+global $conn;
+
+if (!isset($_SESSION)) {
+    session_start();
+}
+
+if (isset($_POST["submit"])) {
+    // Initialize variables
+    $fromDate = $_GET['from_date'] ?? null;
+    $toDate = $_GET['to_date'] ?? null;
+    $departments = $_GET['departments'] ?? [];
+
+    // Construct SQL query
+    $sql = "SELECT CONCAT_WS(' ',s.S_Fname,s.S_Mname,s.S_Lname) as 'Student Name', s.S_PR_No as 'Enrollment No.',c.C_Name as 'Company Name', c.C_Location as 'Location',j.J_Offered_salary as 'Salary',j.J_Due_date as 'Date' FROM student as s
+INNER JOIN jobapplication as ja ON ja.S_College_Email=s.S_College_Email
+INNER JOIN jobposting as jp ON jp.J_id = ja.J_id
+INNER JOIN jobplacements as j ON j.J_id = jp.J_id
+inner join jobdepartments as jd on jd.J_id = j.J_id
+inner join department as d on d.Dept_id= jd.Dept_id
+INNER JOIN company as c ON c.C_id=jp.C_id
+WHERE ja.placed = 1 AND s.S_Year_of_Admission='2021' AND d.Dept_name='Comp';";
+
+    if ($fromDate && $toDate) {
+        $sql .= " AND jp.Job_Post_Date BETWEEN '$fromDate' AND '$toDate'";
+    }
+
+    if (!empty($departments)) {
+        $departmentList = implode("','", $departments);
+        $sql .= " AND d.Dept_name IN ('$departmentList')";
+    }
+
+    $result = $conn->query($sql);
+    $spreadsheetId = '1wS7cTnPvG7zB5z2of8AsV-jDNu_E0coXZXER_iIxzS0'; 
+
+   
+    $data = [];
+
+   
+    $questionTexts = []; 
+
+    
+    if ($result->num_rows > 0) {
+        //edit the headers
+        $headers = array_merge([      
+'Student Name','Enrollment No.','Company Name','Location',	
+'Salary','Date'
+        ], $questionTexts);
+
+        $data[] = $headers;
+
+        // Fetch the rows
+        while ($row = $result->fetch_assoc()) {
+            $data[] = array_values($row);
+        }
+    } else {
+        echo "No data found.";
+        exit();
+    }
+
+   
+    $range = 'studentReport!A4:Z'; 
+
+    
+    try {
+        $clearResponse = $service->spreadsheets_values->clear($spreadsheetId, $range, new \Google_Service_Sheets_ClearValuesRequest());
+    } catch (Exception $e) {
+        echo 'Error clearing sheet: ' . $e->getMessage();
+        exit();
+    }
+
+    
+    $body = new \Google_Service_Sheets_ValueRange([
+        'values' => $data
+    ]);
+    $params = [
+        'valueInputOption' => 'USER_ENTERED' // or 'RAW' depending on your need
+    ];
+
+   
+    try {
+        $response = $service->spreadsheets_values->update($spreadsheetId, $range, $body, $params);
+        printf("%d cells updated.", $response->getUpdatedCells());
+    } catch (Exception $e) {
+        echo 'Error updating sheet: ' . $e->getMessage();
+        exit();
+    }
+}
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 

@@ -8,6 +8,8 @@ global $conn;
 if (!isset($_SESSION)) {
     session_start();
 }
+// Assuming the email is stored in the session
+$student_email = $_SESSION['user_email'];
 
 if(isset($_POST["get-filter-report"])){
     $sql = "SELECT COUNT(DISTINCT ja.S_College_Email)
@@ -36,7 +38,6 @@ if(isset($_POST["get-filter-report"])){
 
 }
 
-
 ?>
 
 
@@ -47,6 +48,7 @@ if(isset($_POST["get-filter-report"])){
     <?php include './head.php' ?>
     <link rel="stylesheet" href="./css/analysis-and-report-yearly.css">
     <title>Analysis and Reports</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 
 <body>
@@ -103,12 +105,72 @@ if(isset($_POST["get-filter-report"])){
                     <div class="sections-1">
                         <p><strong>Total Number of students</strong>: 100</p>
                         <p><strong>Total Number of students Placed</strong>: 20</p>
-                        <iframe class="responsive-iframe" seamless frameborder="0" scrolling="no" src="https://docs.google.com/spreadsheets/d/e/2PACX-1vQwj2XQEskPgLtqr0YpmTsA4eb36sbaUt16rtthRpDURHxbVRPVZVkr-icApfmjR0Lv0WiMdjeGzFEV/pubchart?oid=1931950964&amp;format=interactive"></iframe>
+                        <canvas id="myPieChart" ></canvas>
+                        <script>
+                            const ctx = document.getElementById('myPieChart').getContext('2d');
+                            const myPieChart = new Chart(ctx, {
+                                type: 'pie',
+                                data: {
+                                    labels: ['Was Eligible', 'Was Not Eligible'],
+                                    datasets: [{
+                                        data: [<?php echo $was_eligible_json; ?>, <?php echo $was_not_eligible_json; ?>],
+                                        backgroundColor: ['#FF6384', '#36A2EB'],
+                                        hoverBackgroundColor: ['#FF6384', '#36A2EB']
+                                    }]
+                                },
+                                options: {
+                                    responsive: true,
+                                    
+                                    plugins: {
+                                        legend: {
+                                            position: 'top',
+                                        },
+                                        tooltip: {
+                                            enabled: true,
+                                        }
+                                    },
+                                    animation: {
+                                        animateScale: true,
+                                        animateRotate: true
+                                    }
+                                }
+                            });
+                        </script>
                     </div>
                     <div class="sections-1">
                         <p><strong>Total Number of Companies</strong>: 20</p>
                         <p><strong>Companies That hired</strong>: 8</p>
-                        <iframe class="responsive-iframe" seamless frameborder="0" scrolling="no" src="https://docs.google.com/spreadsheets/d/e/2PACX-1vQwj2XQEskPgLtqr0YpmTsA4eb36sbaUt16rtthRpDURHxbVRPVZVkr-icApfmjR0Lv0WiMdjeGzFEV/pubchart?oid=1931950964&amp;format=interactive"></iframe>
+                        <canvas id="myPieChart1" style="width: 50%; height: 150px;"></canvas>
+                        <script>
+                            const cty = document.getElementById('myPieChart1').getContext('2d');
+                            const myPieChart1 = new Chart(cty, {
+                                type: 'pie',
+                                data: {
+                                    labels: ['Was Eligible', 'Was Not Eligible'],
+                                    datasets: [{
+                                        data: [<?php echo $was_eligible_json; ?>, <?php echo $was_not_eligible_json; ?>],
+                                        backgroundColor: ['#FF6384', '#36A2EB'],
+                                        hoverBackgroundColor: ['#FF6384', '#36A2EB']
+                                    }]
+                                },
+                                options: {
+                                    responsive: true,
+                                    
+                                    plugins: {
+                                        legend: {
+                                            position: 'top',
+                                        },
+                                        tooltip: {
+                                            enabled: true,
+                                        }
+                                    },
+                                    animation: {
+                                        animateScale: true,
+                                        animateRotate: true
+                                    }
+                                }
+                            });
+                        </script>
                     </div>
 
 
@@ -146,7 +208,7 @@ if(isset($_POST["get-filter-report"])){
                             <td>2/3/2024</td>
                             <td><a href="">View more</a></td>
                         </tr>
-                        
+
                     </table>
                     <div class="button-container-1">
                         <div class="dropdown">

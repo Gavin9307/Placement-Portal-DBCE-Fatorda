@@ -430,9 +430,17 @@ function fetchStudents($isDeleted, $sname = null, $departments = [], $gender = n
     $types = "";
 
     if (!is_null($sname)) {
-        $query .= " AND s.S_Fname LIKE ?";
+        $query .= " AND (s.S_Fname LIKE ? OR s.S_Mname LIKE ? OR s.S_Lname LIKE ? 
+                   OR CONCAT(s.S_Fname, ' ', s.S_Mname, ' ', s.S_Lname) LIKE ?
+                   OR CONCAT(s.S_Fname, ' ', s.S_Lname) LIKE ? 
+                   OR CONCAT(s.S_Mname, ' ', s.S_Lname) LIKE ?)";
         $params[] = "%$sname%";
-        $types .= "s";
+        $params[] = "%$sname%";
+        $params[] = "%$sname%";
+        $params[] = "%$sname%";
+        $params[] = "%$sname%";
+        $params[] = "%$sname%";
+        $types .= "ssssss";
     }
 
     if (!is_null($gender)) {
@@ -469,7 +477,7 @@ function fetchStudentsAll($isDeleted, $sname = null, $departments = [], $gender 
 {
     global $conn;
     $table = $isDeleted ? 'deletedstudents' : 'student';
-    $query = "SELECT s.S_College_Email as semail,S.S_Year_of_Admission as yoa, s.S_Fname as fname, s.S_Lname as lname, c.Class_name as cname, d.Dept_name as dname, r.CGPA as cgpa
+    $query = "SELECT s.S_College_Email as semail,S.S_Year_of_Admission as yoa, s.S_Fname as fname,s.S_Mname as mname, s.S_Lname as lname, c.Class_name as cname, d.Dept_name as dname, r.CGPA as cgpa
               FROM $table as s
               INNER JOIN class as c ON c.Class_id = s.S_Class_id
               INNER JOIN department as d ON d.Dept_id = c.Dept_id 
@@ -480,9 +488,17 @@ function fetchStudentsAll($isDeleted, $sname = null, $departments = [], $gender 
     $types = "";
 
     if (!is_null($sname)) {
-        $query .= " AND s.S_Fname LIKE ?";
+        $query .= " AND (s.S_Fname LIKE ? OR s.S_Mname LIKE ? OR s.S_Lname LIKE ? 
+                   OR CONCAT(s.S_Fname, ' ', s.S_Mname, ' ', s.S_Lname) LIKE ?
+                   OR CONCAT(s.S_Fname, ' ', s.S_Lname) LIKE ? 
+                   OR CONCAT(s.S_Mname, ' ', s.S_Lname) LIKE ?)";
         $params[] = "%$sname%";
-        $types .= "s";
+        $params[] = "%$sname%";
+        $params[] = "%$sname%";
+        $params[] = "%$sname%";
+        $params[] = "%$sname%";
+        $params[] = "%$sname%";
+        $types .= "ssssss";
     }
 
     if (!is_null($gender)) {

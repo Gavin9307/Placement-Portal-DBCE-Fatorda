@@ -379,8 +379,6 @@ if (isset($_POST["get-report-students"])) {
                             <input type="text" value="<?php echo urlencode($report_Query); ?>" name="query" hidden>
                             <button name="get-report-students" class="download-button">Get report</button>
                         </form>
-
-
                             <div class="dropdown-content">
                                 <a href="https://docs.google.com/spreadsheets/d/1wS7cTnPvG7zB5z2of8AsV-jDNu_E0coXZXER_iIxzS0/export?format=csv&id=1wS7cTnPvG7zB5z2of8AsV-jDNu_E0coXZXER_iIxzS0">Download as CSV</a>
                                 <a href="https://docs.google.com/spreadsheets/d/1wS7cTnPvG7zB5z2of8AsV-jDNu_E0coXZXER_iIxzS0/export?format=pdf&id=1wS7cTnPvG7zB5z2of8AsV-jDNu_E0coXZXER_iIxzS0">Download as PDF</a>

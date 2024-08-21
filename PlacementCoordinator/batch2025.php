@@ -335,7 +335,7 @@ function downloadSheetAsCSV($spreadsheetId, $sheetId, $range, $filename) {
 
 $sheetId = "0";
 $filename = "Batch";
-//downloadSheetAsCSV($spreadsheetId,$sheetId,$range, $filename);
+downloadSheetAsCSV($spreadsheetId,$sheetId,$range, $filename);
 
 
 

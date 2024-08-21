@@ -298,5 +298,46 @@ foreach ($queries as $index => $sql) {
     }
 }
 
+
+
+
+$range = "batch2025!A1:M";
+function downloadSheetAsPDF($spreadsheetId, $sheetId, $range, $filename) {
+    $url = "https://docs.google.com/spreadsheets/d/$spreadsheetId/export?format=pdf&gid=$sheetId&range=$range";
+
+    // Download and save the PDF
+    downloadFile($url, "$filename.pdf");
+}
+
+function downloadFile($url, $outputFile) {
+    $fileData = file_get_contents($url);
+
+    // Save the file to the specified output
+    file_put_contents($outputFile, $fileData);
+
+    // Set headers to trigger download
+    header('Content-Type: application/pdf');
+    header("Content-Disposition: attachment; filename=$outputFile");
+    readfile($outputFile);
+}
+function downloadSheetAsExcel($spreadsheetId, $sheetId, $range, $filename) {
+    $url = "https://docs.google.com/spreadsheets/d/$spreadsheetId/export?format=xlsx&gid=$sheetId&range=$range";
+
+    // Download and save the Excel file
+    downloadFile($url, "$filename.xlsx");
+}
+function downloadSheetAsCSV($spreadsheetId, $sheetId, $range, $filename) {
+    $url = "https://docs.google.com/spreadsheets/d/$spreadsheetId/export?format=csv&gid=$sheetId&range=$range";
+
+    // Download and save the CSV file
+    downloadFile($url, "$filename.csv");
+}
+
+$sheetId = "0";
+$filename = "Batch";
+//downloadSheetAsCSV($spreadsheetId,$sheetId,$range, $filename);
+
+
+
 $conn->close();
 ?>

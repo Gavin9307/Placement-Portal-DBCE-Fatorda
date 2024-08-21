@@ -124,7 +124,7 @@ $rejectedCount = $row_rejected['rejected_applications'];
                             const newPieChart = new Chart(cty, {
                                 type: 'pie',
                                 data: {
-                                    labels: ['Pending', 'Accepted', 'Rejected'],
+                                    labels: ['Pending', 'Cleared', 'Rejected'],
                                     datasets: [{
                                         data: [pendingCount, acceptedCount, rejectedCount],
                                         backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56'],
@@ -194,10 +194,10 @@ $rejectedCount = $row_rejected['rejected_applications'];
                         const myLineChart = new Chart(ctz, {
                             type: 'line',
                             data: {
-                                labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
+                                labels: ['Company A', 'Company B', 'Company C', 'Company D', 'Company E', 'Company F', 'Company G'], // Company names on x-axis
                                 datasets: [{
-                                    label: 'My First Dataset',
-                                    data: [65, 59, 80, 81, 56, 55, 40],
+                                    label: 'Number of Rounds',
+                                    data: [2, 3, 1, 4, 2, 3, 1], // Number of rounds for each company
                                     fill: false, // Set to true if you want the area under the line to be filled
                                     borderColor: 'rgb(75, 192, 192)',
                                     tension: 0.1 // Adjust the curve of the line
@@ -215,17 +215,22 @@ $rejectedCount = $row_rejected['rejected_applications'];
                                 },
                                 scales: {
                                     x: {
-                                        beginAtZero: true,
                                         title: {
                                             display: true,
-                                            text: 'Months'
+                                            text: 'Companies Applied' // X-axis title
                                         }
                                     },
                                     y: {
                                         beginAtZero: true,
                                         title: {
                                             display: true,
-                                            text: 'Value'
+                                            text: 'Number of Rounds' // Y-axis title
+                                        },
+                                        ticks: {
+                                            stepSize: 1, // Ensure y-axis only shows whole numbers
+                                            callback: function(value) {
+                                                return 'Round ' + value; // Label the y-axis as Round 1, Round 2, etc.
+                                            }
                                         }
                                     }
                                 },
@@ -235,6 +240,7 @@ $rejectedCount = $row_rejected['rejected_applications'];
                             }
                         });
                     </script>
+
                 </div>
             </div>
         </div>

@@ -25,7 +25,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST["post-job"])) {
     $percentage10 = !empty($_POST['percentage_10']) ? (float) $_POST['percentage_10'] : NULL;
     $percentage12 = !empty($_POST['percentage_12']) ? (float) $_POST['percentage_12'] : NULL;
     $gender = !empty($_POST['gender']) ? $_POST['gender'] : NULL;
-    $isPlaced = !empty($_POST['is_placed']) ? $_POST['is_placed'] : NULL;
+    $isPlaced = !empty($_POST['is_placed'])? $_POST['is_placed'] : NULL;
+    $batch = !empty($_POST['d_batch_year'])? $_POST['d_batch_year'] : NULL;
+    $batch = $batch - 4;
 
     $conn->begin_transaction();
 
@@ -98,7 +100,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST["post-job"])) {
             }, $selectedDepartments);
             $studentQuery .= " AND (" . implode(" OR ", $departmentConditions) . ")";
         }
-
+        if (!is_null($batch)) {
+            $studentQuery .= " AND S.S_Year_of_Admission = ?";
+        }
         if (!is_null($minCgpa)) {
             $studentQuery .= " AND cgpa >= ?";
         }
@@ -127,6 +131,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST["post-job"])) {
 
         $stmt = $conn->prepare($studentQuery);
         $params = [];
+        if (!is_null($batch)) $params[] = $batch;
         if (!is_null($minCgpa)) $params[] = $minCgpa;
         if (!is_null($maxCgpa)) $params[] = $maxCgpa;
         if (!is_null($percentage10)) $params[] = $percentage10;
@@ -151,6 +156,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST["post-job"])) {
 
             $conn->commit();
             $addError = 2;
+            //Add to calender
+            echo "Job successfully posted.";
         } else {
             $conn->rollback();
             $addError = 3;
@@ -223,6 +230,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST["post-job"])) {
                                 </select>
                             </div>
                             <div class="inputbox">
+                                <label for="">Batch: </label>
+                                <select name="d_batch_year" id="d_batch_year">
+                                    <option value="" selected>Select Batch</option>
+                                    <?php
+                                    $currentYear = date('Y');
+                                    for ($year = $currentYear + 4; $year >= 2016 + 4; $year--) {
+                                        echo '<option value="' . $year . '">' . $year . '</option>';
+                                    }
+                                    ?>
+                                </select>
+                            </div>
+                            <div class="inputbox">
                                 <label for="">Backlogs</label>
                                 <select name="has_backlogs">
                                     <option value="" selected>Select</option>
@@ -272,7 +291,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST["post-job"])) {
                             </div>
                             <div class="inputbox">
                                 <label for="">Offered Salary:</label>
-                                <input type="number" name="offered-salary">
+                                <input type="text" name="offered-salary">
                             </div>
                             <div class="inputbox">
                                 <label for="">No. of Posts</label>

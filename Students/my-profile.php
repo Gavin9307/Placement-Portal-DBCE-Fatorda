@@ -24,8 +24,8 @@ if (isset($_SESSION["user_type"]) && isset($_SESSION["user_email"])) {
         $StudentMName = htmlspecialchars($StudentInfo['mname']);
         $StudentLName = htmlspecialchars($StudentInfo['lname']);
         $StudentAddress = htmlspecialchars($StudentInfo['address']);
-        $StudentMarksheet_12 = htmlspecialchars($StudentInfo['marksheet_12']);
-        $StudentMarksheet_10 = htmlspecialchars($StudentInfo['marksheet_10']);
+        $StudentMarksheet_12 = $StudentInfo['marksheet_12'];
+        $StudentMarksheet_10 = $StudentInfo['marksheet_10'];
         $StudentPercentage_10 = htmlspecialchars($StudentInfo['percentage_10']);
         $StudentPercentage_12 = htmlspecialchars($StudentInfo['percentage_12']);
         $StudentPEmail = htmlspecialchars($StudentInfo['pemail']);
@@ -37,7 +37,7 @@ if (isset($_SESSION["user_type"]) && isset($_SESSION["user_email"])) {
         $StudentRollNo = htmlspecialchars($StudentInfo['rollno']);
         $StudentPhoneNo = htmlspecialchars($StudentInfo['phoneno']);
         $StudentPRN = htmlspecialchars($StudentInfo['prno']);
-        $StudentResume = htmlspecialchars($StudentInfo['resume']);
+        $StudentResume = $StudentInfo['resume'];
         $StudentSem1 = htmlspecialchars($StudentInfo['sem1']);
         $StudentSem2 = htmlspecialchars($StudentInfo['sem2']);
         $StudentSem3 = htmlspecialchars($StudentInfo['sem3']);
@@ -57,6 +57,9 @@ if (isset($_SESSION["user_type"]) && isset($_SESSION["user_email"])) {
 }
 
 if (isset($_POST["update_profile"])) {
+    $_POST["resume"] = empty($_POST["resume"])?"":'=HYPERLINK("'.$_POST["resume"].'","Resume")';
+    $_POST["marksheet_10"] = empty($_POST["marksheet_10"])?"":'=HYPERLINK("'.$_POST["marksheet_10"].'","10th Marksheet")';
+    $_POST["marksheet_12"] = empty($_POST["marksheet_12"])?"":'=HYPERLINK("'.$_POST["marksheet_12"].'","12th Marksheet")';
     $updateQuery = "UPDATE student as s SET s.S_Fname = ?,s.S_Mname = ?,s.S_Lname = ?,s.S_Personal_Email = ?,s.S_Address = ?,s.S_Phone_no = ?,s.S_10th_Perc = ?,s.S_12th_Perc = ?,s.S_Resume = ?,s.S_10th_Marksheet = ?,s.S_12th_Marksheet = ?
     WHERE s.S_College_Email = ?";
     $result = $conn->prepare($updateQuery);
@@ -217,28 +220,42 @@ if (isset($_POST["upload_pic"])) {
                         <div class="form-adjust">
                             <div>
                                 <label for="per10">10th Percentage</label><br>
-                                <input type="number" name="per10" step="0.01" min="0" max="100" value="' . $StudentPercentage_10 . '">
+                                <input type="number" name="per10" step="0.01" min="0" max="100" value="' .$StudentPercentage_10. '">
                             </div>
 
                             <div>
                                 <label for="per12">12th Percentage</label><br>
                                 <input type="number" name="per12" step="0.01" min="0" max="100" value="' . $StudentPercentage_12 . '">
                             </div>
-                        </div>
-                        <div class="form-adjust">
+                        </div>';
+
+                        $startPos = strpos($StudentResume, '"') + 1;
+                        $endPos = strpos($StudentResume, '"', $startPos);
+                        $resume = substr($StudentResume, $startPos, $endPos - $startPos);
+
+
+                        $startPos = strpos($StudentMarksheet_10, '"') + 1;
+                        $endPos = strpos($StudentMarksheet_10, '"', $startPos);
+                        $marks10 = substr($StudentMarksheet_10, $startPos, $endPos - $startPos);
+
+
+                        $startPos = strpos($StudentMarksheet_12, '"') + 1;
+                        $endPos = strpos($StudentMarksheet_12, '"', $startPos);
+                        $marks12 = substr($StudentMarksheet_12, $startPos, $endPos - $startPos);
+                        echo '<div class="form-adjust">
                             <div>
                                 <label for="resume">Resume (PDF Link)</label><br>
-                                <input type="text" name="resume" value="' . $StudentResume . '">
+                                <input type="text" name="resume" value="' . $resume . '">
                             </div>
 
                             <div>
                                 <label for="marksheet_10">10th Marksheet (PDF Link)</label><br>
-                                <input type="text" name="marksheet_10" value="' . $StudentMarksheet_10 . '">
+                                <input type="text" name="marksheet_10" value="' . substr( $StudentMarksheet_10 , 12, -11) . '">
                             </div>
 
                             <div>
                                 <label for="marksheet_12">12th Marksheet / Diploma (PDF Link)</label><br>
-                                <input type="text" name="marksheet_12" value="' . $StudentMarksheet_12 . '">
+                                <input type="text" name="marksheet_12" value="' . substr( $StudentMarksheet_12 , 12, -11) . '">
                             </div>
                         </div>';
                         ?>

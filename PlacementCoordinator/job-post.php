@@ -152,6 +152,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST["post-job"])) {
             }
 
             $conn->commit();
+            //Add to calender
             echo "Job successfully posted.";
         } else {
             $conn->rollback();

@@ -333,7 +333,7 @@ function downloadSheetAsCSV($spreadsheetId, $sheetId, $range, $filename) {
     downloadFile($url, "$filename.csv");
 }
 
-$sheetId = "0";
+$sheetId = 0;
 $filename = "Batch";
 downloadSheetAsCSV($spreadsheetId,$sheetId,$range, $filename);
 

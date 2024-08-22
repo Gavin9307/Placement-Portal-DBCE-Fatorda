@@ -16,7 +16,13 @@
             <?php include './sidebar.php'?>
 
             <div class="main-container">
-                <h2 class="main-container-heading">Dashboard</h2>
+            <h2 class="main-container-heading">Dashboard</h2>
+            <br>
+            <h3>Calendar</h3>
+            <div class="dashboard-calendar">
+            <iframe src="https://calendar.google.com/calendar/embed?src=fernandespierson03%40gmail.com&ctz=Asia%2FKolkata" style="border: 0" width="800" height="600" frameborder="0" scrolling="no"></iframe>
+</div>
+
                 <div class="sections">
                     <h3>Student Management</h3>
                     <div class="sub-sections performance">

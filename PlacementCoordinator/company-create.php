@@ -6,9 +6,11 @@ global $conn;
 if (!isset($_SESSION)) {
     session_start();
 }
+// 0- Pending 1-Error 2-Success
+$addError = 0;
 $error = "";
 if (isset($_POST["add-company"])) {
-    
+
     $pcEmail = $_SESSION['user_email'];
     $cname = !empty($_POST['cname']) ? $_POST['cname'] : NULL;
     $scope = !empty($_POST['scope']) ? $_POST['scope'] : NULL;
@@ -35,14 +37,17 @@ if (isset($_POST["add-company"])) {
 
         if (!move_uploaded_file($_FILES['clogo']['tmp_name'], '../Data/Companies/Company_Logo/' . $logo)) {
             die("Error uploading Logo.");
+            $addError = 1;
         }
 
         $companyUpdateQuery = "UPDATE `company` SET `C_Logo` = ? WHERE `C_id` = ?";
         $companyUpdate = $conn->prepare($companyUpdateQuery);
         $companyUpdate->bind_param("si", $logo, $companyId);
         $companyUpdate->execute();
+         $addError = 2;
     } else {
         die("Error inserting company details into the database.");
+        $addError = 1;
     }
 }
 ?>
@@ -76,7 +81,7 @@ if (isset($_POST["add-company"])) {
                                 <input type="text" name="cname" placeholder="Company Name" required>
                             </div>
                             <div class="inputbox">
-                                <label for="">Company Logo: <?php echo" <span style='color:red;'>".$error."</span>"?> </label>
+                                <label for="">Company Logo: <?php echo " <span style='color:red;'>" . $error . "</span>" ?> </label>
                                 <input type="file" name="clogo" placeholder="Company Logo" required accept=".jpeg, .jpg, .png">
                             </div>
                         </div>
@@ -122,6 +127,52 @@ if (isset($_POST["add-company"])) {
                     </form>
                 </div>
             </div>
+            <!-- Modals -->
+            <div id="error-logo" class="modal">
+                <div class="modal-content">
+                    <span class="close">&times;</span>
+                    <p>There was an Error</p>
+                </div>
+            </div>
+
+            <div id="successful" class="modal">
+                <div class="modal-content">
+                    <span class="close">&times;</span>
+                    <p>The Company has been added successfully</p>
+                </div>
+            </div>
+            <script>
+                // Get the modals
+                var notInterestedModal = document.getElementById("error-logo");
+                var interestedModal = document.getElementById("successful");
+
+                // Get the <span> elements that close the modals
+                var closeButtons = document.getElementsByClassName("close");
+
+                // Close the modal when the user clicks on <span> (x)
+                for (var i = 0; i < closeButtons.length; i++) {
+                    closeButtons[i].onclick = function() {
+                        interestedModal.style.display = "none";
+                        notInterestedModal.style.display = "none";
+                    }
+                }
+
+                // Close the modal when the user clicks anywhere outside of the modal
+                window.onclick = function(event) {
+                    if (event.target == interestedModal) {
+                        interestedModal.style.display = "none";
+                    } else if (event.target == notInterestedModal) {
+                        notInterestedModal.style.display = "none";
+                    }
+                }
+
+                // Trigger the appropriate modal based on PHP variable
+                <?php if ($addError == 2) : ?>
+                    interestedModal.style.display = "block";
+                <?php elseif ($addError == 1) : ?>
+                    notInterestedModal.style.display = "block";
+                <?php endif; ?>
+            </script>
         </div>
 
         <?php include './footer.php' ?>

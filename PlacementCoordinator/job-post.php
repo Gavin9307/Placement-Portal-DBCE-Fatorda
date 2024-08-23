@@ -168,7 +168,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST["post-job"])) {
         $fetch->execute();
         $result = $fetch->get_result();
         $row = $result->fetch_assoc();
-        $cname = $row["C_Name"];
+        $cname = $row["C_Name"]; 
         
         // Create an instance of the Google Calendar Service
         $service = new Google\Service\Calendar($client);

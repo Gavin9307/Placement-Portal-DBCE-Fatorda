@@ -168,22 +168,8 @@ if (isset($_POST["get-report-students"])) {
         exit();
     }
 
-    // Download the updated sheet as a PDF or Excel file
-    try {
-        $exportMimeType = 'application/pdf'; // or use 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' for Excel
-
-        $exportedFile = $driveService->files->export($spreadsheetId, $exportMimeType, ['alt' => 'media']);
-
-        // Set the appropriate headers for file download
-        header('Content-Type: ' . $exportMimeType);
-        header('Content-Disposition: attachment; filename="report.pdf"'); // or 'report.xlsx' for Excel
-
-        // Output the file to the browser
-        echo $exportedFile->getBody();
-        exit();
-    } catch (Exception $e) {
-        echo 'Error downloading sheet: ' . $e->getMessage();
-    }
+    header("Location: https://docs.google.com/spreadsheets/d/1fGnnbnpsG2Ep1brwKAGLwqVPpWybbwuBBK9j8Sxuc64");
+    exit();
 }
 
 ?>

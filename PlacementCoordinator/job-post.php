@@ -2,11 +2,13 @@
 require "../conn.php";
 require "../restrict.php";
 include "./tpo-utility-functions.php";
+require "./report-utility.php";
 global $conn;
 
 if (!isset($_SESSION)) {
     session_start();
 }
+
 
 // 0-pending 1-error 2-success 3-no match
 $addError = 0;
@@ -48,7 +50,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST["post-job"])) {
 
         // Insert job departments
         $selectedDepartments = $_POST['departments'];
+        $departments = "";
         foreach ($selectedDepartments as $deptName) {
+            $departments .= " " . $deptName;
             $fetchDeptIdQuery = "SELECT Dept_id FROM department WHERE Dept_name = ?";
             $fetchDeptId = $conn->prepare($fetchDeptIdQuery);
             $fetchDeptId->bind_param("s", $deptName);
@@ -155,7 +159,60 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST["post-job"])) {
 
             $conn->commit();
             $addError = 2;
-            //Add to calender
+            global $conn, $client;
+    
+    // Fetch company details
+        $fetchQuery = "SELECT * FROM company WHERE C_id = ?";
+        $fetch = $conn->prepare($fetchQuery);
+        $fetch->bind_param("i", $companyId);
+        $fetch->execute();
+        $result = $fetch->get_result();
+        $row = $result->fetch_assoc();
+        $cname = $row["C_Name"];
+        
+        // Create an instance of the Google Calendar Service
+        $service = new Google\Service\Calendar($client);
+        
+        $startDateTimeObj = new DateTime($dueDate);
+        $startDateTimeObj->modify('-1 day'); // Subtract 1 day
+        $startDateTime = $startDateTimeObj->format('Y-m-d') . 'T10:00:00+05:30'; // One day before due date
+        $endDateTime = $startDateTimeObj->format('Y-m-d') . 'T11:00:00+05:30';   // End time (1 hour later)
+
+        // Create event data
+        $event = new Google\Service\Calendar\Event([
+            'summary' => $cname . ' Job Posting Due Date',
+            'description' => 'Departments: ' . $departments,
+            'start' => [
+                'dateTime' => $startDateTime,
+                'timeZone' => 'Asia/Kolkata', // Set to Indian time
+            ],
+            'end' => [
+                'dateTime' => $endDateTime,
+                'timeZone' => 'Asia/Kolkata', // Set to Indian time
+            ],
+            'recurrence' => [
+                'RRULE:FREQ=DAILY;COUNT=2' // Event repeats for 2 days (if required)
+            ],
+            'attendees' => [
+                ['email' => 'fernandespierson03@gmail.com'], // Add more attendees if needed
+            ],
+            'reminders' => [
+                'useDefault' => false,
+                'overrides' => [
+                    ['method' => 'email', 'minutes' => 24 * 60],  // Email reminder 1 day before
+                    ['method' => 'popup', 'minutes' => 10],       // Popup reminder 10 minutes before the event
+                ],
+            ],
+        ]);
+
+    
+    // Insert the event into the calendar
+    $calendarId = 'primary';
+    $event = $service->events->insert($calendarId, $event);
+    
+    // Return the event details or success message
+    
+
             echo "Job successfully posted.";
         } else {
             $conn->rollback();

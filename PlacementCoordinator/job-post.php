@@ -8,6 +8,9 @@ if (!isset($_SESSION)) {
     session_start();
 }
 
+// 0-pending 1-error 2-success 3-no match
+$addError = 0;
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST["post-job"])) {
     $pcEmail = $_SESSION['user_email'];
     $minCgpa = !empty($_POST['min-cgpa']) ? (float) $_POST['min-cgpa'] : NULL;
@@ -93,7 +96,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST["post-job"])) {
 
         if (!empty($selectedDepartments)) {
             $departmentConditions = array_map(function ($dept) use ($conn) {
-                return "D.Dept_name = '". $conn->real_escape_string($dept) . "'";
+                return "D.Dept_name = '" . $conn->real_escape_string($dept) . "'";
             }, $selectedDepartments);
             $studentQuery .= " AND (" . implode(" OR ", $departmentConditions) . ")";
         }
@@ -152,25 +155,28 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST["post-job"])) {
             }
 
             $conn->commit();
+            $addError = 2;
             //Add to calender
             echo "Job successfully posted.";
         } else {
             $conn->rollback();
-            echo "No students match the criteria.";
+            $addError = 3;
         }
     } catch (Exception $e) {
         $conn->rollback();
-        echo "Failed to post job: " . $e->getMessage();
+        $addError = 1;
     }
 }
 ?>
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <?php include './head.php' ?>
     <link rel="stylesheet" href="./css/job-post.css">
     <title>Post a Job</title>
 </head>
+
 <body>
     <div id="wrapper">
         <?php include './header.php' ?>
@@ -314,27 +320,88 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST["post-job"])) {
 
         <?php include './footer.php' ?>
     </div>
+    <!-- Modals -->
+    <div id="error" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <p>There was an Error while posting the job</p>
+        </div>
+    </div>
 
+    <div id="no-match" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <p>No students matched the criteria</p>
+        </div>
+    </div>
+
+    <div id="successful" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <p>The Job has been posted successfully</p>
+        </div>
+    </div>
     <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        // Function to check if at least one checkbox is selected
-        function validateCheckboxes() {
-            const checkboxes = document.querySelectorAll('input[name="departments[]"]');
-            for (const checkbox of checkboxes) {
-                if (checkbox.checked) {
-                    return true;
-                }
+        // Get the modals
+        var errorModal = document.getElementById("error");
+        var nomatchModal = document.getElementById("no-match");
+        var successfulModal = document.getElementById("successful");
+
+        // Get the <span> elements that close the modals
+        var closeButtons = document.getElementsByClassName("close");
+
+        // Close the modal when the user clicks on <span> (x)
+        for (var i = 0; i < closeButtons.length; i++) {
+            closeButtons[i].onclick = function() {
+                errorModal.style.display = "none";
+                nomatchModal.style.display = "none";
+                successfulModal.style.display = "none";
             }
-            return false;
         }
 
-        document.querySelector('form').addEventListener('submit', function(event) {
-            if (!validateCheckboxes()) {
-                alert('Please select at least one department.');
-                event.preventDefault();
+        // Close the modal when the user clicks anywhere outside of the modal
+        window.onclick = function(event) {
+            if (event.target == errorModal) {
+                errorModal.style.display = "none";
+            } else if (event.target == notmatchModal) {
+                nomatchModal.style.display = "none";
             }
+            else if (event.target == successfulModal) {
+                successfulModal.style.display = "none";
+            }
+        }
+
+        // Trigger the appropriate modal based on PHP variable
+        <?php if ($addError == 1) : ?>
+            errorModal.style.display = "block";
+        <?php elseif ($addError == 2) : ?>
+            successfulModal.style.display = "block";
+            <?php elseif ($addError == 3) : ?>
+                nomatchModal.style.display = "block";
+        <?php endif; ?>
+    </script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Function to check if at least one checkbox is selected
+            function validateCheckboxes() {
+                const checkboxes = document.querySelectorAll('input[name="departments[]"]');
+                for (const checkbox of checkboxes) {
+                    if (checkbox.checked) {
+                        return true;
+                    }
+                }
+                return false;
+            }
+
+            document.querySelector('form').addEventListener('submit', function(event) {
+                if (!validateCheckboxes()) {
+                    alert('Please select at least one department.');
+                    event.preventDefault();
+                }
+            });
         });
-    });
     </script>
 </body>
+
 </html>

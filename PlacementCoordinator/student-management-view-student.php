@@ -135,8 +135,11 @@ if (isset($_POST["upload_pic"])) {
         <div class="container">
             <?php include './sidebar.php' ?>
             <div class="main-container">
+                <div class="main-header">
                 <h2 class="main-container-heading"><a href="#" onclick="window.history.back(); return false;"><i class="fa-solid fa-arrow-left fa-lg" style="color: #000000;"></i></a>
                     Student Profile : </h2>
+                    <button class="delete-button">Delete</button>
+                    </div>
                 <?php
                 echo '
                 <form action="./my-profile.php" method="post" enctype="multipart/form-data" class="profile-image">

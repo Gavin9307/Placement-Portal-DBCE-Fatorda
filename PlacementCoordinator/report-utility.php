@@ -6,11 +6,12 @@ require __DIR__ . '/GoogleSheetsReports/vendor/autoload.php';
 use Google\Client;
 use Google\Service\Sheets;
 use Google\Service\Drive;
+use Google\Service\Calendar;
 
 // Initialize the Google Client
 $client = new Client();
 $client->setApplicationName('XAMPP to Google Sheets');
-$client->setScopes([Sheets::SPREADSHEETS, Drive::DRIVE]);
+$client->setScopes([Sheets::SPREADSHEETS, Drive::DRIVE, Calendar::CALENDAR]);
 $client->setAuthConfig(__DIR__ . '/client_secret.json');
 $client->setAccessType('offline');
 $client->setPrompt('select_account consent');

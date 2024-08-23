@@ -91,11 +91,11 @@ $event = new Google\Service\Calendar\Event([
     'location' => 'Goa',
     'description' => 'A chance to hear more about Google\'s developer products.',
     'start' => [
-        'dateTime' => '2024-08-22T09:00:00-07:00', // Fixed format
+        'dateTime' => '2024-08-22T10:25:00+05:30', // Fixed format
         'timeZone' => 'America/Los_Angeles',
     ],
     'end' => [
-        'dateTime' => '2024-08-22T17:00:00-07:00', // Ensure end time is after start time
+        'dateTime' => '2024-08-22T10:30:00+05:30', // Ensure end time is after start time
         'timeZone' => 'America/Los_Angeles',
     ],
     'recurrence' => [

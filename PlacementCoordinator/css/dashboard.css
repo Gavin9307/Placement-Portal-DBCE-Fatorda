@@ -93,6 +93,11 @@
     margin-bottom: 50px;
 }
 
+.dashboard-calendar {
+    display: flex;
+    justify-content: center;
+}
+
 .sections {
     margin-top: 50px;
 }

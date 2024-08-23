@@ -1,3 +1,17 @@
+<?php
+require "../conn.php";
+require "../restrict.php";
+include "./tpo-utility-functions.php";
+global $conn;
+if (!isset($_SESSION)) {
+    session_start();
+}
+
+
+
+
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -13,48 +27,24 @@
         <?php include './header.php' ?>
 
         <div class="container">
-            <?php include './sidebar.php'?>
+            <?php include './sidebar.php' ?>
 
             <div class="main-container">
-            <h2 class="main-container-heading">Dashboard</h2>
-            <br>
-            <h3>Calendar</h3>
-            <div class="dashboard-calendar">
-            <iframe src="https://calendar.google.com/calendar/embed?src=fernandespierson03%40gmail.com&ctz=Asia%2FKolkata" style="border: 0" width="800" height="600" frameborder="0" scrolling="no"></iframe>
-</div>
-
-                <div class="sections">
-                    <h3>Student Management</h3>
-                    <div class="sub-sections performance">
-                        <div class="right1"><a href="./student-management.php"><i class=" fa-solid fa-chevron-right fa-2x" style="color: #000000;"></i></a>
-                        </div>
-                        <p>Total Applications : 5</p>
-                        <p>Interviews Attended : 3</p>
-                        <p>Rejections : 3</p>
-                    </div>
+                <h2 class="main-container-heading">Dashboard</h2>
+                <br>
+                <h3>Calendar</h3>
+                <div class="dashboard-calendar">
+                    <!-- <iframe src="<?php // echo 'https://calendar.google.com/calendar/embed?src='.$_SESSION["user_email"].'&ctz=Asia%2FKolkata'; 
+                                        ?>" style="border: 0" width="800" height="600" frameborder="0" scrolling="no"></iframe> -->
+                    <iframe src="https://calendar.google.com/calendar/embed?src=fernandespierson03%40gmail.com&ctz=Asia%2FKolkata" style="border: 0;" width="800" height="600" frameborder="0" scrolling="no"></iframe>
                 </div>
 
                 <div class="sections">
                     <h3>Company Management</h3>
-                    <div class="sub-sections companies">
-                        <div class="right1"><a href="./my-applications.php"><a href="./company.php"><i class=" fa-solid fa-chevron-right fa-2x" style="color: #000000;"></i></a></a>
+                    <div class="sub-sections performance">
+                        <div class="right1"><a href="./company.php"><i class=" fa-solid fa-chevron-right fa-2x" style="color: #000000;"></i></a>
                         </div>
-                        <div class="sub-table">
-                            <div class="sub-table-row">
-                                <img src="../Assets/dbce-logo.jpeg" alt="">
-                                <p>Associate Developer</p>
-                            </div>
-                            <hr>
-                            <div class="sub-table-row">
-                                <img src="../Assets/dbce-logo.jpeg" alt="">
-                                <p>Software Analyst</p>
-                            </div>
-                            <hr>
-                            <div class="sub-table-row">
-                                <img src="../Assets/dbce-logo.jpeg" alt="">
-                                <p>UI/UX Designer</p>
-                            </div>
-                        </div>
+                        <p>Total Companies : <?php echo getTotalCompanies(); ?></p>
                     </div>
                 </div>
 
@@ -63,8 +53,8 @@
                     <div class="sub-sections performance">
                         <div class="right1"><a href="./job-management.php"><i class=" fa-solid fa-chevron-right fa-2x" style="color: #000000;"></i></a>
                         </div>
-                        <p>Live Opportunities : 2</p>
-                        <p>Students Applied : 15</p>
+                        <p>Live Opportunities : <?php echo getTotalLiveJobs(); ?></p>
+                        <p>Completed Opportunities : <?php echo getTotalCompletedJobs(); ?></p>
                     </div>
                 </div>
                 <div class="sections">
@@ -72,7 +62,7 @@
                     <div class="sub-sections performance">
                         <div class="right1"><a href="./Placement-Coordinator.php"><i class=" fa-solid fa-chevron-right fa-2x" style="color: #000000;"></i></a>
                         </div>
-                        <p>Total Coordinators : 4</p>
+                        <p>Total Coordinators : <?php echo getTotalPlacementCoordinators(); ?></p>
                     </div>
                 </div>
             </div>

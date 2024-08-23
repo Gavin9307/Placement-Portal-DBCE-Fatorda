@@ -1,5 +1,59 @@
 <?php
 
+function getTotalCompanies(){
+    global $conn;
+
+    $fetchQuery = "SELECT COUNT(*) AS total FROM company";
+    $fetch = $conn->prepare($fetchQuery);
+    $fetch->execute();
+    $result = $fetch->get_result();
+
+    $row = $result->fetch_assoc();
+    return $row["total"];
+}
+
+function getTotalLiveJobs(){
+    global $conn;
+    $fetchQuery = "SELECT count(*) as total
+        from jobplacements as P
+        WHERE P.J_Due_date >= CURRENT_DATE;";
+    $fetch = $conn->prepare($fetchQuery);
+    $fetch->execute();
+    $result = $fetch->get_result();
+
+    $row = $result->fetch_assoc();
+    return $row["total"];
+}
+
+function getTotalCompletedJobs(){
+    global $conn;
+    $fetchQuery = "SELECT count(*) as total
+        from jobplacements as P
+        WHERE P.J_Due_date < CURRENT_DATE;";
+    $fetch = $conn->prepare($fetchQuery);
+    $fetch->execute();
+    $result = $fetch->get_result();
+
+    $row = $result->fetch_assoc();
+    return $row["total"];
+}
+
+function getTotalPlacementCoordinators(){
+    global $conn;
+    $fetchQuery = "SELECT count(*) as total
+        from placementcoordinator as p
+        INNER JOIN department as d ON d.Dept_id = p.PC_Dept_id
+        WHERE PC_Status = ?";
+    $fetch = $conn->prepare($fetchQuery);
+    $status = "active";
+    $fetch->bind_param("s",$status);
+    $fetch->execute();
+    $result = $fetch->get_result();
+
+    $row = $result->fetch_assoc();
+    return $row["total"];
+}
+
 function getTpoNotifications()
 {
     global $conn;

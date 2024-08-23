@@ -128,6 +128,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !isset($_GET["edit"])) {
                     <table>
                         <tr>
                             <th>Department Name</th>
+                            <th>Students</th>
+                            <th>View Classes</th>
                             <th>Edit Department Name</th>
                             <th>Remove Department</th>
                         </tr>
@@ -138,8 +140,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !isset($_GET["edit"])) {
                             $fetchDepartment->execute();
                             $result = $fetchDepartment->get_result();
                             while ($row = $result->fetch_assoc()){
+                                $fetchStudentsQuery = "SELECT COUNT(*) as total FROM student as s
+                                INNER JOIN class as c on c.Class_id=s.S_Class_id
+                                INNER JOIN department as d on c.Dept_id=d.Dept_id
+                                WHERE d.Dept_id = ?;";
+                                $fetchStudents = $conn->prepare($fetchStudentsQuery);
+                                $fetchStudents->bind_param("i",$row["Dept_id"]);
+                                $fetchStudents->execute();
+                                $totalresult = $fetchStudents->get_result();
+                                $row1 = $totalresult->fetch_assoc();
+                                $total = $row1["total"];
                                 echo '<tr>
                                             <td>'.$row["Dept_name"].'</td>
+                                            <td>'.$total.'</td>
+                                            <td><a href="./add-classes.php?did='.$row["Dept_id"].'"><button class="edit-button">Classes</button></a></td>
                                             <td><a href="./add-departments.php?edit=1&did='.$row["Dept_id"].'"><button class="edit-button">Edit</button></a></td>
                                             <td><button class="remove-button" style="color:red" onclick="confirmDelete('.$row["Dept_id"].')">Remove</button></td>
                                         </tr>';

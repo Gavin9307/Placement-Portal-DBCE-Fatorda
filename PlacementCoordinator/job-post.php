@@ -13,21 +13,20 @@ $addError = 0;
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST["post-job"])) {
     $pcEmail = $_SESSION['user_email'];
-    $minCgpa = !empty($_POST['min-cgpa']) ? (float) $_POST['min-cgpa'] : NULL;
-    $maxCgpa = !empty($_POST['max-cgpa']) ? (float) $_POST['max-cgpa'] : NULL;
-    $moreDetails = !empty($_POST['details']) ? $_POST['details'] : NULL;
-    $noPosts = !empty($_POST['no-of-posts']) ? (int) $_POST['no-of-posts'] : NULL;
-    $position = !empty($_POST['position']) ? $_POST['position'] : NULL;
-    $offeredSalary = !empty($_POST['offered-salary']) ? $_POST['offered-salary'] : NULL;
+    $minCgpa = !empty($_POST['min-cgpa']) ? (float) $_POST['min-cgpa'] : 0;
+    $maxCgpa = !empty($_POST['max-cgpa']) ? (float) $_POST['max-cgpa'] : 10.0;
+    $moreDetails = !empty($_POST['details']) ? $_POST['details'] : "";
+    $noPosts = !empty($_POST['no-of-posts']) ? (int) $_POST['no-of-posts'] : 0;
+    $position = !empty($_POST['position']) ? $_POST['position'] : "";
+    $offeredSalary = !empty($_POST['offered-salary']) ? $_POST['offered-salary'] : 0;
     $companyId = !empty($_POST['company']) ? (int) $_POST['company'] : NULL;
     $dueDate = !empty($_POST['due-date']) ? $_POST['due-date'] : NULL;
     $backAllowed = !empty($_POST['has_backlogs']) ? (int) $_POST['has_backlogs'] : NULL;
-    $percentage10 = !empty($_POST['percentage_10']) ? (float) $_POST['percentage_10'] : NULL;
-    $percentage12 = !empty($_POST['percentage_12']) ? (float) $_POST['percentage_12'] : NULL;
+    $percentage10 = !empty($_POST['percentage_10']) ? (float) $_POST['percentage_10'] : 0;
+    $percentage12 = !empty($_POST['percentage_12']) ? (float) $_POST['percentage_12'] : 0;
     $gender = !empty($_POST['gender']) ? $_POST['gender'] : NULL;
     $isPlaced = !empty($_POST['is_placed'])? $_POST['is_placed'] : NULL;
-    $batch = !empty($_POST['d_batch_year'])? $_POST['d_batch_year'] : NULL;
-    $batch = $batch - 4;
+    $batch = !empty($_POST['d_batch_year'])? $_POST['d_batch_year']-4 : NULL;
 
     $conn->begin_transaction();
 
@@ -160,6 +159,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST["post-job"])) {
             echo "Job successfully posted.";
         } else {
             $conn->rollback();
+            echo $studentQuery;
             $addError = 3;
         }
     } catch (Exception $e) {
@@ -270,8 +270,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST["post-job"])) {
                         <div class="form-adjust">
                             <div class="inputbox">
                                 <label for="">Company:</label>
-                                <select name="company">
-                                    <option value="" selected>Select</option>
+                                <select name="company" required>
                                     <?php
                                     global $conn;
                                     $fetchCompanyQuery = "SELECT C_id, C_Name FROM company ORDER BY C_Name ASC";
@@ -299,7 +298,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST["post-job"])) {
                             </div>
                             <div class="inputbox">
                                 <label for="">Due Date:</label>
-                                <input type="date" name="due-date">
+                                <input type="date" name="due-date" required>
                             </div>
                         </div>
                         <h3>More Details:</h3>

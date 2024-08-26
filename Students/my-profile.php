@@ -228,34 +228,49 @@ if (isset($_POST["upload_pic"])) {
                                 <input type="number" name="per12" step="0.01" min="0" max="100" value="' . $StudentPercentage_12 . '">
                             </div>
                         </div>';
-
-                        $startPos = strpos($StudentResume, '"') + 1;
-                        $endPos = strpos($StudentResume, '"', $startPos);
-                        $resume = substr($StudentResume, $startPos, $endPos - $startPos);
-
-
-                        $startPos = strpos($StudentMarksheet_10, '"') + 1;
-                        $endPos = strpos($StudentMarksheet_10, '"', $startPos);
-                        $marks10 = substr($StudentMarksheet_10, $startPos, $endPos - $startPos);
-
-
-                        $startPos = strpos($StudentMarksheet_12, '"') + 1;
-                        $endPos = strpos($StudentMarksheet_12, '"', $startPos);
-                        $marks12 = substr($StudentMarksheet_12, $startPos, $endPos - $startPos);
+                        
+                        if (!empty($StudentResume)) {
+                            // Extract URL from HYPERLINK formula
+                            $startPos = strpos($StudentResume, '"') + 1;
+                            $endPos = strpos($StudentResume, '"', $startPos);
+                            $resume = substr($StudentResume, $startPos, $endPos - $startPos);
+                        } else {
+                            $resume = "";
+                        }
+                        
+                        if (!empty($StudentMarksheet_10)) {
+                            // Extract URL from HYPERLINK formula
+                            $startPos = strpos($StudentMarksheet_10, '"') + 1;
+                            $endPos = strpos($StudentMarksheet_10, '"', $startPos);
+                            $marks10 = substr($StudentMarksheet_10, $startPos, $endPos - $startPos);
+                        } else {
+                            $marks10 = "";
+                        }
+                        
+                        if (!empty($StudentMarksheet_12)) {
+                            // Extract URL from HYPERLINK formula
+                            $startPos = strpos($StudentMarksheet_12, '"') + 1;
+                            $endPos = strpos($StudentMarksheet_12, '"', $startPos);
+                            $marks12 = substr($StudentMarksheet_12, $startPos, $endPos - $startPos);
+                        } else {
+                            $marks12 = "";
+                        }
+                        
+                        // Displaying the input fields
                         echo '<div class="form-adjust">
                             <div>
                                 <label for="resume">Resume (PDF Link)</label><br>
-                                <input type="text" name="resume" value="' . $resume . '">
+                                <input type="text" name="resume" value="' . htmlspecialchars($resume) . '">
                             </div>
-
+                        
                             <div>
                                 <label for="marksheet_10">10th Marksheet (PDF Link)</label><br>
-                                <input type="text" name="marksheet_10" value="' . substr( $StudentMarksheet_10 , 12, -11) . '">
+                                <input type="text" name="marksheet_10" value="' . htmlspecialchars($marks10) . '">
                             </div>
-
+                        
                             <div>
                                 <label for="marksheet_12">12th Marksheet / Diploma (PDF Link)</label><br>
-                                <input type="text" name="marksheet_12" value="' . substr( $StudentMarksheet_12 , 12, -11) . '">
+                                <input type="text" name="marksheet_12" value="' . htmlspecialchars($marks12) . '">
                             </div>
                         </div>';
                         ?>

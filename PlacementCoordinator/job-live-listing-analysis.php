@@ -82,7 +82,7 @@ if (!isset($_GET["jid"])) {
                         <a href="<?php echo './job-interested-students.php?jid='.$_GET["jid"]; ?>"><button class="viewmore-button">View More</button></a>
                     </div>
                 </div>
-                <button class="getreport-button">Get Report</button>
+                <!-- <button class="getreport-button">Get Report</button> -->
             </div>
         </div>
 

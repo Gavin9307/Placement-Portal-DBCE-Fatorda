@@ -88,6 +88,7 @@ if (isset($_GET['responsestatus']) && isset($_GET['jid'])) {
                 <div class="main-container-header">
                     <h2 class="main-container-heading"><a href="./dashboard.html"><a href="./dashboard.php"><i class="fa-solid fa-arrow-left fa-lg" style="color: #000000;"></i></a></a>
                         Job Management</h2>
+                    <a href="https://web.whatsapp.com/" target="_blank"><button class="whatsapp">Whatsapp</button></a>
                     <a href="./job-post-questions.php"><button class="add-questions">Add Questions</button></a>
                     <a href="./job-post.php"><button class="add-button">Post a Job</button></a>
                 </div>

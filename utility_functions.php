@@ -134,57 +134,28 @@ function getApplicationDetails()
 
         $jid = (int)$_GET['jid'];
 
-        // Add placed condition
-        $totalRoundsFailQuery = "SELECT COUNT(*) as total_rounds 
-        FROM rounds as R
-        INNER JOIN studentrounds as S ON S.R_id = R.R_id
-        WHERE S.S_College_Email = ? AND R.J_id = ? AND S.RoundStatus = ?";
+        $fetchPlacedQuery = 'SELECT ja.placed as placed FROM jobapplication AS ja
+        INNER JOIN jobplacements as jp ON jp.J_id=ja.J_id
+        WHERE ja.S_College_Email= ? AND ja.J_id= ? AND jp.J_Due_date>CURRENT_DATE;';
+        $fetchPlaced = $conn->prepare($fetchPlacedQuery);
+        $fetchPlaced->bind_param("si", $_SESSION["user_email"], $jid);
+        $fetchPlaced->execute();
+        $fetchPlacedResult = $fetchPlaced->get_result();
+        $fetchRow = $fetchPlacedResult->fetch_assoc();
 
-        $totalRoundsFail = $conn->prepare($totalRoundsFailQuery);
-        $status = 'rejected';
-        $totalRoundsFail->bind_param("sis", $_SESSION["user_email"], $jid, $status);
-        $totalRoundsFail->execute();
-        $totalRoundsFailResult = $totalRoundsFail->get_result();
-        $totalRoundsFailCount = $totalRoundsFailResult->fetch_assoc()['total_rounds'];
-
-        if ($totalRoundsFailCount > 0) {
+        if ($fetchPlacedResult->num_rows > 0) {
+            if ($fetchRow["placed"] == 1) {
+                echo '<p><strong>Status:</strong> Passed</p>';
+                echo '</div>';
+                echo '<a href="./my-applications-feedback.php"><button>Give Feedback</button></a>';
+            } else if ($fetchRow["placed"] == 0) {
+                echo '<p><strong>Status:</strong> Pending</p>';
+                echo '</div>';
+            }
+        } else {
             echo '<p><strong>Status:</strong> Rejected</p>';
             echo '</div>';
             echo '<a href="./my-applications-feedback.php"><button>Give Feedback</button></a>';
-            return false;
-        }
-
-
-        $totalRoundsQuery = "SELECT COUNT(*) as total_rounds 
-        FROM rounds as R
-        INNER JOIN studentrounds as S ON S.R_id = R.R_id
-        WHERE S.S_College_Email = ? AND R.J_id = ?";
-
-        $totalRounds = $conn->prepare($totalRoundsQuery);
-        $totalRounds->bind_param("si", $_SESSION["user_email"], $jid);
-        $totalRounds->execute();
-        $totalRoundsResult = $totalRounds->get_result();
-        $totalRoundsCount = $totalRoundsResult->fetch_assoc()['total_rounds'];
-
-        $totalRoundsPassedQuery = "SELECT COUNT(*) as passed_rounds 
-        FROM rounds as R
-        INNER JOIN studentrounds as S ON S.R_id = R.R_id
-        WHERE S.S_College_Email = ? AND R.J_id = ? AND S.RoundStatus = ?";
-
-        $totalRoundsPassed = $conn->prepare($totalRoundsPassedQuery);
-        $status = 'passed';
-        $totalRoundsPassed->bind_param("sis", $_SESSION["user_email"], $jid, $status);
-        $totalRoundsPassed->execute();
-        $totalRoundsPassedResult = $totalRoundsPassed->get_result();
-        $totalRoundsPassedCount = $totalRoundsPassedResult->fetch_assoc()['passed_rounds'];
-
-        if ($totalRoundsCount == $totalRoundsPassedCount) {
-            echo '<p><strong>Status:</strong> Passed</p>';
-            echo '</div>';
-            echo '<a href="./my-applications-feedback.php"><button>Give Feedback</button></a>';
-        } else {
-            echo '<p><strong>Status:</strong> Pending</p>';
-            echo '</div>';
         }
     }
 }
@@ -224,60 +195,49 @@ S.S_College_Email = ? AND R.J_id = ?;";
 
     $jid = (int)$_GET['jid'];
 
-    $totalRoundsQuery = "SELECT COUNT(*) as total_rounds 
-        FROM rounds as R
-        INNER JOIN studentrounds as S ON S.R_id = R.R_id
-        WHERE S.S_College_Email = ? AND R.J_id = ?";
+    $fetchPlacedQuery = 'SELECT ja.placed as placed FROM jobapplication AS ja
+        INNER JOIN jobplacements as jp ON jp.J_id=ja.J_id
+        WHERE ja.S_College_Email= ? AND ja.J_id= ? AND jp.J_Due_date>CURRENT_DATE;';
+    $fetchPlaced = $conn->prepare($fetchPlacedQuery);
+    $fetchPlaced->bind_param("si", $_SESSION["user_email"], $jid);
+    $fetchPlaced->execute();
+    $fetchPlacedResult = $fetchPlaced->get_result();
+    $fetchRow = $fetchPlacedResult->fetch_assoc();
 
-    $totalRounds = $conn->prepare($totalRoundsQuery);
-    $totalRounds->bind_param("si", $_SESSION["user_email"], $jid);
-    $totalRounds->execute();
-    $totalRoundsResult = $totalRounds->get_result();
-    $totalRoundsCount = $totalRoundsResult->fetch_assoc()['total_rounds'];
-
-    $totalRoundsPassedQuery = "SELECT COUNT(*) as passed_rounds 
-        FROM rounds as R
-        INNER JOIN studentrounds as S ON S.R_id = R.R_id
-        WHERE S.S_College_Email = ? AND R.J_id = ? AND S.RoundStatus = ?";
-
-    $totalRoundsPassed = $conn->prepare($totalRoundsPassedQuery);
-    $status = 'passed';
-    $totalRoundsPassed->bind_param("sis", $_SESSION["user_email"], $jid, $status);
-    $totalRoundsPassed->execute();
-    $totalRoundsPassedResult = $totalRoundsPassed->get_result();
-    $totalRoundsPassedCount = $totalRoundsPassedResult->fetch_assoc()['passed_rounds'];
-
-    if ($totalRoundsCount == $totalRoundsPassedCount) {
-        echo '</div>';
-        $fetchOfferLetter = "SELECT Offer_Letter FROM jobapplication where S_College_Email = ? and J_id = ?";
-        $OfferLetter = $conn->prepare($fetchOfferLetter);
-        $OfferLetter->bind_param("si",$_SESSION["user_email"],$jid);
-        $OfferLetter->execute();
-        $result = $OfferLetter->get_result();
-        $row = $result->fetch_assoc();
-        if (isset($row["Offer_Letter"])){
-            echo '<div class="sections">
+    if ($fetchPlacedResult->num_rows > 0) {
+        if ($fetchRow["placed"] == 1) {
+            echo '</div>';
+            $fetchOfferLetter = "SELECT Offer_Letter FROM jobapplication where S_College_Email = ? and J_id = ?";
+            $OfferLetter = $conn->prepare($fetchOfferLetter);
+            $OfferLetter->bind_param("si", $_SESSION["user_email"], $jid);
+            $OfferLetter->execute();
+            $result = $OfferLetter->get_result();
+            $row = $result->fetch_assoc();
+            if (isset($row["Offer_Letter"])) {
+                echo '<div class="sections">
                     <div class="offer-letter-container">
-                        <form method="post" action="./my-applications-details.php?jid='.$_GET["jid"].'">
+                        <form method="post" action="./my-applications-details.php?jid=' . $_GET["jid"] . '">
                         <strong>Offer Letter: </strong>
-                        <input name="offer" type="text" value="'.$row["Offer_Letter"].'">
+                        <input name="offer" type="text" value="' . $row["Offer_Letter"] . '">
                         <button name="update-offer">Submit</button>
                         </form>
                     </div>
                 </div>';
-        }
-        else{
-            echo '<div class="sections">
+            } else {
+                echo '<div class="sections">
                     <div class="offer-letter-container">
-                        <form method="post" action="./my-applications-details.php?jid='.$_GET["jid"].'>
+                        <form method="post" action="./my-applications-details.php?jid=' . $_GET["jid"] . '>
                         <strong>Offer Letter: </strong>
                         <input name="offer" type="text" value="">
                         <button name="update-offer">Submit</button>
                         </form>
                     </div>
                 </div>';
+            }
         }
-        
+        else if ($fetchRow["placed"] == 0) {
+            echo '</div>';
+        }
     } else {
         echo '</div>';
     }

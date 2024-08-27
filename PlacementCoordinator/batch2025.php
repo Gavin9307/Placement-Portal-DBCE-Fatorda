@@ -91,10 +91,10 @@ if ($conn->connect_error) {
 // Define queries
 $queries = [
     "SELECT 
-    COUNT(CASE WHEN d.Dept_name = 'CIVIL' THEN 1 END) AS 'CIVIL',
-    COUNT(CASE WHEN d.Dept_name = 'MECH' THEN 1 END) AS 'MECH',
-    COUNT(CASE WHEN d.Dept_name = 'ETC' THEN 1 END) AS 'ETC',
-    COUNT(CASE WHEN d.Dept_name = 'COMP' THEN 1 END) AS 'COMP'
+        COUNT(DISTINCT CASE WHEN d.Dept_name = 'CIVIL' THEN s.S_College_Email END) AS CIVIL,
+        COUNT(DISTINCT CASE WHEN d.Dept_name = 'MECH' THEN s.S_College_Email END) AS MECH,
+        COUNT(DISTINCT CASE WHEN d.Dept_name = 'ETC' THEN s.S_College_Email END) AS ETC,
+        COUNT(DISTINCT CASE WHEN d.Dept_name = 'COMP' THEN s.S_College_Email END) AS COMP
 FROM 
     student AS s
 INNER JOIN 
@@ -102,61 +102,89 @@ INNER JOIN
 INNER JOIN 
     department AS d ON cl.Dept_id = d.Dept_id;",
     
-    "SELECT 
-        COUNT(CASE WHEN d.Dept_name = 'CIVIL' THEN 1 END) as CIVIL,
-        COUNT(CASE WHEN d.Dept_name = 'MECH' THEN 1 END) as MECH,
-        COUNT(CASE WHEN d.Dept_name = 'ETC' THEN 1 END) as ETC,
-        COUNT(CASE WHEN d.Dept_name = 'COMP' THEN 1 END) as COMP
-    FROM 
-        student as s 
-    INNER JOIN 
-        jobapplication as ja ON ja.S_College_Email = s.S_College_Email
-    INNER JOIN 
-        class as c ON c.Class_id = s.S_Class_id
-    INNER JOIN 
-        department as d ON c.Dept_id = d.Dept_id
-    WHERE
-    s.S_Year_of_Admission = '2021' AND ja.J_id = 1 AND ja.Interest = 1;",
+    "SELECT
+        COUNT(DISTINCT CASE WHEN d.Dept_name = 'CIVIL' THEN s.S_College_Email END) AS CIVIL,
+        COUNT(DISTINCT CASE WHEN d.Dept_name = 'MECH' THEN s.S_College_Email END) AS MECH,
+        COUNT(DISTINCT CASE WHEN d.Dept_name = 'ETC' THEN s.S_College_Email END) AS ETC,
+        COUNT(DISTINCT CASE WHEN d.Dept_name = 'COMP' THEN s.S_College_Email END) AS COMP
+FROM
+    student AS s
+INNER JOIN 
+    jobapplication AS ja ON ja.S_College_Email = s.S_College_Email
+INNER JOIN 
+    class AS c ON c.Class_id = s.S_Class_id
+INNER JOIN 
+    department AS d ON c.Dept_id = d.Dept_id
+INNER JOIN
+    jobplacements AS jp ON jp.J_id = ja.J_id
+WHERE
+    s.S_Year_of_Admission = '2021' AND ja.Interest = 1 AND jp.J_Due_date < CURDATE();", //dynamic job id ja.J_id required
     
-    "SELECT 
-        COUNT(CASE WHEN d.Dept_name = 'CIVIL' THEN 1 END) as CIVIL,
-        COUNT(CASE WHEN d.Dept_name = 'MECH' THEN 1 END) as MECH,
-        COUNT(CASE WHEN d.Dept_name = 'ETC' THEN 1 END) as ETC,
-        COUNT(CASE WHEN d.Dept_name = 'COMP' THEN 1 END) as COMP
-    FROM 
-        student as s 
-    INNER JOIN 
-        jobapplication as ja ON ja.S_College_Email = s.S_College_Email
-    INNER JOIN 
-        class as c ON c.Class_id = s.S_Class_id
-    INNER JOIN 
-        department as d ON c.Dept_id = d.Dept_id
-    WHERE
-    s.S_Year_of_Admission = '2021' AND ja.J_id = 1 AND ja.Interest = 0;",
+    "SELECT
+        COUNT(DISTINCT CASE WHEN d.Dept_name = 'CIVIL' THEN s.S_College_Email END) AS CIVIL,
+        COUNT(DISTINCT CASE WHEN d.Dept_name = 'MECH' THEN s.S_College_Email END) AS MECH,
+        COUNT(DISTINCT CASE WHEN d.Dept_name = 'ETC' THEN s.S_College_Email END) AS ETC,
+        COUNT(DISTINCT CASE WHEN d.Dept_name = 'COMP' THEN s.S_College_Email END) AS COMP
+FROM
+    student AS s
+INNER JOIN 
+    jobapplication AS ja ON ja.S_College_Email = s.S_College_Email
+INNER JOIN 
+    class AS c ON c.Class_id = s.S_Class_id
+INNER JOIN 
+    department AS d ON c.Dept_id = d.Dept_id
+INNER JOIN
+    jobplacements AS jp ON jp.J_id = ja.J_id
+WHERE
+    s.S_Year_of_Admission = '2021' AND ja.Interest = 1 AND jp.J_Due_date > CURDATE();",
     
-    "SELECT 
+    "SELECT
+        COUNT(DISTINCT CASE WHEN d.Dept_name = 'CIVIL' THEN s.S_College_Email END) AS CIVIL,
+        COUNT(DISTINCT CASE WHEN d.Dept_name = 'MECH' THEN s.S_College_Email END) AS MECH,
+        COUNT(DISTINCT CASE WHEN d.Dept_name = 'ETC' THEN s.S_College_Email END) AS ETC,
+        COUNT(DISTINCT CASE WHEN d.Dept_name = 'COMP' THEN s.S_College_Email END) AS COMP
+FROM
+    student AS s
+INNER JOIN 
+    jobapplication AS ja ON ja.S_College_Email = s.S_College_Email
+INNER JOIN 
+    class AS c ON c.Class_id = s.S_Class_id
+INNER JOIN 
+    department AS d ON c.Dept_id = d.Dept_id
+INNER JOIN
+    jobplacements AS jp ON jp.J_id = ja.J_id
+WHERE
+    s.S_Year_of_Admission = '2021' AND ja.Interest = 0 AND jp.J_Due_date > CURDATE();",
+
+"SELECT
+        COUNT(DISTINCT CASE WHEN d.Dept_name = 'CIVIL' THEN s.S_College_Email END) AS CIVIL,
+        COUNT(DISTINCT CASE WHEN d.Dept_name = 'MECH' THEN s.S_College_Email END) AS MECH,
+        COUNT(DISTINCT CASE WHEN d.Dept_name = 'ETC' THEN s.S_College_Email END) AS ETC,
+        COUNT(DISTINCT CASE WHEN d.Dept_name = 'COMP' THEN s.S_College_Email END) AS COMP
+FROM
+    student AS s
+INNER JOIN 
+    jobapplication AS ja ON ja.S_College_Email = s.S_College_Email
+INNER JOIN 
+    class AS c ON c.Class_id = s.S_Class_id
+INNER JOIN 
+    department AS d ON c.Dept_id = d.Dept_id
+INNER JOIN
+    jobplacements AS jp ON jp.J_id = ja.J_id
+WHERE
+    s.S_Year_of_Admission = '2021' AND ja.placed = 1 AND jp.J_Due_date < CURRENT_DATE();;",
+    
+    "SELECT
+        ROW_NUMBER() OVER (ORDER BY jp.Job_Post_Date) AS 'Sr No',
+        c.C_Name AS 'Company Name',
+        c.C_Location AS Location,
+        jp.Job_Post_Date AS 'Interview Date',
         COUNT(CASE WHEN d.Dept_name = 'CIVIL' THEN 1 END) as CIVIL,
         COUNT(CASE WHEN d.Dept_name = 'MECH' THEN 1 END) as MECH,
         COUNT(CASE WHEN d.Dept_name = 'ETC' THEN 1 END) as ETC,
-        COUNT(CASE WHEN d.Dept_name = 'COMP' THEN 1 END) as COMP
-    FROM 
-        student as s 
-    INNER JOIN 
-        jobapplication as ja ON ja.S_College_Email = s.S_College_Email
-    INNER JOIN 
-        class as c ON c.Class_id = s.S_Class_id
-    INNER JOIN 
-        department as d ON c.Dept_id = d.Dept_id
-    WHERE
-    s.S_Year_of_Admission = '2021' AND ja.J_id = 0;",
-    "WITH AggregatedPlacements AS (
-    SELECT
-        c.C_Name AS company_name,
-        c.C_Location AS location,
-        jp.Job_Post_Date AS interview_date,
-        d.Dept_Name AS dept_name,
-        COUNT(DISTINCT ja.S_College_Email) AS students_count,
-        jo.J_Offered_salary AS offered_salary
+        COUNT(CASE WHEN d.Dept_name = 'COMP' THEN 1 END) as COMP,
+        COUNT(*) as Total,
+        jo.J_Offered_salary AS 'Offered Salary'
     FROM
         company AS c
     INNER JOIN
@@ -173,85 +201,11 @@ INNER JOIN
         class AS cl ON cl.Class_id = s.S_Class_id
     INNER JOIN
         department AS d ON cl.Dept_id = d.Dept_id
-    WHERE ja.placed = 1 AND jp.Job_Post_Date BETWEEN '2024-01-01' AND '2024-12-31'
-    GROUP BY
-        c.C_Name, c.C_Location, jp.Job_Post_Date, jo.J_Offered_salary, d.Dept_Name
-)
-
-, DepartmentList AS (
-    SELECT DISTINCT Dept_Name
-    FROM department
-)
-
-, JobPostings AS (
-    SELECT DISTINCT
-        jp.J_id AS job_id,
-        c.C_Name AS company_name,
-        c.C_Location AS location,
-        jp.Job_Post_Date AS interview_date,
-        jo.J_Offered_salary AS offered_salary
-    FROM
-        jobposting AS jp
-    LEFT JOIN
-        company AS c ON c.C_id = jp.C_id
-    LEFT JOIN
-        jobplacements AS jo ON jo.J_id = jp.J_id
-)
-
-, JobDepartmentCross AS (
-    SELECT
-        jp.company_name,
-        jp.location,
-        jp.interview_date,
-        jp.offered_salary,
-        d.Dept_Name AS dept_name
-    FROM
-        JobPostings jp
-    CROSS JOIN
-        DepartmentList d
-)
-
-, DepartmentAggregates AS (
-    SELECT
-        j.company_name,
-        j.location,
-        j.interview_date,
-        j.offered_salary,
-        COALESCE(SUM(CASE WHEN j.dept_name = 'CIVIL' THEN ap.students_count ELSE 0 END), 0) AS CIVIL,
-        COALESCE(SUM(CASE WHEN j.dept_name = 'MECH' THEN ap.students_count ELSE 0 END), 0) AS MECH,
-        COALESCE(SUM(CASE WHEN j.dept_name = 'ETC' THEN ap.students_count ELSE 0 END), 0) AS ETC,
-        COALESCE(SUM(CASE WHEN j.dept_name = 'COMP' THEN ap.students_count ELSE 0 END), 0) AS COMP,
-        COALESCE(SUM(ap.students_count), 0) AS Total
-    FROM
-        JobDepartmentCross j
-    LEFT JOIN
-        AggregatedPlacements ap ON j.company_name = ap.company_name
-                              AND j.interview_date = ap.interview_date
-                              AND j.dept_name = ap.dept_name
-    GROUP BY
-        j.company_name, j.location, j.interview_date, j.offered_salary
-)
-
-SELECT
-    ROW_NUMBER() OVER (ORDER BY da.company_name, da.interview_date) AS Sr_No,
-    da.company_name AS 'Company Name',
-    da.location AS 'Location',
-    da.interview_date AS 'Interview Date',
-    COALESCE(da.CIVIL, 0) AS CIVIL,
-    COALESCE(da.MECH, 0) AS MECH,
-    COALESCE(da.ETC, 0) AS ETC,
-    COALESCE(da.COMP, 0) AS COMP,
-    COALESCE(da.Total, 0) AS Total,
-    COALESCE(da.offered_salary, 0) AS 'Salary Package in LPA (Lakhs per annum)'
-FROM
-    DepartmentAggregates da
-ORDER BY
-    da.company_name, da.interview_date;
-"
+    WHERE ja.placed = 1 AND jp.Job_Post_Date BETWEEN '2024-01-01' AND '2024-12-31'"
 ];
 
 // Specify starting rows for each query
-$startRows = [9, 10, 11, 12, 18]; // Starting row numbers for each query
+$startRows = [9, 10, 11, 12, 13,  18]; // Starting row numbers for each query
 
 foreach ($queries as $index => $sql) {
     $result = $conn->query($sql);
@@ -272,7 +226,7 @@ foreach ($queries as $index => $sql) {
         $endRow = $startRows[$index] + $numRows - 1; // Calculate the end row
 
         // Define the range dynamically based on the number of rows
-        if ($index == 4) { // Special handling for the 5th query
+        if ($index == 5) { // Special handling for the 5th query
             $range = 'batch2025!A' . $startRows[$index] . ':Z' . $endRow;
         } else {
             $range = 'batch2025!E' . $startRows[$index] . ':H' . $endRow;
@@ -280,7 +234,7 @@ foreach ($queries as $index => $sql) {
 
         // Clear the specified range before updating the Google Sheet with the current query's data
         try {
-            $clearRange = $index == 4 ? 'batch2025!A' . $startRows[$index] . ':Z' . ($startRows[$index] + 999) : 'batch2025!E' . $startRows[$index] . ':H' . ($startRows[$index] + 999);
+            $clearRange = $index == 5 ? 'batch2025!A' . $startRows[$index]-1 . ':Z' . ($startRows[$index] + 999) : 'batch2025!E' . $startRows[$index] . ':H13';
             $clearResponse = $service->spreadsheets_values->clear($spreadsheetId, $clearRange, new \Google_Service_Sheets_ClearValuesRequest());
 
             $body = new Sheets\ValueRange([

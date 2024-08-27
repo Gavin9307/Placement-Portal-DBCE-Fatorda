@@ -16,6 +16,10 @@ if (!isset($_GET["jid"])) {
 if (isset($_POST["getreport-button"])) {
     $jobId = intval($_GET["jid"]);
 
+    // Initialize questionTexts and caseStatements as empty arrays
+    $questionTexts = [];
+    $caseStatements = [];
+
     // Fetch the list of questions for the job
     $questionsQuery = "
         SELECT q.Question_ID, q.Question_Text
@@ -30,80 +34,86 @@ if (isset($_POST["getreport-button"])) {
         echo "Error fetching questions: " . $conn->error;
         exit();
     }
-
-    $caseStatements = [];
-    $questionTexts = [];
     
     while ($row = $questionsResult->fetch_assoc()) {
-        $questionText = $row['Question_Text'];
+        $questionText = mysqli_real_escape_string($conn, $row['Question_Text']);
         $caseStatements[] = "MAX(CASE WHEN q.Question_Text = '$questionText' THEN sr.Response_Text END) AS `$questionText`";
-        $questionTexts[] = $questionText;
+        $questionTexts[] = $questionText;  // Add question text to the array
     }
 
     $caseStatementList = implode(", ", $caseStatements);
 
-    // Construct the final SQL query
+    // Construct the base SQL query
     $sql = "
         SELECT 
-    s.S_Year_of_Admission + 4 AS Batch, 
-    s.S_College_Email AS 'College Email', 
-    s.S_Personal_Email AS 'Personal Email',
-    s.S_Fname AS 'First Name', 
-    s.S_Mname AS 'Middle Name', 
-    s.S_Lname AS 'Last Name', 
-    d.Dept_name AS 'Department',
-    CASE 
-        WHEN r.Sem1_SGPA = 0 THEN 'NA' 
-        ELSE r.Sem1_SGPA 
-    END AS 'SEM 1 SGPA',
-    CASE 
-        WHEN r.Sem2_SGPA = 0 THEN 'NA' 
-        ELSE r.Sem2_SGPA 
-    END AS 'SEM 2 SGPA',
-    CASE 
-        WHEN r.Sem3_SGPA = 0 THEN 'NA' 
-        ELSE r.Sem3_SGPA 
-    END AS 'SEM 3 SGPA',
-    CASE 
-        WHEN r.Sem4_SGPA = 0 THEN 'NA' 
-        ELSE r.Sem4_SGPA 
-    END AS 'SEM 4 SGPA',
-    CASE 
-        WHEN r.Sem5_SGPA = 0 THEN 'NA' 
-        ELSE r.Sem5_SGPA 
-    END AS 'SEM 5 SGPA',
-    CASE 
-        WHEN r.Sem6_SGPA = 0 THEN 'NA' 
-        ELSE r.Sem6_SGPA 
-    END AS 'SEM 6 SGPA',
-    CASE 
-        WHEN r.Sem7_SGPA = 0 THEN 'NA' 
-        ELSE r.Sem7_SGPA 
-    END AS 'SEM 7 SGPA',
-    CASE 
-        WHEN r.Sem8_SGPA = 0 THEN 'NA' 
-        ELSE r.Sem8_SGPA 
-    END AS 'SEM 8 SGPA',
-    r.CGPA AS 'CGPA',
-    s.S_Resume AS 'Resume',
-    $caseStatementList
-FROM student AS s
-INNER JOIN result as r on r.S_College_Email = s.S_College_Email
-INNER JOIN jobapplication AS ja ON s.S_College_Email = ja.S_College_Email
-INNER JOIN class AS c ON c.Class_id = s.S_Class_id
-INNER JOIN department AS d ON d.Dept_id = c.Dept_id
-INNER JOIN jobplacements AS jp ON jp.J_id = ja.J_id
-INNER JOIN studentresponses AS sr ON sr.Student_Email = s.S_College_Email 
-    AND sr.Job_ID = ja.J_id
-INNER JOIN jobquestions AS jq ON jq.Job_ID = ja.J_id 
-    AND jq.Question_ID = sr.Question_ID
-INNER JOIN questions AS q ON q.Question_ID = jq.Question_ID
-WHERE ja.J_id = $jobId 
-  AND ja.Interest = 1
-GROUP BY s.S_Year_of_Admission, s.S_College_Email, s.S_Personal_Email, 
-         s.S_Fname, s.S_Mname, s.S_Lname, d.Dept_name;
-
+            s.S_Year_of_Admission + 4 AS Batch, 
+            s.S_College_Email AS 'College Email', 
+            s.S_Personal_Email AS 'Personal Email',
+            s.S_Fname AS 'First Name', 
+            s.S_Mname AS 'Middle Name', 
+            s.S_Lname AS 'Last Name', 
+            d.Dept_name AS 'Department',
+            CASE 
+                WHEN r.Sem1_SGPA = 0 THEN 'NA' 
+                ELSE r.Sem1_SGPA 
+            END AS 'SEM 1 SGPA',
+            CASE 
+                WHEN r.Sem2_SGPA = 0 THEN 'NA' 
+                ELSE r.Sem2_SGPA 
+            END AS 'SEM 2 SGPA',
+            CASE 
+                WHEN r.Sem3_SGPA = 0 THEN 'NA' 
+                ELSE r.Sem3_SGPA 
+            END AS 'SEM 3 SGPA',
+            CASE 
+                WHEN r.Sem4_SGPA = 0 THEN 'NA' 
+                ELSE r.Sem4_SGPA 
+            END AS 'SEM 4 SGPA',
+            CASE 
+                WHEN r.Sem5_SGPA = 0 THEN 'NA' 
+                ELSE r.Sem5_SGPA 
+            END AS 'SEM 5 SGPA',
+            CASE 
+                WHEN r.Sem6_SGPA = 0 THEN 'NA' 
+                ELSE r.Sem6_SGPA 
+            END AS 'SEM 6 SGPA',
+            CASE 
+                WHEN r.Sem7_SGPA = 0 THEN 'NA' 
+                ELSE r.Sem7_SGPA 
+            END AS 'SEM 7 SGPA',
+            CASE 
+                WHEN r.Sem8_SGPA = 0 THEN 'NA' 
+                ELSE r.Sem8_SGPA 
+            END AS 'SEM 8 SGPA',
+            r.CGPA AS 'CGPA',
+            s.S_Resume AS 'Resume'
+            " . (!empty($caseStatementList) ? ", $caseStatementList" : "") . "
+        FROM 
+            student AS s
+        INNER JOIN result as r on r.S_College_Email = s.S_College_Email
+        INNER JOIN jobapplication AS ja ON s.S_College_Email = ja.S_College_Email
+        INNER JOIN class AS c ON c.Class_id = s.S_Class_id
+        INNER JOIN department AS d ON d.Dept_id = c.Dept_id
+        " . (!empty($caseStatementList) ? "
+        INNER JOIN studentresponses AS sr ON sr.Student_Email = s.S_College_Email 
+            AND sr.Job_ID = ja.J_id
+        INNER JOIN jobquestions AS jq ON jq.Job_ID = ja.J_id 
+            AND jq.Question_ID = sr.Question_ID
+        INNER JOIN questions AS q ON q.Question_ID = jq.Question_ID
+        " : "") . "
+        WHERE ja.J_id = $jobId 
+          AND ja.Interest = 1
+        GROUP BY 
+            s.S_Year_of_Admission, 
+            s.S_College_Email, 
+            s.S_Personal_Email, 
+            s.S_Fname, 
+            s.S_Mname, 
+            s.S_Lname, 
+            d.Dept_name;
     ";
+
+    echo $sql;
 
     $result = $conn->query($sql);
     $spreadsheetId = '1fGnnbnpsG2Ep1brwKAGLwqVPpWybbwuBBK9j8Sxuc64'; 

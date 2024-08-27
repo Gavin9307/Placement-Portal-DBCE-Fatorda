@@ -241,15 +241,14 @@ if (isset($_POST["get-report-students"])) {
                         <p><strong>Total Number of students who were Eligible</strong>: <?php echo $Eligible['count']; ?></p>
                         <p><strong>Total Number of students who Applied</strong>: <?php echo $Interested['count']; ?></p>
                         <p><strong>Total Number of students Placed</strong>: <?php echo $Placed['count']; ?></p>
-                        <p><strong>Total Number of students Rejected</strong>: <?php echo $Rejected['count']; ?></p>
+                        <p><strong>Total Number of students Not Placed</strong>: <?php echo $Rejected['count']; ?></p>
                         <canvas id="myPieChart"></canvas>
-                        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
                         <script>
                             const ctx = document.getElementById('myPieChart').getContext('2d');
                             const myPieChart = new Chart(ctx, {
                                 type: 'pie',
                                 data: {
-                                    labels: ['Placed', 'Rejected'],
+                                    labels: ['Placed', 'Not Placed'],
                                     datasets: [{
                                         data: [<?php echo $was_passed_json; ?>, <?php echo $was_not_passed_json; ?>],
                                         backgroundColor: ['#FF6384', '#36A2EB'],

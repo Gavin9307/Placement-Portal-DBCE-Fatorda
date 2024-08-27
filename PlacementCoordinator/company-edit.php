@@ -86,6 +86,7 @@ if (isset($_POST["update-company"])) {
                 <div class="main-container-header">
                     <h2 class="main-container-heading"><a href="./company.php"><i class="fa-solid fa-arrow-left fa-lg" style="color: #000000;"></i></a>
                         Edit Company</h2>
+                        <button class="delete-button">Delete</button>
                 </div>
                 <div class="sections">
                     <form action="" method="post" enctype="multipart/form-data">

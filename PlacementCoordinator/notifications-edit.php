@@ -7,7 +7,8 @@ global $conn;
 if (!isset($_SESSION)) {
     session_start();
 }
-
+// 0-pending  1-error  2-success
+$addError = 0 ;
 if (!isset($_GET["nid"])) {
     header("Location: ./notifications.php");
     exit();
@@ -148,7 +149,53 @@ if (isset($_POST["update-button"])) {
 
         <?php include './footer.php'; ?>
     </div>
+    <!-- Modals -->
+    <div id="error" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <p>There was an Error while updating the Notification</p>
+        </div>
+    </div>
 
+    <div id="successful" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <p>The notification has been updated  successfully</p>
+        </div>
+    </div>
+    <script>
+        // Get the modals
+        var errorModal = document.getElementById("error");
+        var successfulModal = document.getElementById("successful");
+
+        // Get the <span> elements that close the modals
+        var closeButtons = document.getElementsByClassName("close");
+
+        // Close the modal when the user clicks on <span> (x)
+        for (var i = 0; i < closeButtons.length; i++) {
+            closeButtons[i].onclick = function() {
+                errorModal.style.display = "none";
+                successfulModal.style.display = "none";
+            }
+        }
+
+        // Close the modal when the user clicks anywhere outside of the modal
+        window.onclick = function(event) {
+            if (event.target == errorModal) {
+                errorModal.style.display = "none";
+            } 
+            else if (event.target == successfulModal) {
+                successfulModal.style.display = "none";
+            }
+        }
+
+        // Trigger the appropriate modal based on PHP variable
+        <?php if ($addError == 1) : ?>
+            errorModal.style.display = "block";
+        <?php elseif ($addError == 2) : ?>
+            successfulModal.style.display = "block";
+        <?php endif; ?>
+    </script>
 </body>
 
 </html>

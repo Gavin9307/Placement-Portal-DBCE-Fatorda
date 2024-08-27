@@ -6,7 +6,8 @@ global $conn;
 if (!isset($_SESSION)) {
     session_start();
 }
-
+// 0-pending 1-error 2-success 3-no match
+$addError = 0;
 
 if (isset($_POST["subject"])) {
     $pcEmail = $_SESSION['user_email'];
@@ -98,16 +99,20 @@ if (isset($_POST["subject"])) {
                  }
  
                 //  echo "Student notifications successfully inserted.";
+                $addError = 2;
              } else {
                 //  echo "No students matched the criteria.";
+                $addError = 3;
              }
         } else {
             // echo "Error updating notification with attachments: " . $notiUpdate->error;
+            $addError = 1;
         }
 
         $notiUpdate->close();
     } else {
         // echo "Error inserting notification: " . $notiInsert->error;
+        $addError = 1;
     }
     $notiInsert->close();
 
@@ -220,6 +225,66 @@ if (isset($_POST["subject"])) {
 
         <?php include './footer.php' ?>
     </div>
+    <!-- Modals -->
+    <div id="error" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <p>There was an Error while posting the Notification</p>
+        </div>
+    </div>
+
+    <div id="no-match" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <p>No students matched the criteria</p>
+        </div>
+    </div>
+
+    <div id="successful" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <p>The notification has been sent successfully</p>
+        </div>
+    </div>
+    <script>
+        // Get the modals
+        var errorModal = document.getElementById("error");
+        var nomatchModal = document.getElementById("no-match");
+        var successfulModal = document.getElementById("successful");
+
+        // Get the <span> elements that close the modals
+        var closeButtons = document.getElementsByClassName("close");
+
+        // Close the modal when the user clicks on <span> (x)
+        for (var i = 0; i < closeButtons.length; i++) {
+            closeButtons[i].onclick = function() {
+                errorModal.style.display = "none";
+                nomatchModal.style.display = "none";
+                successfulModal.style.display = "none";
+            }
+        }
+
+        // Close the modal when the user clicks anywhere outside of the modal
+        window.onclick = function(event) {
+            if (event.target == errorModal) {
+                errorModal.style.display = "none";
+            } else if (event.target == notmatchModal) {
+                nomatchModal.style.display = "none";
+            }
+            else if (event.target == successfulModal) {
+                successfulModal.style.display = "none";
+            }
+        }
+
+        // Trigger the appropriate modal based on PHP variable
+        <?php if ($addError == 1) : ?>
+            errorModal.style.display = "block";
+        <?php elseif ($addError == 2) : ?>
+            successfulModal.style.display = "block";
+            <?php elseif ($addError == 3) : ?>
+                nomatchModal.style.display = "block";
+        <?php endif; ?>
+    </script>
 
 </body>
 

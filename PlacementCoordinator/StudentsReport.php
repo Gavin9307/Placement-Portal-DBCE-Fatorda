@@ -1,7 +1,7 @@
 <?php
 
 // Include the Composer autoloader
-require __DIR__ . './GoogleSheetsReports/vendor/autoload.php';
+require __DIR__ . '/GoogleSheetsReports/vendor/autoload.php';
 
 use Google\Client;
 use Google\Service\Sheets;
@@ -12,13 +12,13 @@ use Google\Service\Drive\DriveFile;
 $client = new Client();
 $client->setApplicationName('XAMPP to Google Sheets');
 $client->setScopes([Sheets::SPREADSHEETS, Sheets::DRIVE]);
-$client->setAuthConfig('D:/STEPHEN/Downloads/client_secret_230758258420-13mvvjsanoatlbc2o97b5p5u8509rjp7.apps.googleusercontent.com.json');
+$client->setAuthConfig(__DIR__ . '/client_secret.json');
 $client->setAccessType('offline');
 $client->setPrompt('select_account consent');
 $client->setRedirectUri('http://localhost:8080/'); // or your redirect URI
 
 // Load previously authorized credentials from a file.
-$tokenPath = './GoogleSheetsReports/token.json';
+$tokenPath = __DIR__ . '/GoogleSheetsReports/token.json';
 if (file_exists($tokenPath)) {
     $accessToken = json_decode(file_get_contents($tokenPath), true);
     $client->setAccessToken($accessToken);
@@ -89,7 +89,31 @@ if ($conn->connect_error) {
 }
 
 // SQL query
-$sql = $_GET["sql"]; // Replace with your table name
+$sql = "SELECT
+    COALESCE(CONCAT_WS(' ',s.S_Fname,s.S_Mname,s.S_Lname), 'NA') AS 'Student Name',
+    COALESCE(cl.Class_name, 'NA') AS 'Class',
+    COALESCE(d.Dept_name, 'NA') AS 'Department',
+    COALESCE(c.C_Name, 'NA') AS 'Company Name',
+    COALESCE(jo.J_Offered_salary, 'NA') AS 'Offered Salary',
+    COALESCE(jo.J_Due_date, 'NA') AS 'Joining Date'
+FROM 
+    student AS s
+INNER JOIN 
+    class AS cl ON s.S_Class_id = cl.Class_id
+INNER JOIN 
+    department AS d ON cl.Dept_id = d.Dept_id
+INNER JOIN 
+    jobapplication AS ja ON s.S_College_Email = ja.S_College_Email
+INNER JOIN 
+    jobplacements AS jo ON ja.J_id = jo.J_id
+INNER JOIN 
+    jobposting AS jp ON jo.J_id = jp.J_id
+INNER JOIN 
+    company AS c ON jp.C_id = c.C_id
+WHERE 
+    ja.placed = 1
+ORDER BY 
+    cl.Class_name;"; // Replace with your table name
 $result = $conn->query($sql);
 
 // Prepare data for Google Sheets as array
@@ -112,7 +136,7 @@ while ($row = $result->fetch_assoc()) {
 }
 
 $spreadsheetId = '1wS7cTnPvG7zB5z2of8AsV-jDNu_E0coXZXER_iIxzS0'; 
-$range = 'students details!A7:Z'; 
+$range = 'students details!B6:Z'; 
 
 // Specify the folder ID where the sheet should be stored
 $folderId = '1tVGQyQh872_UiuXQMqjlHwp_-9bNMQfq'; 
@@ -144,7 +168,7 @@ $body = new Sheets\ValueRange([
     'values' => $data
 ]);
 $params = [
-    'valueInputOption' => 'RAW' //parsing
+    'valueInputOption' => 'USER_ENTERED' //parsing
 ];
 
 // Updating  the sheet with new data
@@ -157,16 +181,4 @@ try {
 
 $conn->close();
 
-
-
-
-// Condition for redirection
-$shouldRedirect = true;
-
-if ($shouldRedirect) {
-    //returning to orignal page
-   header("Location: /Placement-Portal-DBCE-Fatorda/PlacementCoordinator/analysis-and-report-yearly.php");
-
-    exit();
-}
 ?>

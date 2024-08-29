@@ -52,8 +52,14 @@
                     $checkStmt->fetch();
 
                     $newPassword = generatePassword();
-                    $body = "Hello,\n\nYour password has been reset successfully. Here is your new password:\n\n$newPassword\n\nFor security reasons, we recommend that you change this password after logging in.\n\nThank you,\nDBCE Placement";
-                    $subject = "Password Reset";
+                    $body = "Hello,\n\n"
+                        . "Your password has been successfully reset. Below, you will find your new password:\n\n"
+                        . "New Password:\n"
+                        . "$newPassword\n\n"
+                        . "For your security, we recommend that you change this password after logging in.\n\n"
+                        . "DBCE Placement";
+
+                    $subject = "Password Reset Confirmation";
                     if (sendMail($dbEmail, $subject,$body)){
                         $hashedPassword = password_hash($newPassword, PASSWORD_DEFAULT);
                         $updateQuery = "UPDATE $Table SET $Password = ? WHERE $Email = ?";
@@ -115,8 +121,12 @@
                         <h1>Oops!</h1>
                         <h1>Forgot Password ?</h1>
                         <div class="inputbox">
-                            <label for="acctype">Account Type</label><br>
-                            <input name="usertype" type="text" placeholder="Student" required>
+                            <label for="usertype">Sign in as</label><br>
+                            <select name="usertype" id="usertype">
+                                <option value="stu">Student</option>
+                                <option value="tpo">TPO</option>
+                                <!-- <option value="pc">Placement Coordinator</option> -->
+                            </select>
                         </div>
                         <div class="inputbox">
                             <label for="email">Email</label><br>

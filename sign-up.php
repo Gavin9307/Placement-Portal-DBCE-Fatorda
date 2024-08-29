@@ -104,11 +104,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_GET["add_student"])) {
 
                         <label for="password">Password</label><br>
                         <input name="password" class="user-input" placeholder="password" type="password" id="password" required><br><br>
-
-                        <div class="checkbox-container">
-                            <input type="checkbox" name="remember_me" id="remember-me">
-                            <label for="remember-me">Remember me</label>
-                        </div><br>
                     
                         <button type="submit">Sign up</button>
 

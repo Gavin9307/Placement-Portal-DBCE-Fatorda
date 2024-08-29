@@ -21,7 +21,7 @@
             $mail->SMTPSecure = "ssl";
             $mail->Port = 465;
 
-            $mail->setFrom("araujofid5@gmail.com", "Your Name"); // Set your name here
+            $mail->setFrom("araujofid5@gmail.com", "DBCE Placement - Password Reset"); // Set your name here
             $mail->addAddress($receiver);
 
             $mail->isHTML(true);

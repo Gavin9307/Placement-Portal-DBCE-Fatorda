@@ -61,6 +61,7 @@
 .section-container {
     display:flex;
     flex-direction:row;
+    flex-wrap:wrap;
     justify-content: space-evenly;
 }
 
@@ -68,20 +69,7 @@
     width: 50%;
     margin: 0 auto;
 }
-.datebox {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-top: 20px;
-    margin-bottom: 20px;
-}
-.datebox input {
-    border: 1px solid var(--secondary-grey);
-    padding: 10px;
-    border-radius: 5px;
-    margin-top: 5px;
-    outline: none;  
-}
+
 .batch-container {
     display: flex;
     justify-content: space-between;

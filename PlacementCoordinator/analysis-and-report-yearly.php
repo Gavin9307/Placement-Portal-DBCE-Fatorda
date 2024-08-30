@@ -34,6 +34,10 @@ $result_not_placed = $conn->query($sql_not_placed);
 $not_placed_count = ($result_not_placed->num_rows > 0) ? $result_not_placed->fetch_assoc()['count'] : 0;
 
 
+// Assuming the email is stored in the session
+$student_email = $_SESSION['user_email'];
+
+$report_Query = "SELECT  CONCAT_WS(' ', s.S_Fname, s.S_Mname, s.S_Lname) AS `Name`,d.Dept_name AS `Department`,  com.C_Name AS `Company`,  IFNULL(j.J_Offered_salary, 0) AS `Offered Salary`, j.J_Due_date AS `Joining Date`, com.C_Location AS `Location`, s.S_Year_of_Admission + 4 AS `Batch` FROM student AS s INNER JOIN class AS c ON c.Class_id = s.S_Class_id INNER JOIN  department AS d ON d.Dept_id = c.Dept_id INNER JOIN jobapplication AS ja ON ja.S_College_Email = s.S_College_Email INNER JOIN jobplacements AS j ON j.J_id = ja.J_id INNER JOIN jobposting AS jp ON jp.J_id = j.J_id INNER JOIN company AS com ON com.C_id = jp.C_id WHERE ja.placed = 1 AND j.J_Due_date < CURRENT_DATE";
 
 
 if (isset($_POST["get-report-students"])) {
@@ -50,8 +54,8 @@ if (isset($_POST["get-report-students"])) {
     }
 
     // Specify the spreadsheet ID and range
-    $spreadsheetId = '1tV0U_6Lxomb-tT6ruU9eX2veKjht5-0W84xSh9AvZvU';
-    $range = 'Sheet1!A5:Z'; // Adjust range as needed to cover all possible cells
+    $spreadsheetId = '1wS7cTnPvG7zB5z2of8AsV-jDNu_E0coXZXER_iIxzS0';
+    $range = 'students_details!B7:Z'; // Adjust range as needed to cover all possible cells
 
     // Clear the existing content in the range
     try {
@@ -78,7 +82,7 @@ if (isset($_POST["get-report-students"])) {
         exit();
     }
 
-    header("Location: https://docs.google.com/spreadsheets/d/1fGnnbnpsG2Ep1brwKAGLwqVPpWybbwuBBK9j8Sxuc64");
+    header("Location: https://docs.google.com/spreadsheets/d/1wS7cTnPvG7zB5z2of8AsV-jDNu_E0coXZXER_iIxzS0");
     exit();
 }
 
@@ -201,24 +205,24 @@ if (isset($_POST["get-report-students"])) {
                             var salaryBarChart = new Chart(cta, {
                                 type: 'bar', // Specify the chart type as bar
                                 data: {
-                                    labels: ['COMP', 'MECH', 'ECS' ,'CIVIL'], // X-axis labels (e.g., company names)
+                                    labels: ['COMP', 'MECH', 'ECS', 'CIVIL'], // X-axis labels (e.g., company names)
                                     datasets: [{
                                             label: 'Highest Salary', // Label for the highest salary dataset
-                                            data: [90000, 75000, 82000,60000], // Data for the highest salaries
+                                            data: [90000, 75000, 82000, 60000], // Data for the highest salaries
                                             backgroundColor: 'rgba(54, 162, 235, 0.7)', // Color for the highest salary bars
                                             borderColor: 'rgba(54, 162, 235, 1)', // Border color for the highest salary bars
                                             borderWidth: 1
                                         },
                                         {
                                             label: 'Lowest Salary', // Label for the lowest salary dataset
-                                            data: [50000, 42000, 45000,20000], // Data for the lowest salaries
+                                            data: [50000, 42000, 45000, 20000], // Data for the lowest salaries
                                             backgroundColor: 'rgba(255, 99, 132, 0.7)', // Color for the lowest salary bars
                                             borderColor: 'rgba(255, 99, 132, 1)', // Border color for the lowest salary bars
                                             borderWidth: 1
                                         },
                                         {
                                             label: 'Average Salary', // Label for the average salary dataset
-                                            data: [70000, 60000, 65000,40000], // Data for the average salaries
+                                            data: [70000, 60000, 65000, 40000], // Data for the average salaries
                                             backgroundColor: 'rgba(255, 206, 86, 0.7)', // Color for the average salary bars
                                             borderColor: 'rgba(255, 206, 86, 1)', // Border color for the average salary bars
                                             borderWidth: 1
@@ -334,12 +338,12 @@ if (isset($_POST["get-report-students"])) {
                                     <option value="">One Shield</option>
                                 </select>
                             </div>
-                            
+
                             <button name="get-filter-report" class="add-button">Get Report</button>
                         </form>
                     </div>
                     <div class="section-1">
-                        
+
                     </div>
 
                 </div>
@@ -394,11 +398,6 @@ if (isset($_POST["get-report-students"])) {
                                 <input type="text" value="<?php echo urlencode($report_Query); ?>" name="query" hidden>
                                 <button name="get-report-students" class="download-button">Get report</button>
                             </form>
-                            <div class="dropdown-content">
-                                <a href="https://docs.google.com/spreadsheets/d/1wS7cTnPvG7zB5z2of8AsV-jDNu_E0coXZXER_iIxzS0/export?format=csv&id=1wS7cTnPvG7zB5z2of8AsV-jDNu_E0coXZXER_iIxzS0">Download as CSV</a>
-                                <a href="https://docs.google.com/spreadsheets/d/1wS7cTnPvG7zB5z2of8AsV-jDNu_E0coXZXER_iIxzS0/export?format=pdf&id=1wS7cTnPvG7zB5z2of8AsV-jDNu_E0coXZXER_iIxzS0">Download as PDF</a>
-                                <a href="https://docs.google.com/spreadsheets/d/1wS7cTnPvG7zB5z2of8AsV-jDNu_E0coXZXER_iIxzS0/export?format=xlsx&id=1wS7cTnPvG7zB5z2of8AsV-jDNu_E0coXZXER_iIxzS0">Download as Excel</a>
-                            </div>
                         </div>
                     </div>
                 </div>

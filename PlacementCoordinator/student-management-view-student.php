@@ -119,6 +119,27 @@ if (isset($_POST["upload_pic"])) {
         // echo "File upload error: " . $_FILES['profile_pic']['error'];
     }
 }
+
+if (isset($_GET["remove"]) && isset($_GET["semail"])) {
+    $deleteQuery = "DELETE FROM student WHERE S_College_Email = ?";
+
+    if ($delete = $conn->prepare($deleteQuery)) {
+        $delete->bind_param("s", $_GET["semail"]);
+        
+        if ($delete->execute()) { 
+            echo "Delete success";
+            header("Location: ./student-management-search-students.php");
+            exit();
+        } else {
+            echo "Delete failed: " . $delete->error; 
+        }
+
+        $delete->close();
+    } else {
+        echo "Delete failed: " . $conn->error; 
+    }
+}
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -138,7 +159,9 @@ if (isset($_POST["upload_pic"])) {
                 <div class="main-header">
                 <h2 class="main-container-heading"><a href="#" onclick="window.history.back(); return false;"><i class="fa-solid fa-arrow-left fa-lg" style="color: #000000;"></i></a>
                     Student Profile : </h2>
-                    <button class="delete-button">Delete</button>
+                    <a href="#" onclick="confirmDeletion('<?php echo $_GET['semail']; ?>')">
+                        <button class="delete-button">Delete Student</button>
+                    </a>
                     </div>
                 <?php
                 echo '
@@ -295,6 +318,15 @@ if (isset($_POST["upload_pic"])) {
             </div>
         </div>
     </div>
+
+    <script>
+        function confirmDeletion(semail) {
+    const confirmation = confirm("Are you sure you want to delete this student?");
+    if (confirmation) {
+        window.location.href = "./student-management-view-student.php?semail=" + semail + "&remove=1";
+    }
+}
+    </script>
 </body>
 
 </html>

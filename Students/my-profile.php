@@ -60,6 +60,19 @@ if (isset($_POST["update_profile"])) {
     $_POST["resume"] = empty($_POST["resume"])?"":'=HYPERLINK("'.$_POST["resume"].'","Resume")';
     $_POST["marksheet_10"] = empty($_POST["marksheet_10"])?"":'=HYPERLINK("'.$_POST["marksheet_10"].'","10th Marksheet")';
     $_POST["marksheet_12"] = empty($_POST["marksheet_12"])?"":'=HYPERLINK("'.$_POST["marksheet_12"].'","12th Marksheet")';
+
+    $_POST["newpass"] = empty($_POST["newpass"]) ? "" : $_POST["newpass"];
+    if (!empty($_POST["newpass"])) {
+        $hashPassword = password_hash($_POST["newpass"], PASSWORD_BCRYPT);
+        $updateQuery = "UPDATE student AS s
+        SET s.S_Password = ?
+        WHERE s.S_College_Email=?";
+    
+    $result = $conn->prepare($updateQuery);
+    $result->bind_param("ss",$hashPassword,$_SESSION["user_email"]);
+    $result->execute();
+    }
+
     $updateQuery = "UPDATE student as s SET s.S_Fname = ?,s.S_Mname = ?,s.S_Lname = ?,s.S_Personal_Email = ?,s.S_Address = ?,s.S_Phone_no = ?,s.S_10th_Perc = ?,s.S_12th_Perc = ?,s.S_Resume = ?,s.S_10th_Marksheet = ?,s.S_12th_Marksheet = ?
     WHERE s.S_College_Email = ?";
     $result = $conn->prepare($updateQuery);
@@ -154,7 +167,7 @@ if (isset($_POST["upload_pic"])) {
                 </form>';
                 ?>
                 <div class="sections">
-                    <form action="./my-profile.php" method="post">
+                    <form action="./my-profile.php" method="post" onclick="return validatePassword()">
                         <h3>Personal Information:</h3>
                         <?php
                         echo '<div class="form-adjust">
@@ -275,18 +288,18 @@ if (isset($_POST["upload_pic"])) {
                         </div>';
                         ?>
 
-                        <h3>Change Password:</h3>
+                        <h3>Change Password:</h3> <span style="color: red;" id="error"></span>
 
                         <?php
-                        echo '<div class="form-adjust">
+                        echo '<div class="form-adjust" style="margin-bottom:50px">
                             <div>
                                 <label for="newpass">New Password</label><br>
-                                <input type="password" name="newpass">
+                                <input type="password" id="newpass" name="newpass">
                             </div>
 
                             <div>
                                 <label for="newpassconfirm">Confirm Password</label><br>
-                                <input type="password" name="newpassconfirm">
+                                <input type="password" id="newpassconfirm" name="newpassconfirm">
                             </div>
                         </div>
 
@@ -369,6 +382,27 @@ if (isset($_POST["upload_pic"])) {
         </div>
     </div>
     <script>
+        function validatePassword() {
+            const password = document.getElementById('newpass').value;
+            const confirmPassword = document.getElementById('newpassconfirm').value;
+            const errorSpan = document.getElementById('error');
+            if(password.length == 0) {
+                return true;
+            }
+            if (password.length < 8) {
+                errorSpan.textContent = "Password must be at least 8 characters long.";
+                return false; // Prevent form submission
+            }
+
+            if (password !== confirmPassword) {
+                errorSpan.textContent = "Passwords do not match.";
+                return false; // Prevent form submission
+            }
+
+            errorSpan.textContent = ""; // Clear error message if validation passes
+            return true; // Allow form submission
+        }
+
         // Get the modal
         var modal = document.getElementById("myModal");
 

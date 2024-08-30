@@ -173,6 +173,7 @@ if (isset($_POST["get-report-students"])) {
                                     }]
                                 },
                                 options: {
+                                    maintainAspectRatio: false, // Prevents aspect ratio from shrinking the chart
                                     responsive: true,
                                     plugins: {
                                         legend: {

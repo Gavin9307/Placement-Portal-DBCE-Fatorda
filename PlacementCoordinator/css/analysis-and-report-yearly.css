@@ -64,6 +64,16 @@
     flex-wrap:wrap;
     justify-content: space-evenly;
 }
+.sections-1 {
+    width: 40%; 
+    min-width: 300px; 
+    margin-bottom: 20px; 
+    flex: 1 1 auto; 
+}
+canvas {
+    width: 100% !important; /* Force the canvas to take up the full width of the parent */
+    height: auto !important; /* Let the height adjust automatically */
+}
 
 .form-adjust {
     width: 50%;
@@ -145,9 +155,7 @@
     outline: none;  
 }
 
-.sections-1 {
-    width: 400px;
-}
+    
 
 .responsive-iframe {
     width: 100%;

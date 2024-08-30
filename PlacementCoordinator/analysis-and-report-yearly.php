@@ -241,7 +241,8 @@ if (isset($_POST["get-report-students"])) {
                     </div>
                     <div class="sections-1">
                         <canvas id="myDoubleBarChart"></canvas>
-                        <script>
+                        <script> 
+                        
                             // Get the canvas element by its ID
                             var cty = document.getElementById('myDoubleBarChart').getContext('2d');
 

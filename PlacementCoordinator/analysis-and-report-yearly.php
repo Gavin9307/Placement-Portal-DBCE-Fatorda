@@ -338,7 +338,6 @@ if (isset($_POST["get-report-students"])) {
                                     <option value="">One Shield</option>
                                 </select>
                             </div>
-
                             <button name="get-filter-report" class="add-button">Get Report</button>
                         </form>
                     </div>

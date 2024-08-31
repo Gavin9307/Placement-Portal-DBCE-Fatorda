@@ -39,7 +39,19 @@ $student_email = $_SESSION['user_email'];
 
 $report_Query = "SELECT  CONCAT_WS(' ', s.S_Fname, s.S_Mname, s.S_Lname) AS `Name`,d.Dept_name AS `Department`,  com.C_Name AS `Company`,  IFNULL(j.J_Offered_salary, 0) AS `Offered Salary`, j.J_Due_date AS `Joining Date`, com.C_Location AS `Location`, s.S_Year_of_Admission + 4 AS `Batch` FROM student AS s INNER JOIN class AS c ON c.Class_id = s.S_Class_id INNER JOIN  department AS d ON d.Dept_id = c.Dept_id INNER JOIN jobapplication AS ja ON ja.S_College_Email = s.S_College_Email INNER JOIN jobplacements AS j ON j.J_id = ja.J_id INNER JOIN jobposting AS jp ON jp.J_id = j.J_id INNER JOIN company AS com ON com.C_id = jp.C_id WHERE ja.placed = 1 AND j.J_Due_date < CURRENT_DATE";
 
+if (isset($_POST["get-filter-report"])) {
+    // Apply filters if set
+    if (!empty($_POST['d_batch_year'])) {
+        $batch_year = (int)$_POST['d_batch_year'] - 4;
+        $report_Query .= " AND s.S_Year_of_Admission = '$batch_year'";
+    }
 
+    if (!empty($_POST['departments'])) {
+        $departments = $_POST['departments'];
+        $departmentList = implode("','", array_map('htmlspecialchars', $departments));
+        $report_Query .= " AND d.Dept_name IN ('$departmentList')";
+    }
+}
 if (isset($_POST["get-report-students"])) {
     $sql = urldecode($_POST['query']);
     echo "<pre>" . htmlspecialchars($sql) . "</pre>";

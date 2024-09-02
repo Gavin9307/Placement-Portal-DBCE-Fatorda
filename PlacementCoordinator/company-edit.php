@@ -64,6 +64,21 @@ if (isset($_POST["update-company"])) {
     header("Location: ./company-edit.php?cid=" . $cid);
     exit();
 }
+
+if (isset($_GET["cid"]) && isset($_GET["deleteCompany"])){
+    $cid = (int)$_GET["cid"];
+    $deleteQuery = "DELETE FROM company
+    WHERE company.C_id=?";
+    $delete= $conn->prepare($deleteQuery);
+    $delete->bind_param("i",$cid);
+    if ($delete->execute()){
+        header("Location: ./company.php");
+        exit();
+    }
+    else {
+        echo "Delete Unsuccessfull";
+    }
+}
 ?>
 
 <!DOCTYPE html>
@@ -86,7 +101,19 @@ if (isset($_POST["update-company"])) {
                 <div class="main-container-header">
                     <h2 class="main-container-heading"><a href="./company.php"><i class="fa-solid fa-arrow-left fa-lg" style="color: #000000;"></i></a>
                         Edit Company</h2>
-                        <button class="delete-button">Delete</button>
+                        <a href="#" onclick="confirmCompanyDeletion('<?php echo $cid; ?>')">
+                            <button class="delete-button">Delete</button>
+                        </a>
+
+                        <script>
+                        function confirmCompanyDeletion(cid) {
+                            const confirmation = confirm("Are you sure you want to delete this company?\nWARNING: THIS WILL DELETE ENTIRE DATA ASSOCIATED THE COMPANY ie JOBS, STUDENT PLACED etc\n PROCEED WITH CAUTION!");
+                            if (confirmation) {
+                                window.location.href = "./company-edit.php?cid=" + cid + "&deleteCompany=1";
+                            }
+                        }
+                        </script>
+                       
                 </div>
                 <div class="sections">
                     <form action="" method="post" enctype="multipart/form-data">

@@ -7,6 +7,7 @@ use Google\Client;
 use Google\Service\Sheets;
 use Google\Service\Drive;
 use Google\Service\Calendar;
+use Google\Service\Drive\DriveFile;
 
 // Initialize the Google Client
 $client = new Client();

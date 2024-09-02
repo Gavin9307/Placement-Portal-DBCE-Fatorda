@@ -34,6 +34,92 @@ $result_not_placed = $conn->query($sql_not_placed);
 $not_placed_count = ($result_not_placed->num_rows > 0) ? $result_not_placed->fetch_assoc()['count'] : 0;
 
 
+// SQL query to get the count of placed female students
+$sqlFemale = "SELECT COUNT(DISTINCT s.S_College_Email) as count
+              FROM student as s
+              INNER JOIN jobapplication as ja ON ja.S_College_Email = s.S_College_Email
+              INNER JOIN jobplacements as jp ON jp.J_id = ja.J_id
+              INNER JOIN jobdepartments as jd ON jd.J_id = ja.J_id
+              INNER JOIN department as d ON jd.Dept_id = d.Dept_id
+              WHERE s.Gender ='F' AND ja.placed = 1 AND jp.J_Due_date < CURRENT_DATE";
+
+$resultFemale = $conn->query($sqlFemale);
+$femaleCount = 0; // Default value
+if ($resultFemale->num_rows > 0) {
+    $rowFemale = $resultFemale->fetch_assoc();
+    $femaleCount = $rowFemale['count'];
+}
+
+// SQL query to get the count of placed male students
+$sqlMale = "SELECT COUNT(DISTINCT s.S_College_Email) as count
+            FROM student as s
+            INNER JOIN jobapplication as ja ON ja.S_College_Email = s.S_College_Email
+            INNER JOIN jobplacements as jp ON jp.J_id = ja.J_id
+            INNER JOIN jobdepartments as jd ON jd.J_id = ja.J_id
+            INNER JOIN department as d ON jd.Dept_id = d.Dept_id
+            WHERE s.Gender ='M' AND ja.placed = 1 AND jp.J_Due_date < CURRENT_DATE";
+
+$resultMale = $conn->query($sqlMale);
+$maleCount = 0; // Default value
+if ($resultMale->num_rows > 0) {
+    $rowMale = $resultMale->fetch_assoc();
+    $maleCount = $rowMale['count'];
+}
+// SQL query to get the average, highest, and minimum salary
+$sqlSalaries = "SELECT 
+    AVG(subquery.J_Offered_salary) AS Average_Salary,
+    MAX(subquery.J_Offered_salary) AS Highest_Salary,
+    MIN(subquery.J_Offered_salary) AS Minimum_Salary
+FROM 
+    (SELECT DISTINCT jp.J_id, jp.J_Offered_salary
+     FROM jobplacements AS jp
+     INNER JOIN jobdepartments AS jd ON jd.J_id = jp.J_id
+     INNER JOIN department AS d ON d.Dept_id = jd.Dept_id) AS subquery";
+
+$resultSalaries = $conn->query($sqlSalaries);
+
+$averageSalary = $highestSalary = $minimumSalary = 0; // Default values
+
+if ($resultSalaries->num_rows > 0) {
+    $rowSalaries = $resultSalaries->fetch_assoc();
+    $averageSalary = $rowSalaries['Average_Salary'];
+    $highestSalary = $rowSalaries['Highest_Salary'];
+    $minimumSalary = $rowSalaries['Minimum_Salary'];
+}
+// SQL query to fetch salary data by department
+$sqlDepartments = "SELECT 
+    d.Dept_name AS Department,
+    AVG(jp.J_Offered_salary) AS Average_Salary,
+    MAX(jp.J_Offered_salary) AS Highest_Salary,
+    MIN(jp.J_Offered_salary) AS Minimum_Salary
+FROM 
+    jobplacements AS jp
+INNER JOIN 
+    jobdepartments AS jd ON jd.J_id = jp.J_id     
+INNER JOIN 
+    department AS d ON d.Dept_id = jd.Dept_id
+GROUP BY 
+    d.Dept_name";
+
+$resultDepartments = $conn->query($sqlDepartments);
+
+// Initialize arrays to store department names and salary data
+$departments = [];
+$highestSalaries = [];
+$lowestSalaries = [];
+$averageSalaries = [];
+
+// Fetch data and populate the arrays
+if ($resultDepartments->num_rows > 0) {
+    while ($row = $resultDepartments->fetch_assoc()) {
+        $departments[] = $row['Department'];
+        $highestSalaries[] = $row['Highest_Salary'];
+        $lowestSalaries[] = $row['Minimum_Salary'];
+        $averageSalaries[] = $row['Average_Salary'];
+    }
+}
+
+
 // Assuming the email is stored in the session
 $student_email = $_SESSION['user_email'];
 
@@ -193,57 +279,86 @@ if (isset($_POST["get-report-students"])) {
                     </div>
                     <div class="sections-1">
                         <p><strong>Total Offers </strong> 20</p>
-                        <p><strong>Highest Salary </strong> 2000000</p>
-                        <p><strong>Average Salary </strong> 150000</p>
-                        <p><strong>Lowest Salary </strong> 150000</p>
+                        <p><strong>Highest Salary: </strong><?php echo number_format($highestSalary); ?></p>
+                        <p><strong>Average Salary: </strong><?php echo number_format($averageSalary); ?></p>
+                        <p><strong>Lowest Salary: </strong><?php echo number_format($minimumSalary); ?></p>
 
-                        <canvas id="myBarChart"></canvas>
-                        <script>
-                            // Get the canvas element by its ID
-                            var cta = document.getElementById('myBarChart').getContext('2d');
 
-                            // Create a new Chart instance
-                            var salaryBarChart = new Chart(cta, {
-                                type: 'bar', // Specify the chart type as bar
-                                data: {
-                                    labels: ['COMP', 'MECH', 'ECS', 'CIVIL'], // X-axis labels (e.g., company names)
-                                    datasets: [{
-                                            label: 'Highest Salary', // Label for the highest salary dataset
-                                            data: [90000, 75000, 82000, 60000], // Data for the highest salaries
-                                            backgroundColor: 'rgba(54, 162, 235, 0.7)', // Color for the highest salary bars
-                                            borderColor: 'rgba(54, 162, 235, 1)', // Border color for the highest salary bars
-                                            borderWidth: 1
+                        <!DOCTYPE html>
+                        <html lang="en">
+
+                        <head>
+                            <meta charset="UTF-8">
+                            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                            <title>Department Salary Chart</title>
+                            <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+                        </head>
+
+                        <body>
+                            <canvas id="myBarChart"></canvas>
+                            <script>
+                                // Get the PHP arrays into JavaScript
+                                var departments = <?php echo json_encode($departments); ?>;
+                                var highestSalaries = <?php echo json_encode($highestSalaries); ?>;
+                                var lowestSalaries = <?php echo json_encode($lowestSalaries); ?>;
+                                var averageSalaries = <?php echo json_encode($averageSalaries); ?>;
+
+                                // Get the canvas element by its ID
+                                var cta = document.getElementById('myBarChart').getContext('2d');
+
+                                // Create a new Chart instance
+                                var salaryBarChart = new Chart(cta, {
+                                    type: 'bar', // Specify the chart type as bar
+                                    data: {
+                                        labels: departments, // X-axis labels from PHP
+                                        datasets: [{
+                                                label: 'Highest Salary', // Label for the highest salary dataset
+                                                data: highestSalaries, // Data for the highest salaries from PHP
+                                                backgroundColor: 'rgba(54, 162, 235, 0.7)', // Color for the highest salary bars
+                                                borderColor: 'rgba(54, 162, 235, 1)', // Border color for the highest salary bars
+                                                borderWidth: 1
+                                            },
+                                            {
+                                                label: 'Lowest Salary', // Label for the lowest salary dataset
+                                                data: lowestSalaries, // Data for the lowest salaries from PHP
+                                                backgroundColor: 'rgba(255, 99, 132, 0.7)', // Color for the lowest salary bars
+                                                borderColor: 'rgba(255, 99, 132, 1)', // Border color for the lowest salary bars
+                                                borderWidth: 1
+                                            },
+                                            {
+                                                label: 'Average Salary', // Label for the average salary dataset
+                                                data: averageSalaries, // Data for the average salaries from PHP
+                                                backgroundColor: 'rgba(255, 206, 86, 0.7)', // Color for the average salary bars
+                                                borderColor: 'rgba(255, 206, 86, 1)', // Border color for the average salary bars
+                                                borderWidth: 1
+                                            }
+                                        ]
+                                    },
+                                    options: {
+                                        responsive: true,
+                                        plugins: {
+                                            tooltip: {
+                                                enabled: true // Ensure tooltips are enabled
+                                            }
                                         },
-                                        {
-                                            label: 'Lowest Salary', // Label for the lowest salary dataset
-                                            data: [50000, 42000, 45000, 20000], // Data for the lowest salaries
-                                            backgroundColor: 'rgba(255, 99, 132, 0.7)', // Color for the lowest salary bars
-                                            borderColor: 'rgba(255, 99, 132, 1)', // Border color for the lowest salary bars
-                                            borderWidth: 1
-                                        },
-                                        {
-                                            label: 'Average Salary', // Label for the average salary dataset
-                                            data: [70000, 60000, 65000, 40000], // Data for the average salaries
-                                            backgroundColor: 'rgba(255, 206, 86, 0.7)', // Color for the average salary bars
-                                            borderColor: 'rgba(255, 206, 86, 1)', // Border color for the average salary bars
-                                            borderWidth: 1
-                                        }
-                                    ]
-                                },
-                                options: {
-                                    scales: {
-                                        y: {
-                                            beginAtZero: true // Start the y-axis at zero
+                                        scales: {
+                                            y: {
+                                                beginAtZero: true // Start the y-axis at zero
+                                            }
                                         }
                                     }
-                                }
-                            });
-                        </script>
+                                });
+                            </script>
+                        </body>
+
+                        </html>
+
+
+
                     </div>
                     <div class="sections-1">
                         <canvas id="myDoubleBarChart"></canvas>
-                        <script> 
-                        
+                        <script>
                             // Get the canvas element by its ID
                             var cty = document.getElementById('myDoubleBarChart').getContext('2d');
 
@@ -285,8 +400,12 @@ if (isset($_POST["get-report-students"])) {
 
                     </div>
                     <div class="sections-1">
-                        <canvas id="mySidebarChart" width="400" height="200"></canvas>
+                        <canvas id="mySidebarChart" style="width: 400px; height: 200px;"></canvas>
                         <script>
+                            // PHP variable integration
+                            var femaleCount = <?php echo $femaleCount; ?>; // Count for Girls
+                            var maleCount = <?php echo $maleCount; ?>; // Count for Boys
+
                             // Get the canvas element by its ID
                             var ctz = document.getElementById('mySidebarChart').getContext('2d');
 
@@ -297,7 +416,7 @@ if (isset($_POST["get-report-students"])) {
                                     labels: ['Girls', 'Boys'], // Y-axis labels
                                     datasets: [{
                                         label: 'Total Students Placed', // Label for the dataset
-                                        data: [12, 19], // Data for the dataset
+                                        data: [femaleCount, maleCount], // Use the fetched counts for Girls and Boys
                                         backgroundColor: [
                                             'rgba(255, 87, 51, 0.7)', // Color for Girls
                                             'rgba(51, 196, 255, 0.7)' // Color for Boys
@@ -313,17 +432,29 @@ if (isset($_POST["get-report-students"])) {
                                     maintainAspectRatio: false, // Prevents aspect ratio from shrinking the chart
                                     responsive: true,
                                     indexAxis: 'y', // Set the index axis to 'y' for a horizontal bar chart
+                                    plugins: {
+                                        title: {
+                                            display: false // Disable the chart title
+                                        },
+                                        tooltip: {
+                                            callbacks: {
+                                                label: function(tooltipItem) {
+                                                    return tooltipItem.dataset.label + ': ' + tooltipItem.raw;
+                                                }
+                                            }
+                                        }
+                                    },
                                     scales: {
                                         x: {
-                                            beginAtZero: true // Start the x-axis at zero
-                                        },
-                                        y: {
-                                            stacked: false // Keep bars side-by-side rather than stacked
+                                            beginAtZero: true, // Start the x-axis at zero
+
                                         }
                                     }
                                 }
                             });
                         </script>
+
+
 
 
                     </div>

@@ -112,8 +112,6 @@ if (isset($_POST["get-filter-report"])) {
         $sql_not_placed .= " AND s.S_Year_of_Admission = '$batch_year'";
         $sqlFemale .= " AND s.S_Year_of_Admission = '$batch_year'";
         $sqlMale .= " AND s.S_Year_of_Admission = '$batch_year'";
-        $sqlSalaries .= " AND s.S_Year_of_Admission = '$batch_year'";
-        $sqlDepartments .= " AND s.S_Year_of_Admission = '$batch_year' ";
         $sql_placed .= " AND s.S_Year_of_Admission = '$batch_year' ";
         $sql_registered .= " AND s.S_Year_of_Admission = '$batch_year' ";
     }

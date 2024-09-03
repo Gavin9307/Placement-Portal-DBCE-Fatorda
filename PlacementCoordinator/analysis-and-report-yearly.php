@@ -10,18 +10,14 @@ if (!isset($_SESSION)) {
 }
 
 // Query for "Placed" students
-$sql_placed = "SELECT COUNT(DISTINCT s.S_College_Email) as count
+$sql_placed21 = "SELECT COUNT(DISTINCT s.S_College_Email) as count
                FROM student as s
                INNER JOIN jobapplication as ja ON ja.S_College_Email = s.S_College_Email
                INNER JOIN jobplacements as jp ON jp.J_id = ja.J_id
                INNER JOIN jobdepartments as jd ON jd.J_id = ja.J_id
                INNER JOIN department as d ON jd.Dept_id = d.Dept_id
-               WHERE ja.placed = 1 AND jp.J_Due_date < CURRENT_DATE";
+               WHERE ja.placed = 1 AND jp.J_Due_date < CURRENT_DATE ";
 
-$result_placed = $conn->query($sql_placed);
-$placed_count = ($result_placed->num_rows > 0) ? $result_placed->fetch_assoc()['count'] : 0;
-
-// Query for "Not Placed" students
 $sql_not_placed = "SELECT COUNT(DISTINCT s.S_College_Email) as count
                    FROM student as s
                    INNER JOIN jobapplication as ja ON ja.S_College_Email = s.S_College_Email
@@ -30,11 +26,6 @@ $sql_not_placed = "SELECT COUNT(DISTINCT s.S_College_Email) as count
                    INNER JOIN department as d ON jd.Dept_id = d.Dept_id
                    WHERE ja.placed = 0 AND jp.J_Due_date < CURRENT_DATE";
 
-$result_not_placed = $conn->query($sql_not_placed);
-$not_placed_count = ($result_not_placed->num_rows > 0) ? $result_not_placed->fetch_assoc()['count'] : 0;
-
-
-// SQL query to get the count of placed female students
 $sqlFemale = "SELECT COUNT(DISTINCT s.S_College_Email) as count
               FROM student as s
               INNER JOIN jobapplication as ja ON ja.S_College_Email = s.S_College_Email
@@ -43,14 +34,6 @@ $sqlFemale = "SELECT COUNT(DISTINCT s.S_College_Email) as count
               INNER JOIN department as d ON jd.Dept_id = d.Dept_id
               WHERE s.Gender ='F' AND ja.placed = 1 AND jp.J_Due_date < CURRENT_DATE";
 
-$resultFemale = $conn->query($sqlFemale);
-$femaleCount = 0; // Default value
-if ($resultFemale->num_rows > 0) {
-    $rowFemale = $resultFemale->fetch_assoc();
-    $femaleCount = $rowFemale['count'];
-}
-
-// SQL query to get the count of placed male students
 $sqlMale = "SELECT COUNT(DISTINCT s.S_College_Email) as count
             FROM student as s
             INNER JOIN jobapplication as ja ON ja.S_College_Email = s.S_College_Email
@@ -59,13 +42,6 @@ $sqlMale = "SELECT COUNT(DISTINCT s.S_College_Email) as count
             INNER JOIN department as d ON jd.Dept_id = d.Dept_id
             WHERE s.Gender ='M' AND ja.placed = 1 AND jp.J_Due_date < CURRENT_DATE";
 
-$resultMale = $conn->query($sqlMale);
-$maleCount = 0; // Default value
-if ($resultMale->num_rows > 0) {
-    $rowMale = $resultMale->fetch_assoc();
-    $maleCount = $rowMale['count'];
-}
-// SQL query to get the average, highest, and minimum salary
 $sqlSalaries = "SELECT 
     AVG(subquery.J_Offered_salary) AS Average_Salary,
     MAX(subquery.J_Offered_salary) AS Highest_Salary,
@@ -74,19 +50,8 @@ FROM
     (SELECT DISTINCT jp.J_id, jp.J_Offered_salary
      FROM jobplacements AS jp
      INNER JOIN jobdepartments AS jd ON jd.J_id = jp.J_id
-     INNER JOIN department AS d ON d.Dept_id = jd.Dept_id) AS subquery";
+     INNER JOIN department AS d ON d.Dept_id = jd.Dept_id WHERE 1=1 ";
 
-$resultSalaries = $conn->query($sqlSalaries);
-
-$averageSalary = $highestSalary = $minimumSalary = 0; // Default values
-
-if ($resultSalaries->num_rows > 0) {
-    $rowSalaries = $resultSalaries->fetch_assoc();
-    $averageSalary = $rowSalaries['Average_Salary'];
-    $highestSalary = $rowSalaries['Highest_Salary'];
-    $minimumSalary = $rowSalaries['Minimum_Salary'];
-}
-// SQL query to fetch salary data by department
 $sqlDepartments = "SELECT 
     d.Dept_name AS Department,
     AVG(jp.J_Offered_salary) AS Average_Salary,
@@ -97,29 +62,8 @@ FROM
 INNER JOIN 
     jobdepartments AS jd ON jd.J_id = jp.J_id     
 INNER JOIN 
-    department AS d ON d.Dept_id = jd.Dept_id
-GROUP BY 
-    d.Dept_name";
+    department AS d ON d.Dept_id = jd.Dept_id";
 
-$resultDepartments = $conn->query($sqlDepartments);
-
-// Initialize arrays to store department names and salary data
-$departments = [];
-$highestSalaries = [];
-$lowestSalaries = [];
-$averageSalaries = [];
-
-// Fetch data and populate the arrays
-if ($resultDepartments->num_rows > 0) {
-    while ($row = $resultDepartments->fetch_assoc()) {
-        $departments[] = $row['Department'];
-        $highestSalaries[] = $row['Highest_Salary'];
-        $lowestSalaries[] = $row['Minimum_Salary'];
-        $averageSalaries[] = $row['Average_Salary'];
-    }
-}
-
-// Query to get total placed students
 $sql_placed = "
 SELECT 
     d.Dept_name AS Department,
@@ -135,21 +79,8 @@ JOIN
 JOIN 
     department d ON jd.Dept_id = d.Dept_id
 WHERE 
-    ja.placed = 1
-GROUP BY 
-    d.Dept_id
-";
+    ja.placed = 1";
 
-$result_placed = $conn->query($sql_placed);
-$placed_students = [];
-$departments = [];
-
-while ($row = $result_placed->fetch_assoc()) {
-    $departments[] = $row['Department'];
-    $placed_students[] = $row['Total_Placed_Students'];
-}
-
-// Query to get total registered students
 $sql_registered = "
 SELECT 
     d.Dept_name AS Department,
@@ -161,17 +92,9 @@ JOIN
 JOIN 
     department d ON c.Dept_id = d.Dept_id
 WHERE 
-    s.registration_complete = 1
-GROUP BY 
-    d.Dept_id
-";
+    s.registration_complete = 1";
 
-$result_registered = $conn->query($sql_registered);
-$registered_students = [];
 
-while ($row = $result_registered->fetch_assoc()) {
-    $registered_students[] = $row['Total_Registered_Students'];
-}
 
 
 
@@ -185,14 +108,42 @@ if (isset($_POST["get-filter-report"])) {
     if (!empty($_POST['d_batch_year'])) {
         $batch_year = (int)$_POST['d_batch_year'] - 4;
         $report_Query .= " AND s.S_Year_of_Admission = '$batch_year'";
+        $sql_placed21 .= " AND s.S_Year_of_Admission = '$batch_year'";
+        $sql_not_placed .= " AND s.S_Year_of_Admission = '$batch_year'";
+        $sqlFemale .= " AND s.S_Year_of_Admission = '$batch_year'";
+        $sqlMale .= " AND s.S_Year_of_Admission = '$batch_year'";
+        $sqlSalaries .= " AND s.S_Year_of_Admission = '$batch_year'";
+        $sqlDepartments .= " AND s.S_Year_of_Admission = '$batch_year' ";
+        $sql_placed .= " AND s.S_Year_of_Admission = '$batch_year' ";
+        $sql_registered .= " AND s.S_Year_of_Admission = '$batch_year' ";
     }
 
     if (!empty($_POST['departments'])) {
         $departments = $_POST['departments'];
         $departmentList = implode("','", array_map('htmlspecialchars', $departments));
         $report_Query .= " AND d.Dept_name IN ('$departmentList')";
+        $sql_placed21 .= " AND d.Dept_name IN ('$departmentList')";
+        $sql_not_placed .= " AND d.Dept_name IN ('$departmentList')";
+        $sqlFemale .= " AND d.Dept_name IN ('$departmentList')";
+        $sqlMale .= " AND d.Dept_name IN ('$departmentList')";
+        $sqlSalaries .= " AND d.Dept_name IN ('$departmentList')";
+        $sqlDepartments .= " AND d.Dept_name IN ('$departmentList')";
+        $sql_placed .= " AND d.Dept_name IN ('$departmentList')";
+        $sql_registered .= " AND d.Dept_name IN ('$departmentList')";
     }
+    $sqlDepartments .= " GROUP BY d.Dept_name";
+    $sql_placed .= " GROUP BY d.Dept_id";
+    $sql_registered .= " GROUP BY d.Dept_id";
+    $sqlSalaries .= " ) AS subquery";
 }
+else{
+    $sqlDepartments .= " GROUP BY d.Dept_name";
+    $sql_placed .= " GROUP BY d.Dept_id";
+    $sql_registered .= " GROUP BY d.Dept_id";
+    $sqlSalaries .= " ) AS subquery";
+}
+
+
 if (isset($_POST["get-report-students"])) {
     $sql = urldecode($_POST['query']);
     echo "<pre>" . htmlspecialchars($sql) . "</pre>";
@@ -237,6 +188,90 @@ if (isset($_POST["get-report-students"])) {
 
     header("Location: https://docs.google.com/spreadsheets/d/1wS7cTnPvG7zB5z2of8AsV-jDNu_E0coXZXER_iIxzS0");
     exit();
+}
+
+$result_placed = $conn->query($sql_placed21);
+$placed_count = ($result_placed->num_rows > 0) ? $result_placed->fetch_assoc()['count'] : 0;
+
+// Query for "Not Placed" students
+
+
+$result_not_placed = $conn->query($sql_not_placed);
+$not_placed_count = ($result_not_placed->num_rows > 0) ? $result_not_placed->fetch_assoc()['count'] : 0;
+
+
+// SQL query to get the count of placed female students
+
+
+$resultFemale = $conn->query($sqlFemale);
+$femaleCount = 0; // Default value
+if ($resultFemale->num_rows > 0) {
+    $rowFemale = $resultFemale->fetch_assoc();
+    $femaleCount = $rowFemale['count'];
+}
+
+// SQL query to get the count of placed male students
+
+
+$resultMale = $conn->query($sqlMale);
+$maleCount = 0; // Default value
+if ($resultMale->num_rows > 0) {
+    $rowMale = $resultMale->fetch_assoc();
+    $maleCount = $rowMale['count'];
+}
+// SQL query to get the average, highest, and minimum salary
+
+$resultSalaries = $conn->query($sqlSalaries);
+
+$averageSalary = $highestSalary = $minimumSalary = 0; // Default values
+
+if ($resultSalaries->num_rows > 0) {
+    $rowSalaries = $resultSalaries->fetch_assoc();
+    $averageSalary = $rowSalaries['Average_Salary'];
+    $highestSalary = $rowSalaries['Highest_Salary'];
+    $minimumSalary = $rowSalaries['Minimum_Salary'];
+}
+// SQL query to fetch salary data by department
+
+
+$resultDepartments = $conn->query($sqlDepartments);
+
+// Initialize arrays to store department names and salary data
+$departments = [];
+$highestSalaries = [];
+$lowestSalaries = [];
+$averageSalaries = [];
+
+// Fetch data and populate the arrays
+if ($resultDepartments->num_rows > 0) {
+    while ($row = $resultDepartments->fetch_assoc()) {
+        $departments[] = $row['Department'];
+        $highestSalaries[] = $row['Highest_Salary'];
+        $lowestSalaries[] = $row['Minimum_Salary'];
+        $averageSalaries[] = $row['Average_Salary'];
+    }
+}
+
+// Query to get total placed students
+
+
+$result_placed = $conn->query($sql_placed);
+$placed_students = [];
+$departments = [];
+
+while ($row = $result_placed->fetch_assoc()) {
+    $departments[] = $row['Department'];
+    $placed_students[] = $row['Total_Placed_Students'];
+}
+
+// Query to get total registered students
+
+
+$result_registered = $conn->query($sql_registered);
+$registered_students = [];
+
+while ($row = $result_registered->fetch_assoc()) {
+    $registered_students[] = $row['Total_Registered_Students'];
 }
 
 ?>
@@ -584,27 +619,6 @@ var mySidebarChart = new Chart(ctz, {
                     </div>
 
                 </div>
-                <h3>Company Reports:</h3>
-                <div class="sections section-container">
-                    <div class="form-adjust">
-                        <form action="" method="post">
-                            <div class="batch-container">
-                                <label for=""><strong>Company: </strong></label>
-                                <select name=" " id=" ">
-                                    <option value="" selected>Select Company</option>
-                                    <option value="">Bliss Company</option>
-                                    <option value="">IVP</option>
-                                    <option value="">One Shield</option>
-                                </select>
-                            </div>
-                            <button name="get-filter-report" class="add-button">Get Report</button>
-                        </form>
-                    </div>
-                    <div class="section-1">
-
-                    </div>
-
-                </div>
                 <div class="sortby-container">
                     <h3><strong>Student Details</strong></h3>
                     <!-- <div>
@@ -662,8 +676,6 @@ var mySidebarChart = new Chart(ctz, {
                 <h3>Other Reports:</h3>
                 <div class="button-container-2">
                     <a href="./analysis-and-report-company-report.php"><button class="add-button">Company Report</button></a>
-                    <a href="./notification-post.php"><button class="add-button">Student Report</button></a>
-                    <a href="./notification-post.php"><button class="add-button">Alumini Report</button></a>
                 </div>
             </div>
         </div>

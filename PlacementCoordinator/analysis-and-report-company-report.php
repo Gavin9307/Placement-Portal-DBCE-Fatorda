@@ -265,9 +265,8 @@ foreach ($queries as $index => $sql) {
     }
 }
 
-
-    header("Location: https://docs.google.com/spreadsheets/d/1-WaAX--E--eWShVlqYrjqdwGs1IGzJCjk7Z8eXQ1OGo");
-    exit();
+header("Location: https://docs.google.com/spreadsheets/d/1-WaAX--E--eWShVlqYrjqdwGs1IGzJCjk7Z8eXQ1OGo");
+exit();
 }
 
 ?>

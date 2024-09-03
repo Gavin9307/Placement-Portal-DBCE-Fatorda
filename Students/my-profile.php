@@ -380,6 +380,7 @@ if (isset($_POST["upload_pic"])) {
                 </div>
             </div>
         </div>
+        <?php include './footer.php' ?>
     </div>
     <script>
         function validatePassword() {

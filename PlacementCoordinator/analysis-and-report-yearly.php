@@ -291,9 +291,9 @@ if (isset($_POST["get-report-students"])) {
                     </div>
                     <div class="sections-1">
                         <p><strong>Total Offers </strong> 20</p>
-                        <p><strong>Highest Salary: </strong><?php echo number_format($highestSalary); ?></p>
-                        <p><strong>Average Salary: </strong><?php echo number_format($averageSalary); ?></p>
-                        <p><strong>Lowest Salary: </strong><?php echo number_format($minimumSalary); ?></p>
+                        <p><strong>Highest Salary: </strong><?php echo $highestSalary; ?></p>
+                        <p><strong>Average Salary: </strong><?php echo $averageSalary; ?></p>
+                        <p><strong>Lowest Salary: </strong><?php echo $minimumSalary; ?></p>
 
 
                         <!DOCTYPE html>

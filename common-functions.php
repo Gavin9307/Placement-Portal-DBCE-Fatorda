@@ -8,7 +8,7 @@
     require "./PHPMailer/src/PHPMailer.php";
     require "./PHPMailer/src/SMTP.php";
 
-    function sendMail($receiver, $subject, $body) {
+    function sendMail($receiver, $subject, $body,$name) {
         $mail = new PHPMailer(true);
         
         try {
@@ -21,7 +21,7 @@
             $mail->SMTPSecure = "ssl";
             $mail->Port = 465;
 
-            $mail->setFrom("araujofid5@gmail.com", "DBCE Placement - Password Reset"); // Set your name here
+            $mail->setFrom("araujofid5@gmail.com", $name); // Set your name here
             $mail->addAddress($receiver);
 
             $mail->isHTML(true);

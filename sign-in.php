@@ -91,15 +91,18 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_GET["login"])) {
                             $checkStmt->bind_param("s", $email);
                             $checkStmt->execute();
                             $result = $checkStmt->get_result();
-                            $row = $result->fetch_assoc();
+                            if ($result->num_rows>0){
+                                $row = $result->fetch_assoc();
 
-                            if($row["registration_complete"] == 0){
-                                header("Location: ./update-profile.php");
-                                exit();
+                                if($row["registration_complete"] == 0){
+                                    header("Location: ./update-profile.php");
+                                    exit();
+                                }
+                                else {
+                                    header("Location: ./Students/dashboard.php");
+                                }
                             }
-                            else {
-                                header("Location: ./Students/dashboard.php");
-                            }
+                            
                             break;
                         case "tpo":
                             header("Location: ./PlacementCoordinator/dashboard.php");

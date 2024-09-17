@@ -1,20 +1,15 @@
 <?php
 require "conn.php";
+require './common-functions.php';
 
 $email = "";
 $password = "";
 $error = "";
-$rememberMe = false;
 
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_GET["add_student"])) {
     global $conn;
     $email = htmlspecialchars($_POST["email"]);
-    $password = htmlspecialchars($_POST["password"]);
-    if (isset($_POST["remember_me"])) {
-        $rememberMe = true;
-    }
     $pattern = "/^[a-zA-Z0-9._%+-]+@dbcegoa.ac.in$/";
-
     if (empty($email)) {
         $error = "Email is required.";
     } else if (!preg_match($pattern, $email)) {
@@ -29,32 +24,25 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_GET["add_student"])) {
 
         if ($checkStmt->num_rows > 0) {
             $error = "Email already registered, please login.";
-        } else if (empty($password)) {
-            $error = "Password is required.";
-        } else if (strlen($password) < 8) {
-            $error = "Password must be at least 8 characters long.";
-        } else {
-            $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
-            $insertQuery = "INSERT INTO student (S_College_Email, S_Password) VALUES (?, ?)";
-            $insertStmt = $conn->prepare($insertQuery);
-            $insertStmt->bind_param("ss", $email, $hashedPassword);
+        }
+        else {
+            $otp = rand(100000, 999999);
+            $otp_expiration = time() + (10 * 60);
 
-            if ($insertStmt->execute()) {
+            $insertOtpQuery = "INSERT INTO otp_table (email, otp, otp_expiration) VALUES (?, ?, ?)";
+            $insertStmt = $conn->prepare($insertOtpQuery);
+            $insertStmt->bind_param("sii", $email, $otp, $otp_expiration);
+            $insertStmt->execute();
 
-                if (!isset($_SESSION)){
-                    session_start();
-                }
-                $_SESSION['user_email'] = $email;
-                $_SESSION['user_type'] = $usertype;
-                
-                if ($rememberMe) {
-                    setcookie("user_email", $email, time() + (86400 * 30), "/"); // 30 days
-                    setcookie("user_type", $usertype, time() + (86400 * 30), "/"); 
-                }
-                header("Location: ./sign-in.php");
+            $subject = "Your OTP Code";
+            $body = "Your OTP code is <strong>$otp</strong>. It is valid for 10 minutes.";
+            $name = "DBCE Placement - Sign Up OTP";
+            if (sendMail($email, $subject, $body,$name)) {
+                $message = "OTP has been sent to your email address.";
+                header("Location: sign-up-otp-validate.php?semail=" . $email);
                 exit();
             } else {
-                $error = "Registration failed, please try again.";
+                $error = "Failed to send OTP. Please try again.";
             }
         }
     }
@@ -101,11 +89,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_GET["add_student"])) {
                     <form action="./sign-up.php?add_student" method="post">
                         <label for="email">Email</label><br>
                         <input name="email" class="user-input" placeholder="example@dbcegoa.ac.in" type="email" id="email" value="<?php echo htmlspecialchars($email); ?>" required><br><br>
-
-                        <label for="password">Password</label><br>
-                        <input name="password" class="user-input" placeholder="password" type="password" id="password" required><br><br>
-                    
-                        <button type="submit">Sign up</button>
+                        
+                        <button type="submit">Generate OTP</button>
 
                         <?php if (!empty($error)): ?>
                             <div style="color: red; font-size: small; text-align:center; margin-top:10px"><?php echo $error; ?></div><br>

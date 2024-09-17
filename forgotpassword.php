@@ -60,7 +60,8 @@
                         . "DBCE Placement";
 
                     $subject = "Password Reset Confirmation";
-                    if (sendMail($dbEmail, $subject,$body)){
+                    $name = "DBCE Placement - Password Reset";
+                    if (sendMail($dbEmail, $subject,$body,$name)){
                         $hashedPassword = password_hash($newPassword, PASSWORD_DEFAULT);
                         $updateQuery = "UPDATE $Table SET $Password = ? WHERE $Email = ?";
                         $stmt = $conn->prepare($updateQuery);

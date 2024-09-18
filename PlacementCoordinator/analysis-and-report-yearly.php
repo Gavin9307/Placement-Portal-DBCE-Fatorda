@@ -1,6 +1,7 @@
 <?php
 require "../conn.php";
 require "../restrict.php";
+require "../restrict_student.php";
 include "./tpo-utility-functions.php";
 include "./report-utility.php";
 global $conn;

@@ -6,7 +6,8 @@ if (!isset($_SESSION)) {
 <?php
 
 require "../conn.php";
-
+require "../restrict.php";
+require "../restrict_student.php";
 function get_companies()
 {
     global $conn;

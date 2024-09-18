@@ -1,6 +1,7 @@
 <?php
 require "../conn.php";
 require "../restrict.php";
+require "../restrict_student.php";
 include "../utility_functions.php";
 global $conn;
 if (!isset($_SESSION)) {

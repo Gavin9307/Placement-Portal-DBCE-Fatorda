@@ -33,6 +33,7 @@ if (isset($_SESSION["user_type"]) && isset($_SESSION["user_email"])) {
         $StudentClass = htmlspecialchars($StudentInfo['class']);
         $StudentDepartment = htmlspecialchars($StudentInfo['department']);
         $StudentYOA = htmlspecialchars($StudentInfo['yoa']);
+        $Batch = $StudentYOA+4;
         $StudentImage = htmlspecialchars($StudentInfo['image']);
         $StudentRollNo = htmlspecialchars($StudentInfo['rollno']);
         $StudentPhoneNo = htmlspecialchars($StudentInfo['phoneno']);
@@ -60,7 +61,7 @@ if (isset($_POST["update_profile"])) {
     $_POST["resume"] = empty($_POST["resume"])?"":'=HYPERLINK("'.$_POST["resume"].'","Resume")';
     $_POST["marksheet_10"] = empty($_POST["marksheet_10"])?"":'=HYPERLINK("'.$_POST["marksheet_10"].'","10th Marksheet")';
     $_POST["marksheet_12"] = empty($_POST["marksheet_12"])?"":'=HYPERLINK("'.$_POST["marksheet_12"].'","12th Marksheet")';
-
+    $yoa = $_POST["yoa"]-4;
     $_POST["newpass"] = empty($_POST["newpass"]) ? "" : $_POST["newpass"];
     if (!empty($_POST["newpass"])) {
         $hashPassword = password_hash($_POST["newpass"], PASSWORD_BCRYPT);
@@ -73,10 +74,10 @@ if (isset($_POST["update_profile"])) {
     $result->execute();
     }
 
-    $updateQuery = "UPDATE student as s SET s.S_Fname = ?,s.S_Mname = ?,s.S_Lname = ?,s.S_Personal_Email = ?,s.S_Address = ?,s.S_Phone_no = ?,s.S_10th_Perc = ?,s.S_12th_Perc = ?,s.S_Resume = ?,s.S_10th_Marksheet = ?,s.S_12th_Marksheet = ?
+    $updateQuery = "UPDATE student as s SET s.S_Fname = ?,s.S_Mname = ?,s.S_Lname = ?,s.S_Personal_Email = ?,s.S_Address = ?,s.S_Phone_no = ?,s.S_10th_Perc = ?,s.S_12th_Perc = ?,s.S_Resume = ?,s.S_10th_Marksheet = ?,s.S_12th_Marksheet = ?,s.S_Year_of_Admission = ?
     WHERE s.S_College_Email = ?";
     $result = $conn->prepare($updateQuery);
-    $result->bind_param("ssssssddssss", $_POST["fname"], $_POST["mname"], $_POST["lname"], $_POST["pemail"], $_POST["addr"], $_POST["phno"], $_POST["per10"], $_POST["per12"],$_POST["resume"],$_POST["marksheet_10"],$_POST["marksheet_12"], $_SESSION["user_email"]);
+    $result->bind_param("ssssssddsssis", $_POST["fname"], $_POST["mname"], $_POST["lname"], $_POST["pemail"], $_POST["addr"], $_POST["phno"], $_POST["per10"], $_POST["per12"],$_POST["resume"],$_POST["marksheet_10"],$_POST["marksheet_12"],$yoa ,$_SESSION["user_email"]);
     $result->execute();
 
     $updateResultQuery = "UPDATE result as r 
@@ -167,27 +168,27 @@ if (isset($_POST["upload_pic"])) {
                 </form>';
                 ?>
                 <div class="sections">
-                    <form action="./my-profile.php" method="post" onclick="return validatePassword()">
+                    <form action="./my-profile.php" method="post" onclick="return validateForm()">
                         <h3>Personal Information:</h3>
                         <?php
                         echo '<div class="form-adjust">
                             <div>
-                                <label for="fname">First Name</label><br>
+                                <label for="fname">First Name<span style="color: red;"><sup>*</sup><span/> <span style="color: red;" id="fname_error"></label><br>
                                 <input type="text" name="fname" value="' . $StudentFName . '">
                             </div>
                             <div>
-                                <label for="mname">Middle Name</label><br>
+                                <label for="mname">Middle Name <span style="color: red;" id="mname_error"></label><br>
                                 <input type="text" name="mname" value="' . $StudentMName . '">
                             </div>
                             <div>
-                                <label for="lname">Last Name</label><br>
+                                <label for="lname">Last Name <span style="color: red;" id="lname_error"></label><br>
                                 <input type="text" name="lname" value="' . $StudentLName . '">
                             </div>
                         </div>
                         <div class="form-adjust">
                             <div>
-                                <label for="phno">Contact No</label><br>
-                                <input type="text" name="phno" value="' . $StudentPhoneNo . '">
+                                <label for="phno">Contact No<span style="color: red;"><sup>*</sup><span/> <span style="color: red;" id="phno_error"></label><br>
+                                <input type="text" name="phno" value="' . $StudentPhoneNo . '"required>
                             </div>
                             <div>
                                 <label for="addr">Address</label><br>
@@ -195,7 +196,7 @@ if (isset($_POST["upload_pic"])) {
                             </div>
                             <div>
                                 <label for="pemail">Personal Email</label><br>
-                                <input type="text" name="pemail" value="' . $StudentPEmail . '">
+                                <input type="email" name="pemail" value="' . $StudentPEmail . '">
                             </div>
                         </div>';
                         ?>
@@ -206,39 +207,44 @@ if (isset($_POST["upload_pic"])) {
                         echo '<div class="form-adjust">
                             <div>
                                 <label for="cemail">College Email</label><br>
-                                <input type="text" name="cemail" value="' . $StudentCEmail . '">
+                                <input type="text" disabled name="cemail" value="' . $StudentCEmail . '">
                             </div>
                             <div>
-                                <label for="prn">PR No.</label><br>
-                                <input type="text" name="prn" value="' . $StudentPRN . '">
+                                <label for="prn">PR No. <span style="color: red;" id="prn_error"></label><br>
+                                <input type="text" disabled name="prn" value="' . $StudentPRN . '">
                             </div>
 
                             <div>
-                                <label for="rollno">Roll No.</label><br>
-                                <input type="text" name="rollno" value="' . $StudentRollNo . '">
+                                <label for="rollno">Roll No. <span style="color: red;" id="rollno_error"></label><br>
+                                <input type="text" disabled name="rollno" value="' . $StudentRollNo . '">
                             </div>
                         </div>
                         <div class="form-adjust">
                             <div>
                                 <label for="class">Class</label><br>
-                                <input type="text" name="class" value="' . $StudentClass . '">
+                                <input type="text" name="class" disabled value="' . $StudentClass . '">
                             </div>
 
                             <div>
                                 <label for="department">Department</label><br>
-                                <input type="text" name="department" value="' . $StudentDepartment . '">
+                                <input type="text" name="department" disabled value="' . $StudentDepartment . '">
+                            </div>
+
+                            <div>
+                                <label for="batch">Batch<span style="color: red;"><sup>*</sup><span/></label><br>
+                                <input type="number" name="yoa" min="2020" max="2040" step="1" value="' . $Batch . '" required/>
                             </div>
                         </div>
                         <h3>Other Information:</h3>
                         <div class="form-adjust">
                             <div>
-                                <label for="per10">10th Percentage</label><br>
-                                <input type="number" name="per10" step="0.01" min="0" max="100" value="' .$StudentPercentage_10. '">
+                                <label for="per10">10th Percentage<span style="color: red;"><sup>*</sup><span/> <span style="color: red;" id="per10_error"></label><br>
+                                <input type="number" name="per10" step="0.01" min="0" max="100" value="' .$StudentPercentage_10. '"required>
                             </div>
 
                             <div>
-                                <label for="per12">12th Percentage</label><br>
-                                <input type="number" name="per12" step="0.01" min="0" max="100" value="' . $StudentPercentage_12 . '">
+                                <label for="per12">12th Percentage<span style="color: red;"><sup>*</sup><span/> <span style="color: red;" id="per12_error"></label><br>
+                                <input type="number" name="per12" step="0.01" min="0" max="100" value="' . $StudentPercentage_12 . '"required>
                             </div>
                         </div>';
                         
@@ -271,29 +277,30 @@ if (isset($_POST["upload_pic"])) {
                         
                         // Displaying the input fields
                         echo '<div class="form-adjust">
+                            
                             <div>
-                                <label for="resume">Resume (PDF Link)</label><br>
+                                <label for="resume">Resume (PDF Link) <span style="color: red;" id="url_error"></label><br>
                                 <input type="text" name="resume" value="' . htmlspecialchars($resume) . '">
                             </div>
                         
                             <div>
-                                <label for="marksheet_10">10th Marksheet (PDF Link)</label><br>
+                                <label for="marksheet_10">10th Marksheet (PDF Link) <span style="color: red;" id="marksheet_10_error"></label><br>
                                 <input type="text" name="marksheet_10" value="' . htmlspecialchars($marks10) . '">
                             </div>
                         
                             <div>
-                                <label for="marksheet_12">12th Marksheet / Diploma (PDF Link)</label><br>
+                                <label for="marksheet_12">12th Marksheet / Diploma (PDF Link) <span style="color: red;" id="marksheet_12_error"></label><br>
                                 <input type="text" name="marksheet_12" value="' . htmlspecialchars($marks12) . '">
                             </div>
                         </div>';
                         ?>
 
-                        <h3>Change Password:</h3> <span style="color: red;" id="error"></span>
+                        <h3>Change Password:</h3></span>
 
                         <?php
                         echo '<div class="form-adjust" style="margin-bottom:50px">
                             <div>
-                                <label for="newpass">New Password</label><br>
+                                <label for="newpass">New Password <span style="color: red;" id="error"></label><br>
                                 <input type="password" id="newpass" name="newpass">
                             </div>
 
@@ -346,8 +353,8 @@ if (isset($_POST["upload_pic"])) {
                         </div>
                         <div class="form-adjust cgpa">
                             <div>
-                                <label for="cgpa">CGPA</label><br>
-                                <input type="number" name="cgpa" step="0.01" min="0" max="10" value="' . $StudentCGPA . '" step="0.01" min="0" max="10">
+                                <label for="cgpa">CGPA<span style="color: red;"><sup>*</sup><span/></label><br>
+                                <input type="number" name="cgpa" step="0.01" min="0" max="10" value="' . $StudentCGPA . '" step="0.01" min="0" max="10" required>
                             </div>
                             <div>
                                 <label for="backs">Do you have any backlogs?</label><br>
@@ -383,26 +390,107 @@ if (isset($_POST["upload_pic"])) {
         <?php include './footer.php' ?>
     </div>
     <script>
-        function validatePassword() {
-            const password = document.getElementById('newpass').value;
-            const confirmPassword = document.getElementById('newpassconfirm').value;
-            const errorSpan = document.getElementById('error');
-            if(password.length == 0) {
-                return true;
-            }
-            if (password.length < 8) {
-                errorSpan.textContent = "Password must be at least 8 characters long.";
-                return false; // Prevent form submission
-            }
-
-            if (password !== confirmPassword) {
-                errorSpan.textContent = "Passwords do not match.";
-                return false; // Prevent form submission
-            }
-
-            errorSpan.textContent = ""; // Clear error message if validation passes
-            return true; // Allow form submission
+        function validateForm() {
+        let errorSpan = document.getElementById('error');
+        errorSpan.textContent = ""; // Clear previous error messages
+        let isValid = true; // Flag to check form validity
+        
+        // Validate First Name
+        let fname = document.querySelector('input[name="fname"]').value;
+        let fname_errorSpan = document.getElementById('fname_error');
+        fname_errorSpan.textContent = ""; // Clear previous error messages
+        if (fname.trim() === "") {
+            fname_errorSpan.textContent += "First Name is required.\n";
+            isValid = false;
         }
+        
+
+        // Validate Contact Number
+        let phno = document.querySelector('input[name="phno"]').value;
+        let phno_errorSpan = document.getElementById('phno_error');
+        phno_errorSpan.textContent = ""; // Clear previous error messages
+        if (phno.trim() === "") {
+            phno_errorSpan.textContent += "Contact Number is required.\n";
+            isValid = false;
+        } else if (!/^\d{10}$/.test(phno)) {
+            phno_errorSpan.textContent += "Enter a valid 10-digit phone no.\n";
+            isValid = false;
+        }
+
+        
+
+        // Validate Personal Email
+        let pemail = document.querySelector('input[name="pemail"]').value;
+        let emailPattern = /^[^ ]+@[^ ]+\.[a-z]{2,3}$/;
+        if (pemail.trim() === "") {
+            errorSpan.textContent += "Personal Email is required.\n";
+            isValid = false;
+        } else if (!pemail.match(emailPattern)) {
+            errorSpan.textContent += "Enter a valid email address.\n";
+            isValid = false;
+        }
+
+        // Validate 10th and 12th Percentages
+        let per10 = document.querySelector('input[name="per10"]').value;
+        let per12 = document.querySelector('input[name="per12"]').value;
+        let per10_errorSpan = document.getElementById('per10_error');
+        per10_errorSpan.textContent = ""; // Clear previous error messages
+        let per12_errorSpan = document.getElementById('per12_error');
+        per12_errorSpan.textContent = ""; // Clear previous error messages
+        if (per10 === "" || per10 < 0 || per10 > 100) {
+            per10_errorSpan.textContent += "Enter a valid percentage (0-100).\n";
+            isValid = false;
+        }
+        if (per12 === "" || per12 < 0 || per12 > 100) {
+            per12_errorSpan.textContent += "Enter a valid percentage (0-100).\n";
+            isValid = false;
+        }
+
+        // Validate Resume URL (optional but valid if present)
+        let resume = document.querySelector('input[name="resume"]').value;
+        let url_errorSpan = document.getElementById('url_error');
+        url_errorSpan.textContent = ""; // Clear previous error messages
+        if (resume.trim() !== "" && !isValidURL(resume)) {
+            url_errorSpan.textContent += "Enter a valid URL";
+            isValid = false;
+        }
+
+        let marksheet_10 = document.querySelector('input[name="marksheet_10"]').value;
+        let marksheet_10_errorSpan = document.getElementById('marksheet_10_error');
+        marksheet_10_errorSpan.textContent = ""; // Clear previous error messages
+        if (marksheet_10.trim() !== "" && !isValidURL(marksheet_10)) {
+            marksheet_10_errorSpan.textContent += "Enter a valid URL";
+            isValid = false;
+        }
+
+        let marksheet_12 = document.querySelector('input[name="marksheet_12"]').value;
+        marksheet_12_errorSpan = document.getElementById('marksheet_12_error');
+        marksheet_12_errorSpan.textContent = ""; // Clear previous error messages
+        if (marksheet_12.trim() !== "" && !isValidURL(marksheet_12)) {
+            marksheet_12_errorSpan.textContent += "Enter a valid URL";
+            isValid = false;
+        }
+
+        // Validate Passwords (if filled)
+        let password = document.getElementById('newpass').value;
+        let confirmPassword = document.getElementById('newpassconfirm').value;
+        if (password.length > 0) {
+            if (password.length < 8) {
+                errorSpan.textContent += "Password must be at least 8 characters long.\n";
+                isValid = false;
+            } else if (password !== confirmPassword) {
+                errorSpan.textContent += "Passwords do not match.\n";
+                isValid = false;
+            }
+        }
+
+        return isValid; // Return true if all fields are valid
+    }
+
+    function isValidURL(url) {
+        let pattern = /^(https?:\/\/)?([\w-]+(\.[\w-]+)+)\/?$/i;
+        return pattern.test(url);
+    }
 
         // Get the modal
         var modal = document.getElementById("myModal");
@@ -432,7 +520,7 @@ if (isset($_POST["upload_pic"])) {
 
         <?php
         // If the profile was updated, show the modal
-        if (isset($_SESSION['profile_updated']) && $_SESSION['profile_updated']) {
+        if (isset($_SESSION['profile_updated']) && $_SESSION['profile_updated']==true) {
             echo 'modal.style.display = "block";';
             // Unset the session variable so the modal doesn't show again on refresh
             unset($_SESSION['profile_updated']);

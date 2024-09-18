@@ -16,7 +16,7 @@ if (isset($_SESSION["user_type"]) && isset($_SESSION["user_email"])) {
     $usertype = $_SESSION["user_type"];
     $useremail = $_SESSION["user_email"];
 
-    $fetchStudentQuery = "SELECT S.S_10th_marksheet as marksheet_10, S.S_12th_marksheet as marksheet_12, S.S_10th_Perc as percentage_10, S.S_12th_Perc as percentage_12, S.S_Address as address, S.S_College_Email as cemail, S.S_Fname as fname, S.S_Lname as lname, S.S_Mname as mname, S.S_Personal_Email as pemail, S.S_Phone_no as phoneno, S.S_PR_No as prno, S.S_Resume as resume, S.S_Roll_no as rollno, S.S_Year_of_Admission as yoa, C.Class_name as class, D.Dept_name as department, S.S_Profile_pic as image, R.Sem1_SGPA as sem1, R.Sem2_SGPA as sem2, R.Sem3_SGPA as sem3,R.Sem4_SGPA as sem4,R.Sem5_SGPA as sem5,R.Sem6_SGPA as sem6,R.Sem7_SGPA as sem7,R.Sem8_SGPA as sem8,R.CGPA as cgpa,R.has_backlogs as backs FROM student S INNER JOIN class as C ON C.Class_id = S.S_Class_id INNER JOIN department as D ON D.Dept_id = C.Dept_id INNER JOIN result as R ON R.S_College_Email = S.S_College_Email WHERE S.S_College_Email = ?;";
+    $fetchStudentQuery = "SELECT S.S_10th_marksheet as marksheet_10, S.S_12th_marksheet as marksheet_12, S.S_10th_Perc as percentage_10, S.S_12th_Perc as percentage_12, S.S_Address as address, S.S_College_Email as cemail, S.S_Fname as fname, S.S_Lname as lname, S.S_Mname as mname, S.S_Personal_Email as pemail, S.S_Phone_no as phoneno, S.S_PR_No as prno, S.S_Resume as resume, S.S_Roll_no as rollno, S.S_Year_of_Admission as yoa,C.Class_id as class_id, C.Class_name as class, D.Dept_id as department_id, D.Dept_name as department, S.S_Profile_pic as image, R.Sem1_SGPA as sem1, R.Sem2_SGPA as sem2, R.Sem3_SGPA as sem3,R.Sem4_SGPA as sem4,R.Sem5_SGPA as sem5,R.Sem6_SGPA as sem6,R.Sem7_SGPA as sem7,R.Sem8_SGPA as sem8,R.CGPA as cgpa,R.has_backlogs as backs FROM student S INNER JOIN class as C ON C.Class_id = S.S_Class_id INNER JOIN department as D ON D.Dept_id = C.Dept_id INNER JOIN result as R ON R.S_College_Email = S.S_College_Email WHERE S.S_College_Email = ?;";
     $fetchStudent = $conn->prepare($fetchStudentQuery);
     $fetchStudent->bind_param("s",$_GET["semail"]);
     $fetchStudent->execute();
@@ -34,7 +34,9 @@ if (isset($_SESSION["user_type"]) && isset($_SESSION["user_email"])) {
         $StudentPercentage_12 = htmlspecialchars($StudentInfo['percentage_12']);
         $StudentPEmail = htmlspecialchars($StudentInfo['pemail']);
         $StudentCEmail = htmlspecialchars($StudentInfo['cemail']);
+        $StudentClassId = htmlspecialchars($StudentInfo['class_id']);
         $StudentClass = htmlspecialchars($StudentInfo['class']);
+        $StudentDepartmentId = htmlspecialchars($StudentInfo['department_id']);
         $StudentDepartment = htmlspecialchars($StudentInfo['department']);
         $StudentYOA = htmlspecialchars($StudentInfo['yoa']);
         $StudentImage = htmlspecialchars($StudentInfo['image']);
@@ -61,10 +63,10 @@ if (isset($_SESSION["user_type"]) && isset($_SESSION["user_email"])) {
 }
 
 if (isset($_POST["update_profile"])) {
-    $updateQuery = "UPDATE student as s SET s.S_Fname = ?,s.S_Mname = ?,s.S_Lname = ?,s.S_Personal_Email = ?,s.S_Address = ?,s.S_Phone_no = ?,s.S_10th_Perc = ?,s.S_12th_Perc = ?
-    WHERE s.S_College_Email = ?";
+    $updateQuery = "UPDATE student as s SET s.S_Class_id = ?
+WHERE s.S_College_Email = ?";
     $result = $conn->prepare($updateQuery);
-    $result->bind_param("ssssssdds", $_POST["fname"], $_POST["mname"], $_POST["lname"], $_POST["pemail"], $_POST["addr"], $_POST["phno"], $_POST["per10"], $_POST["per12"], $_GET["semail"]);
+    $result->bind_param("is", $_POST["class"],$_GET["semail"]);
     $result->execute();
 
     $_SESSION['profile_updated'] = true;
@@ -174,7 +176,7 @@ if (isset($_GET["remove"]) && isset($_GET["semail"])) {
                 </form>';
                 ?>
                 <div class="sections">
-                    <form action="./my-profile.php" method="post">
+                    <form action="" method="post">
                         <h3>Personal Information:</h3>
                         <?php
                         echo '<div class="form-adjust">
@@ -217,18 +219,30 @@ if (isset($_GET["remove"]) && isset($_GET["semail"])) {
                             </div>
                             <div>
                                 <label for="prn">PR No.</label><br>
-                                <input type="text" name="prn" value="' . $StudentPRN . '" disabled>
+                                <input type="text" name="prn" value="' . $StudentPRN . '" disabled">
                             </div>
 
                             <div>
                                 <label for="rollno">Roll No.</label><br>
-                                <input type="text" name="rollno" value="' . $StudentRollNo . '" disabled>
+                                <input type="text" name="rollno" value="' . $StudentRollNo . '">
                             </div>
-                        </div>
-                        <div class="form-adjust">
+                        </div>';
+                            
+                        echo '<div class="form-adjust">
+                                    
                             <div>
                                 <label for="class">Class</label><br>
-                                <input type="text" name="class" value="' . $StudentClass . '" disabled>
+                                <select type="text" name="class">
+                                    <option value="'.$StudentClassId.'" selected>' . $StudentClass . '</option>';
+                                    $fetchDeptQuery = "SELECT * FROM `class`";
+                                    $fetchDept = $conn->prepare($fetchDeptQuery);
+                                    $fetchDept->execute();
+                                    $result = $fetchDept->get_result();
+
+                                    while ($row = $result->fetch_assoc()) {
+                                        echo '<option value="' . $row['Class_id'] . '">' . $row["Class_name"] . '</option >';
+                                    }
+                            echo '</select>
                             </div>
 
                             <div>
@@ -312,7 +326,7 @@ if (isset($_GET["remove"]) && isset($_GET["semail"])) {
                         }
 
                         ?>
-                        <!-- <button id="myBtn" name="update_profile">Update</button> -->
+                        <button id="myBtn" name="update_profile">Update</button>
                     </form>
                 </div>
             </div>

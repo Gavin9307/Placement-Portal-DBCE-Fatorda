@@ -2,7 +2,6 @@
 require "../conn.php";
 require "../restrict.php";
 include "./tpo-utility-functions.php";
-require "./report-utility.php";
 global $conn;
 
 if (!isset($_SESSION)) {

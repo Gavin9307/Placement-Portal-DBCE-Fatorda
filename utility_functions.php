@@ -147,7 +147,14 @@ function getApplicationDetails()
             if ($fetchRow["placed"] == 1) {
                 echo '<p><strong>Status:</strong> Passed</p>';
                 echo '</div>';
-                echo '<a href="./my-applications-feedback.php"><button>Give Feedback</button></a>';
+                $fetchCompanyQuery = 'SELECT jp.C_id as cid FROM jobposting as jp WHERE jp.J_id= ?';
+                $fetchCompany = $conn->prepare($fetchCompanyQuery);
+                $fetchCompany->bind_param("i",$jid);
+                $fetchCompany->execute();
+                $fetchCompanyResult = $fetchCompany->get_result();
+                $fetchCompanyRow = $fetchCompanyResult->fetch_assoc(); 
+
+                echo '<a href="./my-applications-feedback.php?cid='.$fetchCompanyRow["cid"].'&jid='.$jid.'"><button>Give Feedback</button></a>';
             } else if ($fetchRow["placed"] == 0) {
                 echo '<p><strong>Status:</strong> Pending</p>';
                 echo '</div>';

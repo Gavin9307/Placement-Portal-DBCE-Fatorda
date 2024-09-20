@@ -6,20 +6,26 @@ include "../utility_functions.php";
 global $conn;
 if (!isset($_SESSION)) {
     session_start();
+} 
+if (!(isset($_GET["jid"])&&isset($_GET["cid"]))){
+    header("Location: my-applications-details.php");
+    exit();
 }
 
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit_feedback'])) {
     $message = $_POST['message'];
     $rating = (int)$_POST['rating'];
     $userEmail = $_SESSION["user_email"];
+    $cid =(int)$_GET["cid"];
+    $jid = (int)$_GET["jid"];
 
     // Prepare the query to insert or update feedback
-    $insertFeedbackQuery = "INSERT INTO feedback (S_College_Email, Message, Rating) VALUES (?, ?, ?)
+    $insertFeedbackQuery = "INSERT INTO feedback (J_id,C_id,S_College_Email, Message, Rating) VALUES (?,?, ?, ?,?)
                             ON DUPLICATE KEY UPDATE Message=?, Rating=?";
     $insertFeedback = $conn->prepare($insertFeedbackQuery);
-    $insertFeedback->bind_param("ssisi", $userEmail, $message, $rating, $message, $rating);
-
+    $insertFeedback->bind_param("iississ", $jid,$cid,$userEmail,$message, $rating,$message, $rating);
     if ($insertFeedback->execute()) {
+        echo "Success";
         // Feedback submitted successfully!
     } else {
         // Error handling
@@ -28,17 +34,24 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit_feedback'])) {
 }
 
 // Fetch existing feedback
-    $fetchFeedbackQuery = "SELECT f.Message as message, f.Rating as rating FROM company as c
+$fetchFeedbackQuery = "SELECT f.Message as message, f.Rating as rating FROM company as c
         INNER JOIN feedback as f on c.C_id = f.C_id
         INNER JOIN jobposting as jp on jp.C_id = c.C_id
         WHERE f.S_College_Email = ? ;";
-    $fetchFeedback = $conn->prepare($fetchFeedbackQuery);
-    $fetchFeedback->bind_param("s", $_SESSION["user_email"]);
-    $fetchFeedback->execute();
-    $result = $fetchFeedback->get_result();
+$fetchFeedback = $conn->prepare($fetchFeedbackQuery);
+$fetchFeedback->bind_param("s", $_SESSION["user_email"]);
+$fetchFeedback->execute();
+$result = $fetchFeedback->get_result();
+if ($result->num_rows>0){
     $row = $result->fetch_assoc();
     $message = $row["message"];
-    $rating = (int) $row["rating"];
+    $rating =(int) $row["rating"];
+}
+else {
+    $message = "";
+    $rating = 0;
+}
+
 ?>
 
 <!DOCTYPE html>
@@ -48,15 +61,23 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit_feedback'])) {
     <?php include './head.php' ?>
     <link rel="stylesheet" href="./css/my-applications-feedback.css">
     <title>My Applications</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
-        .checked {
-            color: orange;
+        .star-rating {
+          display: inline-block;
+          font-size: 0;
+          position: relative;
         }
         .star {
-            cursor: pointer;
+          cursor: pointer;
+          font-size: 2rem;
+          color: lightgray;
+          transition: color 0.2s;
         }
-    </style>
+        .star.checked {
+          color: orange;
+        }
+      </style>
 </head>
 
 <body>
@@ -73,22 +94,32 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit_feedback'])) {
                 <div class="sections">
                     <div class="company-logo-container">
                         <h3>Company Feedback</h3>
-                        <img src="../Assets/oneshield.png" alt="">
+
+                        <?php
+                        $cid =(int)$_GET["cid"];
+                        $fetchCompanyQuery = "SELECT c.C_Logo as clogo FROM company as c WHERE c.C_id = ?";
+                        $fetchCompany = $conn->prepare($fetchCompanyQuery);
+                        $fetchCompany->bind_param("i", $cid);
+                        $fetchCompany->execute();
+                        $result5 = $fetchCompany->get_result();
+                        $row5 = $result5->fetch_assoc();
+                        echo '<img src="../Data/Companies/Company_Logo/' . $row5['clogo'] . '" alt="">'
+                        ?>
                     </div>
 
                     <form action="" method="post">
                         <label for="message"><strong>Message:</strong></label>
-                        <textarea class="user-input-message" placeholder="Enter your message" name="message" required><?php echo htmlspecialchars($message); ?></textarea><br><br>
+                        <textarea class="user-input-message" placeholder="Enter your message" name="message" required><?php echo $message; ?></textarea><br><br>
 
                         <strong>Ratings:</strong>
-                        <span class="rating-container">
-                            <span class="fa fa-star fa-xl star" data-value="1"></span>
-                            <span class="fa fa-star fa-xl star" data-value="2"></span>
-                            <span class="fa fa-star fa-xl star" data-value="3"></span>
-                            <span class="fa fa-star fa-xl star" data-value="4"></span>
-                            <span class="fa fa-star fa-xl star" data-value="5"></span>
-                        </span>
-                        <input type="hidden" name="rating" id="rating-input" value="<?php echo $rating; ?>">
+                        <div class="rating-container" id="starRatingContainer">
+                            <span class="star" data-value="1">&#9733;</span>
+                            <span class="star" data-value="2">&#9733;</span>
+                            <span class="star" data-value="3">&#9733;</span>
+                            <span class="star" data-value="4">&#9733;</span>
+                            <span class="star" data-value="5">&#9733;</span>
+                        </div>
+                        <input type="hidden" name="rating" id="ratingInput" value="<?php echo $rating; ?>">
                         <br><br>
                         <button type="submit" name="submit_feedback">Submit</button>
                     </form>
@@ -99,31 +130,36 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit_feedback'])) {
         <?php include './footer.php' ?>
     </div>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            const stars = document.querySelectorAll('.rating-container .star');
-            const ratingInput = document.getElementById('rating-input');
-
-            // Set initial star rating
-            const initialRating = parseInt(ratingInput.value);
-            stars.forEach((star, index) => {
-                if (index < initialRating) {
-                    star.classList.add('checked');
-                }
-            });
-
-            stars.forEach((star, index) => {
-                star.addEventListener('click', () => {
-                    // Update the rating
-                    ratingInput.value = index + 1;
-                    stars.forEach((s, i) => {
-                        s.classList.toggle('checked', i <= index);
-                    });
-                });
-            });
-        });
-    </script>
+    
 
 </body>
+<script>
+    const stars = document.querySelectorAll('.star');
+const ratingInput = document.getElementById('ratingInput');
 
+// Initial check to set the stars based on the current rating value
+const initialRating = ratingInput.value;
+if (initialRating) {
+  updateStars(initialRating);
+}
+
+stars.forEach(star => {
+  star.addEventListener('click', () => {
+    const value = star.getAttribute('data-value');
+    ratingInput.value = value;
+    updateStars(value);
+  });
+});
+
+function updateStars(value) {
+  stars.forEach(star => {
+    if (star.getAttribute('data-value') <= value) {
+      star.classList.add('checked');
+    } else {
+      star.classList.remove('checked');
+    }
+  });
+}
+
+  </script>
 </html>

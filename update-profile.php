@@ -156,23 +156,23 @@ if (isset($_POST["create_profile"])) {
                 // </form>';
                 ?>
                 <div class="sections">
-                    <form action="" method="post">
+                    <form action="" method="post" onsubmit="return validateForm()">
                         <h3>Personal Information:</h3>
                         <div class="form-adjust">
                             <div>
-                                <label for="fname">First Name</label><br>
-                                <input type="text" name="fname" required>
+                                <label for="fname">First Name<span style="color:red">*</span><span style="color:red" id="fname_error"></span></label><br>
+                                <input type="text" name="fname" placeholder="Enter your first name" required>
                             </div>
                             <div>
-                                <label for="mname">Middle Name</label><br>
-                                <input type="text" name="mname">
+                                <label for="mname">Middle Name<span style="color:red" id="mname_error"></span></label><br>
+                                <input type="text" name="mname" placeholder="Enter your middle name" >
                             </div>
                             <div>
-                                <label for="lname">Last Name</label><br>
-                                <input type="text" name="lname" required>
+                                <label for="lname">Last Name<span style="color:red">*</span><span style="color:red" id="lname_error"></span></label><br>
+                                <input type="text" name="lname" placeholder="Enter your last name" required>
                             </div>
                             <div>
-                                <label for="gender">Gender</label><br>
+                                <label for="gender">Gender<span style="color:red">*</span><span style="color:red" id="gender_error"></span></label><br>
                                 <select type="text" name="gender">
                                     <option value="" selected>Choose Gender</option>
                                     <option value="M">Male</option>
@@ -182,19 +182,19 @@ if (isset($_POST["create_profile"])) {
                         </div>
                         <div class="form-adjust">
                             <div>
-                                <label for="phno">Contact No</label><br>
-                                <input type="text" name="phno" required>
+                                <label for="phno">Contact No<span style="color:red">*</span><span style="color:red" id="contact_error"></span></label><br>
+                                <input type="text" name="phno" placeholder="Enter 10 digit phone no." required>
                             </div>
                             <div>
-                                <label for="addr">Address</label><br>
-                                <input type="text" name="address" required>
+                                <label for="addr">Address<span style="color:red">*</span><span style="color:red" id="address_error"></span></label><br>
+                                <input type="text" name="address" placeholder="Enter your address" required>
                             </div>
                             <div>
-                                <label for="pemail">Personal Email</label><br>
-                                <input type="text" name="pemail" required>
+                                <label for="pemail">Personal Email<span style="color:red">*</span><span style="color:red" id="email_error"></span></label><br>
+                                <input type="text" name="pemail" placeholder="Enter your personal email" required>
                             </div>
                             <div>
-                                <label for="yoa">Year of Admission</label><br>
+                                <label for="yoa">Year of Admission<span style="color:red">*</span><span style="color:red" id="yoa_error"></span></label><br>
                                 <input type="number" name="yoa" min="2020" max="2035" step="1" value="2024" required />
                             </div>
                         </div>
@@ -209,16 +209,16 @@ if (isset($_POST["create_profile"])) {
                                 <input type="text" name="cemail" disabled value="<?php echo $_SESSION['user_email'] ?>">
                             </div>
                             <div>
-                                <label for="prn">PR No.</label><br>
-                                <input type="text" name="prn" required>
+                                <label for="prn">PR No.<span style="color:red">*</span><span style="color:red" id="prn_error"></span></label><br>
+                                <input type="text" name="prn" placeholder="Permanent Registration Number" required>
                             </div>
 
                             <div>
-                                <label for="rollno">Roll No.</label><br>
-                                <input type="text" name="rollno" required>
+                                <label for="rollno">Roll No.<span style="color:red">*</span><span style="color:red" id="roll_error"></span></label><br>
+                                <input type="text" name="rollno" placeholder="Roll Number" required>
                             </div>
                             <div>
-                                <label for="class">Class</label><br>
+                                <label for="class">Class<span style="color:red">*</span><span style="color:red" id="class_error"></span></label><br>
                                 <select type="text" name="class">
                                     <option value="" selected>Choose Class</option>
                                     <?php
@@ -237,13 +237,13 @@ if (isset($_POST["create_profile"])) {
                         <h3>Other Information:</h3>
                         <div class="form-adjust">
                             <div>
-                                <label for="per10">10th Percentage</label><br>
-                                <input type="number" name="per10" step="0.01" min="0" max="100">
+                                <label for="per10">10th Percentage<span style="color:red">*</span><span style="color:red" id="per10_error"></span></label><br>
+                                <input type="number" name="per10" step="0.01" min="0" max="100" placeholder="Enter your 10th percentage">
                             </div>
 
                             <div>
-                                <label for="per12">12th Percentage</label><br>
-                                <input type="number" name="per12" step="0.01" min="0" max="100">
+                                <label for="per12">12th Percentage<span style="color:red">*</span><span style="color:red" id="per12_error"></span></label><br>
+                                <input type="number" name="per12" step="0.01" min="0" max="100" placeholder="Enter your 12th percentage">
                             </div>
                         </div>
 
@@ -251,47 +251,47 @@ if (isset($_POST["create_profile"])) {
                         <div class="form-adjust">
                             <div>
                                 <label for="sem1">Sem 1</label><br>
-                                <input type="number" name="sem1" step="0.01" min="0" max="10">
+                                <input type="number" name="sem1" step="0.01" min="0" max="10" placeholder="Sem 1 SGPA">
                             </div>
 
                             <div>
                                 <label for="sem2">Sem 2</label><br>
-                                <input type="number" name="sem2" step="0.01" min="0" max="10">
+                                <input type="number" name="sem2" step="0.01" min="0" max="10" placeholder="Sem 2 SGPA">
                             </div>
                             <div>
                                 <label for="sem3">Sem 3</label><br>
-                                <input type="number" name="sem3" step="0.01" min="0" max="10">
+                                <input type="number" name="sem3" step="0.01" min="0" max="10" placeholder="Sem 3 SGPA">
                             </div>
 
                             <div>
                                 <label for="sem4">Sem 4</label><br>
-                                <input type="number" name="sem4" step="0.01" min="0" max="10">
+                                <input type="number" name="sem4" step="0.01" min="0" max="10" placeholder="Sem 4 SGPA">
                             </div>
                         </div>
                         <div class="form-adjust">
                             <div>
                                 <label for="sem5">Sem 5</label><br>
-                                <input type="number" name="sem5" step="0.01" min="0" max="10">
+                                <input type="number" name="sem5" step="0.01" min="0" max="10" placeholder="Sem 5 SGPA">
                             </div>
 
                             <div>
                                 <label for="sem6">Sem 6</label><br>
-                                <input type="number" name="sem6" step="0.01" min="0" max="10">
+                                <input type="number" name="sem6" step="0.01" min="0" max="10" placeholder="Sem 6 SGPA">
                             </div>
                             <div>
                                 <label for="sem7">Sem 7</label><br>
-                                <input type="number" name="sem7" step="0.01" min="0" max="10">
+                                <input type="number" name="sem7" step="0.01" min="0" max="10" placeholder="Sem 7 SGPA">
                             </div>
 
                             <div>
                                 <label for="sem8">Sem 8</label><br>
-                                <input type="number" name="sem8" step="0.01" min="0" max="10">
+                                <input type="number" name="sem8" step="0.01" min="0" max="10" placeholder="Sem 8 SGPA">
                             </div>
                         </div>
                         <div class="form-adjust cgpa">
                             <div>
                                 <label for="cgpa">CGPA</label><br>
-                                <input type="number" name="cgpa" step="0.01" min="0" max="10" step="0.01" min="0" max="10">
+                                <input type="number" name="cgpa" step="0.01" min="0" max="10" step="0.01" min="0" max="10" placeholder="CGPA">
                             </div>
                             <div>
                                 <label for="backs">Do you have any backlogs?</label><br>
@@ -312,5 +312,104 @@ if (isset($_POST["create_profile"])) {
     </div>
 </body>
 <script defer src="./FontAwesome/JS/all.js"></script>
+<script>
+    function validateForm() {
+        let isValid = true;
+        
+        // First Name validation (no digits allowed)
+        let fname = document.querySelector("input[name='fname']").value;
+        let nameRegex = /^[A-Za-z]+$/;
+        if (fname === "") {
+            document.getElementById("fname_error").textContent = "First Name is required";
+            isValid = false;
+        } else if (!nameRegex.test(fname)) {
+            document.getElementById("fname_error").textContent = "First Name must contain only letters";
+            isValid = false;
+        } else {
+            document.getElementById("fname_error").textContent = "";
+        }
+
+        // Middle Name validation (no digits allowed)
+        let mname = document.querySelector("input[name='mname']").value;
+        if (mname !== "" && !nameRegex.test(mname)) {
+            document.getElementById("mname_error").textContent = "Middle Name must contain only letters";
+            isValid = false;
+        } else {
+            document.getElementById("mname_error").textContent = "";
+        }
+
+        // Last Name validation (no digits allowed)
+        let lname = document.querySelector("input[name='lname']").value;
+        if (lname === "") {
+            document.getElementById("lname_error").textContent = "Last Name is required";
+            isValid = false;
+        } else if (!nameRegex.test(lname)) {
+            document.getElementById("lname_error").textContent = "Last Name must contain only letters";
+            isValid = false;
+        } else {
+            document.getElementById("lname_error").textContent = "";
+        }
+
+        // Gender validation
+        let gender = document.querySelector("select[name='gender']").value;
+        if (gender === "") {
+            document.getElementById("gender_error").textContent = "Please select a gender";
+            isValid = false;
+        } else {
+            document.getElementById("gender_error").textContent = "";
+        }
+
+        // Class validation
+        let className = document.querySelector("select[name='class']").value;
+        if (className === "") {
+            document.getElementById("class_error").textContent = "Please select a class";
+            isValid = false;
+        } else {
+            document.getElementById("class_error").textContent = "";
+        }
+
+        // Phone number validation (10 digits)
+        let phno = document.querySelector("input[name='phno']").value;
+        let phoneRegex = /^\d{10}$/;
+        if (!phoneRegex.test(phno)) {
+            document.getElementById("contact_error").textContent = "Please enter a valid 10-digit phone number";
+            isValid = false;
+        } else {
+            document.getElementById("contact_error").textContent = "";
+        }
+
+        // Email validation
+        let pemail = document.querySelector("input[name='pemail']").value;
+        let emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(pemail)) {
+            document.getElementById("email_error").textContent = "Please enter a valid email";
+            isValid = false;
+        } else {
+            document.getElementById("email_error").textContent = "";
+        }
+
+        // 10th percentage validation
+        let per10 = document.querySelector("input[name='per10']").value;
+        if (per10 < 0 || per10 > 100) {
+            document.getElementById("per10_error").textContent = "Please enter a valid percentage between 0 and 100";
+            isValid = false;
+        } else {
+            document.getElementById("per10_error").textContent = "";
+        }
+
+        // 12th percentage validation
+        let per12 = document.querySelector("input[name='per12']").value;
+        if (per12 < 0 || per12 > 100) {
+            document.getElementById("per12_error").textContent = "Please enter a valid percentage between 0 and 100";
+            isValid = false;
+        } else {
+            document.getElementById("per12_error").textContent = "";
+        }
+
+        return isValid;
+    }
+</script>
+
+
 
 </html>

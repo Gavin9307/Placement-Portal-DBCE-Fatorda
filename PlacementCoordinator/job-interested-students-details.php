@@ -44,11 +44,29 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update-round-status']
         $updatePlacedStatus = $conn->prepare($updatePlacedStatusQuery);
         $updatePlacedStatus->bind_param("is", $jid, $semail);
         $updatePlacedStatus->execute();
+
+        $updatePlacedStudentStatusQuery = "UPDATE student SET PLACED = 1 WHERE S_College_Email = ?";
+        $updatePlacedStudentStatus = $conn->prepare($updatePlacedStudentStatusQuery);
+        $updatePlacedStudentStatus->bind_param("s", $semail);
+        $updatePlacedStudentStatus->execute();
     }else {
         $updatePlacedStatusQuery = "UPDATE jobapplication SET placed = 0 WHERE J_id = ? AND S_College_Email = ?";
         $updatePlacedStatus = $conn->prepare($updatePlacedStatusQuery);
         $updatePlacedStatus->bind_param("is", $jid, $semail);
         $updatePlacedStatus->execute();
+
+        $fetchQuery = "SELECT * FROM jobapplication WHERE S_College_Email = ? AND placed = 1";
+        $fetch = $conn->prepare($fetchQuery);
+        $fetch->bind_param("s", $semail);
+        $fetch->execute();
+        $res = $fetch->get_result();
+
+        if ($res->num_rows == 0) {
+            $updatePlacedStudentStatusQuery = "UPDATE student SET PLACED = 0 WHERE S_College_Email = ?";
+            $updatePlacedStudentStatus = $conn->prepare($updatePlacedStudentStatusQuery);
+            $updatePlacedStudentStatus->bind_param("s", $semail);
+            $updatePlacedStudentStatus->execute();
+        }
     }
 
     header("Location: ./job-interested-students-details.php?jid=$jid&semail=$semail");

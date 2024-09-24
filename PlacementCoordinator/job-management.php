@@ -31,14 +31,23 @@ if (isset($_POST["delete-listing"])) {
             throw new Exception("Failed to delete from jobdepartments.");
         }
 
-        // Step 3: Delete from jobplacements
+        
+        // Step 3: Delete from student responses
+        $deletestudentresponsesQuery = "DELETE FROM studentresponses WHERE Job_ID = ?";
+        $deletestudentresponses = $conn->prepare($deletestudentresponsesQuery);
+        $deletestudentresponses->bind_param("i", $jobId);
+        if (!$deletestudentresponses->execute()) {
+            throw new Exception("Failed to delete from studentresponses.");
+        }
+        
+        // Step 4: Delete from jobplacements
         $deleteJobPlacementsQuery = "DELETE FROM jobplacements WHERE J_id = ?";
         $deleteJobPlacements = $conn->prepare($deleteJobPlacementsQuery);
         $deleteJobPlacements->bind_param("i", $jobId);
         if (!$deleteJobPlacements->execute()) {
             throw new Exception("Failed to delete from jobplacements.");
         }
-
+        
         // Commit transaction
         $conn->commit();
         echo "Job listing successfully deleted.";
@@ -47,8 +56,8 @@ if (isset($_POST["delete-listing"])) {
         $conn->rollback();
         echo "Failed to delete job listing: " . $e->getMessage();
     }
-    header("Location: ./job-management.php");
-    exit();
+    // header("Location: ./job-management.php");
+    // exit();
 }
 
 if (isset($_GET['responsestatus']) && isset($_GET['jid'])) {

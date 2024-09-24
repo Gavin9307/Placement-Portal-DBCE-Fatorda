@@ -98,54 +98,45 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST["post-job"])) {
             INNER JOIN department D ON D.Dept_id = C.Dept_id
         WHERE 1=1";
 
-        if (!empty($selectedDepartments)) {
-            $departmentConditions = array_map(function ($dept) use ($conn) {
-                return "D.Dept_name = '" . $conn->real_escape_string($dept) . "'";
-            }, $selectedDepartments);
-            $studentQuery .= " AND (" . implode(" OR ", $departmentConditions) . ")";
-        }
-        if (!is_null($batch)) {
-            $studentQuery .= " AND S.S_Year_of_Admission = ?";
-        }
-        if (!is_null($minCgpa)) {
-            $studentQuery .= " AND cgpa >= ?";
-        }
-        if (!is_null($maxCgpa)) {
-            $studentQuery .= " AND cgpa <= ?";
-        }
-        // if (!is_null($isPlaced)) {
-        //     $studentQuery .= " AND placed = '$isPlaced'";
-        // }
-        if (!is_null($percentage10)) {
-            $studentQuery .= " AND S.S_10th_Perc >= ?";
-        }
-        if (!is_null($percentage12)) {
-            $studentQuery .= " AND S.S_12th_Perc >= ?";
-        }
-        if (!is_null($gender)) {
-            $studentQuery .= " AND gender = ?";
-        }
-        if (!is_null($backAllowed)) {
-            if ($backAllowed == 0) {
-                $studentQuery .= " AND R.has_backlogs = 0";
-            } else {
-                $studentQuery .= " AND R.has_backlogs IN (0, 1)";
-            }
-        }
+if (!empty($selectedDepartments)) {
+    $departmentConditions = array_map(function ($dept) use ($conn) {
+        return "D.Dept_name = '" . $conn->real_escape_string($dept) . "'";
+    }, $selectedDepartments);
+    $studentQuery .= " AND (" . implode(" OR ", $departmentConditions) . ")";
+}
 
-        $stmt = $conn->prepare($studentQuery);
-        $params = [];
-        if (!is_null($batch)) $params[] = $batch;
-        if (!is_null($minCgpa)) $params[] = $minCgpa;
-        if (!is_null($maxCgpa)) $params[] = $maxCgpa;
-        if (!is_null($percentage10)) $params[] = $percentage10;
-        if (!is_null($percentage12)) $params[] = $percentage12;
-        if (!is_null($gender)) $params[] = $gender;
-        if (!is_null($minCgpa) || !is_null($maxCgpa) || !is_null($percentage10) || !is_null($percentage12) || !is_null($gender)) {
-            $stmt->bind_param(str_repeat('d', count($params)), ...$params);
-        }
-        $stmt->execute();
-        $studentsResult = $stmt->get_result();
+if (!is_null($batch)) {
+    $studentQuery .= " AND S.S_Year_of_Admission = '" . $conn->real_escape_string($batch) . "'";
+}
+if (!is_null($minCgpa)) {
+    $studentQuery .= " AND cgpa >= " . $conn->real_escape_string($minCgpa);
+}
+if (!is_null($maxCgpa)) {
+    $studentQuery .= " AND cgpa <= " . $conn->real_escape_string($maxCgpa);
+}
+if (!is_null($isPlaced)) {
+    $studentQuery .= " AND placed = '" . $conn->real_escape_string($isPlaced) . "'";
+}
+if (!is_null($percentage10)) {
+    $studentQuery .= " AND S.S_10th_Perc >= " . $conn->real_escape_string($percentage10);
+}
+if (!is_null($percentage12)) {
+    $studentQuery .= " AND S.S_12th_Perc >= " . $conn->real_escape_string($percentage12);
+}
+if (!is_null($gender)) {
+    $studentQuery .= " AND gender = '" . $conn->real_escape_string($gender) . "'";
+}
+if (!is_null($backAllowed)) {
+    if ($backAllowed == 0) {
+        $studentQuery .= " AND R.has_backlogs = 0";
+    } else {
+        $studentQuery .= " AND R.has_backlogs IN (0, 1)";
+    }
+}
+
+// Execute query using $conn->query
+$studentsResult = $conn->query($studentQuery);
+
 
         if ($studentsResult->num_rows > 0) {
             $studentJobInsertQuery = "INSERT INTO jobapplication (S_College_Email, J_id, Interest) VALUES (?, ?, ?)";
@@ -223,6 +214,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST["post-job"])) {
     } catch (Exception $e) {
         $conn->rollback();
         $addError = 1;
+        // Output or log the exception details
+    echo "Exception caught: " . $e->getMessage() . "<br>";
+    echo "Stack Trace: " . nl2br($e->getTraceAsString()) . "<br>";
     }
 }
 ?>

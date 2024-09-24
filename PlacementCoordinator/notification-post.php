@@ -180,8 +180,8 @@ if (isset($_POST["subject"])) {
                                 <label for="">Placed</label>
                                 <select name="is_placed" id="">
                                     <option value="" disabled selected>Select</option>
-                                    <option value="yes">Yes</option>
-                                    <option value="no">No</option>
+                                    <option value="1">Yes</option>
+                                    <option value="0">No</option>
                                 </select>
                             </div>
                             <div class="inputbox">

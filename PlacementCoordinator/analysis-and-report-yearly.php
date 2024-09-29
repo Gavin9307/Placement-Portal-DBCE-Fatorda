@@ -11,76 +11,69 @@ if (!isset($_SESSION)) {
 }
 
 // Query for "Placed" students
-$sql_placed21 = "SELECT COUNT(DISTINCT s.S_College_Email) as count
-               FROM student as s
-               INNER JOIN jobapplication as ja ON ja.S_College_Email = s.S_College_Email
-               INNER JOIN jobplacements as jp ON jp.J_id = ja.J_id
-               INNER JOIN jobdepartments as jd ON jd.J_id = ja.J_id
-               INNER JOIN department as d ON jd.Dept_id = d.Dept_id
-               WHERE ja.placed = 1 AND jp.J_Due_date < CURRENT_DATE ";
+$sql_placed21 = "SELECT COUNT(*) as count
+FROM student s 
+INNER JOIN class c ON s.S_Class_id = c.Class_id  
+INNER JOIN department d ON c.Dept_id = d.Dept_id
+WHERE s.PLACED = 1 ";
 
-$sql_not_placed = "SELECT COUNT(DISTINCT s.S_College_Email) as count
-                   FROM student as s
-                   INNER JOIN jobapplication as ja ON ja.S_College_Email = s.S_College_Email
-                   INNER JOIN jobplacements as jp ON jp.J_id = ja.J_id
-                   INNER JOIN jobdepartments as jd ON jd.J_id = ja.J_id
-                   INNER JOIN department as d ON jd.Dept_id = d.Dept_id
-                   WHERE ja.placed = 0 AND jp.J_Due_date < CURRENT_DATE";
+$sql_not_placed = "SELECT COUNT(*) as count
+FROM student s 
+INNER JOIN class c ON s.S_Class_id = c.Class_id  
+INNER JOIN department d ON c.Dept_id = d.Dept_id
+WHERE s.PLACED = 0 ";
 
-$sqlFemale = "SELECT COUNT(DISTINCT s.S_College_Email) as count
-              FROM student as s
-              INNER JOIN jobapplication as ja ON ja.S_College_Email = s.S_College_Email
-              INNER JOIN jobplacements as jp ON jp.J_id = ja.J_id
-              INNER JOIN jobdepartments as jd ON jd.J_id = ja.J_id
-              INNER JOIN department as d ON jd.Dept_id = d.Dept_id
-              WHERE s.Gender ='F' AND ja.placed = 1 AND jp.J_Due_date < CURRENT_DATE";
+$sqlFemale = "SELECT COUNT(*) as count
+FROM student s 
+INNER JOIN class c ON s.S_Class_id = c.Class_id  
+INNER JOIN department d ON c.Dept_id = d.Dept_id
+WHERE s.PLACED = 1 AND s.Gender = 'F'";
 
-$sqlMale = "SELECT COUNT(DISTINCT s.S_College_Email) as count
-            FROM student as s
-            INNER JOIN jobapplication as ja ON ja.S_College_Email = s.S_College_Email
-            INNER JOIN jobplacements as jp ON jp.J_id = ja.J_id
-            INNER JOIN jobdepartments as jd ON jd.J_id = ja.J_id
-            INNER JOIN department as d ON jd.Dept_id = d.Dept_id
-            WHERE s.Gender ='M' AND ja.placed = 1 AND jp.J_Due_date < CURRENT_DATE";
+$sqlMale = "SELECT COUNT(*) as count
+FROM student s 
+INNER JOIN class c ON s.S_Class_id = c.Class_id  
+INNER JOIN department d ON c.Dept_id = d.Dept_id
+WHERE s.PLACED = 1 AND s.Gender = 'M'";
 
 $sqlSalaries = "SELECT 
-    AVG(subquery.J_Offered_salary) AS Average_Salary,
-    MAX(subquery.J_Offered_salary) AS Highest_Salary,
-    MIN(subquery.J_Offered_salary) AS Minimum_Salary
-FROM 
-    (SELECT DISTINCT jp.J_id, jp.J_Offered_salary
-     FROM jobplacements AS jp
-     INNER JOIN jobdepartments AS jd ON jd.J_id = jp.J_id
-     INNER JOIN department AS d ON d.Dept_id = jd.Dept_id WHERE 1=1 ";
-
-$sqlDepartments = "SELECT 
-    d.Dept_name AS Department,
-    AVG(jp.J_Offered_salary) AS Average_Salary,
+AVG(jp.J_Offered_salary) AS Average_Salary,
     MAX(jp.J_Offered_salary) AS Highest_Salary,
     MIN(jp.J_Offered_salary) AS Minimum_Salary
+FROM jobplacements as jp 
+INNER JOIN jobapplication as ja ON jp.J_id = ja.J_id
+INNER JOIN student as s on s.S_College_Email = ja.S_College_Email
+INNER JOIN class as c on c.Class_id=s.S_Class_id
+INNER JOIN department d ON d.Dept_id=c.Dept_id
+WHERE ja.placed = 1 ";
+
+$sqlDepartments = "SELECT 
+    d.Dept_name AS Department, 
+    AVG(jp.J_Offered_salary) AS Average_Salary, 
+    MAX(jp.J_Offered_salary) AS Highest_Salary, 
+    MIN(jp.J_Offered_salary) AS Minimum_Salary 
 FROM 
-    jobplacements AS jp
+    jobplacements AS jp 
 INNER JOIN 
-    jobdepartments AS jd ON jd.J_id = jp.J_id     
+    jobapplication AS ja ON jp.J_id = ja.J_id 
 INNER JOIN 
-    department AS d ON d.Dept_id = jd.Dept_id";
+    student AS s ON s.S_College_Email = ja.S_College_Email 
+INNER JOIN 
+    class AS c ON c.Class_id = s.S_Class_id 
+INNER JOIN 
+    department AS d ON d.Dept_id = c.Dept_id 
+WHERE 
+    ja.placed = 1 ";
 
 $sql_placed = "
 SELECT 
     d.Dept_name AS Department,
-    COUNT(DISTINCT s.S_College_Email) AS Total_Placed_Students
+    COUNT(*) as Total_Placed_Students
 FROM 
     student s
-JOIN 
-    jobapplication ja ON s.S_College_Email = ja.S_College_Email
-JOIN 
-    jobplacements jp ON ja.J_id = jp.J_id
-JOIN 
-    jobdepartments jd ON jp.J_id = jd.J_id
-JOIN 
-    department d ON jd.Dept_id = d.Dept_id
-WHERE 
-    ja.placed = 1";
+INNER JOIN class c ON s.S_Class_id = c.Class_id  
+INNER JOIN department d ON c.Dept_id = d.Dept_id
+WHERE s.PLACED = 1";
+
 
 $sql_registered = "
 SELECT 
@@ -133,13 +126,10 @@ if (isset($_POST["get-filter-report"])) {
     $sqlDepartments .= " GROUP BY d.Dept_name";
     $sql_placed .= " GROUP BY d.Dept_id";
     $sql_registered .= " GROUP BY d.Dept_id";
-    $sqlSalaries .= " ) AS subquery";
-}
-else{
+} else {
     $sqlDepartments .= " GROUP BY d.Dept_name";
     $sql_placed .= " GROUP BY d.Dept_id";
     $sql_registered .= " GROUP BY d.Dept_id";
-    $sqlSalaries .= " ) AS subquery";
 }
 
 
@@ -189,6 +179,7 @@ if (isset($_POST["get-report-students"])) {
     exit();
 }
 
+
 $result_placed = $conn->query($sql_placed21);
 $placed_count = ($result_placed->num_rows > 0) ? $result_placed->fetch_assoc()['count'] : 0;
 
@@ -197,7 +188,6 @@ $placed_count = ($result_placed->num_rows > 0) ? $result_placed->fetch_assoc()['
 
 $result_not_placed = $conn->query($sql_not_placed);
 $not_placed_count = ($result_not_placed->num_rows > 0) ? $result_not_placed->fetch_assoc()['count'] : 0;
-
 
 // SQL query to get the count of placed female students
 
@@ -232,7 +222,6 @@ if ($resultSalaries->num_rows > 0) {
 }
 // SQL query to fetch salary data by department
 
-
 $resultDepartments = $conn->query($sqlDepartments);
 
 // Initialize arrays to store department names and salary data
@@ -244,10 +233,10 @@ $averageSalaries = [];
 // Fetch data and populate the arrays
 if ($resultDepartments->num_rows > 0) {
     while ($row = $resultDepartments->fetch_assoc()) {
-        $departments[] = $row['Department'];
-        $highestSalaries[] = $row['Highest_Salary'];
-        $lowestSalaries[] = $row['Minimum_Salary'];
-        $averageSalaries[] = $row['Average_Salary'];
+        $departments[] = $row['Department']; // Store department name
+        $highestSalaries[] = $row['Highest_Salary']; // Store highest salary
+        $lowestSalaries[] = $row['Minimum_Salary']; // Store lowest salary
+        $averageSalaries[] = $row['Average_Salary']; // Store average salary
     }
 }
 
@@ -337,287 +326,293 @@ while ($row = $result_registered->fetch_assoc()) {
                         </form>
                     </div>
                 </div>
+
                 <div class="sections section-container">
-
-                    <div class="sections-1">
-                        
-                        <p><strong>Total Number of students Placed</strong>: <?php echo json_encode($placed_count); ?></p>
-                        <p><strong>Total Number of students Not Placed</strong>: <?php echo json_encode($not_placed_count); ?></p> 
+                    <div>
+                        <p><strong>Total Number of students Placed</strong>: <?php echo $placed_count; ?></p>
+                        <p><strong>Total Number of students Not Placed</strong>: <?php echo $not_placed_count; ?></p>
                         <canvas id="myPieChart"></canvas>
-                        <script>
-    const placedCount = <?php echo json_encode($placed_count); ?>;
-    const notPlacedCount = <?php echo json_encode($not_placed_count); ?>;
-
-    const ctx = document.getElementById('myPieChart').getContext('2d');
-    const myPieChart = new Chart(ctx, {
-        type: 'pie',
-        data: {
-            labels: ['Placed', 'Not Placed'],
-            datasets: [{
-                data: [placedCount, notPlacedCount],
-                backgroundColor: ['#FF6384', '#36A2EB'],
-                hoverBackgroundColor: ['#FF6384', '#36A2EB']
-            }]
-        },
-        options: {
-            maintainAspectRatio: false,
-            responsive: true,
-            plugins: {
-                legend: {
-                    position: 'top',
-                },
-                tooltip: {
-                    enabled: true,
-                },
-                // Enable DataLabels plugin to display values
-                datalabels: {
-                    color: '#000', // Set label color
-                    font: {
-                        weight: 'bold',
-                        size: 14 // You can adjust the size
-                    },
-                    formatter: (value, context) => {
-                        return value; // Display the value directly
-                    }
-                }
-            },
-            animation: {
-                animateScale: true,
-                animateRotate: true
-            }
-        },
-        plugins: [ChartDataLabels] // Register the DataLabels plugin
-    });
-</script>
                     </div>
-                    <div class="sections-1">
-                        <p><strong>Total Offers </strong> 20</p>
+                    <div>
                         <p><strong>Highest Salary: </strong><?php echo $highestSalary; ?></p>
                         <p><strong>Average Salary: </strong><?php echo $averageSalary; ?></p>
-                        <p><strong>Lowest Salary: </strong><?php echo $minimumSalary; ?></p>
-
-
-                        
-
-                        
-                            <canvas id="myBarChart"></canvas>
-                            <script>
-    // Get the PHP arrays into JavaScript
-    var departments = <?php echo json_encode($departments); ?>;
-    var highestSalaries = <?php echo json_encode($highestSalaries); ?>;
-    var lowestSalaries = <?php echo json_encode($lowestSalaries); ?>;
-    var averageSalaries = <?php echo json_encode($averageSalaries); ?>;
-
-    // Get the canvas element by its ID
-    var cta = document.getElementById('myBarChart').getContext('2d');
-
-    // Create a new Chart instance
-    var salaryBarChart = new Chart(cta, {
-        type: 'bar', // Specify the chart type as bar
-        data: {
-            labels: departments, // X-axis labels from PHP
-            datasets: [{
-                    label: 'Highest Salary',
-                    data: highestSalaries, // Data for the highest salaries from PHP
-                    backgroundColor: 'rgba(54, 162, 235, 0.7)', // Color for the highest salary bars
-                    borderColor: 'rgba(54, 162, 235, 1)', // Border color for the highest salary bars
-                    borderWidth: 1
-                },
-                {
-                    label: 'Lowest Salary',
-                    data: lowestSalaries, // Data for the lowest salaries from PHP
-                    backgroundColor: 'rgba(255, 99, 132, 0.7)', // Color for the lowest salary bars
-                    borderColor: 'rgba(255, 99, 132, 1)', // Border color for the lowest salary bars
-                    borderWidth: 1
-                },
-                {
-                    label: 'Average Salary',
-                    data: averageSalaries, // Data for the average salaries from PHP
-                    backgroundColor: 'rgba(255, 206, 86, 0.7)', // Color for the average salary bars
-                    borderColor: 'rgba(255, 206, 86, 1)', // Border color for the average salary bars
-                    borderWidth: 1
-                }
-            ]
-        },
-        options: {
-            responsive: true,
-            plugins: {
-                datalabels: {
-                    color: '#000', // Set label color to white
-                    font: {
-                        weight: 'bold',
-                        size: 12 // Adjust font size
-                    },
-                    anchor: 'end', // Position the labels at the end of each bar
-                    align: 'center', // Align labels to the top of the bars
-                    rotation: 0, // Rotate the labels by 90 degrees for vertical display
-                    formatter: (value, context) => {
-                        return value; // Display the value directly on the bars
-                    }
-                },
-                tooltip: {
-                    enabled: true // Ensure tooltips are enabled
-                },
-                legend: {
-                    position: 'top' // Position the legend at the top
-                }
-            },
-            scales: {
-                y: {
-                    beginAtZero: true // Start the y-axis at zero
-                }
-            }
-        },
-        plugins: [ChartDataLabels] // Register the DataLabels plugin
-    });
-</script>
-                        
-
-
-
+                        <p><strong>Lowest Salary: </strong><?php echo $minimumSalary; ?></p><br><br>
+                        <canvas id="myBarChart"></canvas>
                     </div>
-                    <div class="sections-1">
-                        <canvas id="myDoubleBarChart"></canvas>
-                        <script>
-// Convert PHP arrays to JavaScript arrays
-var departments = <?php echo json_encode($departments); ?>;
-var totalPlacedStudents = <?php echo json_encode($placed_students); ?>;
-var totalRegisteredStudents = <?php echo json_encode($registered_students); ?>;
+                    <script>
+                        const placedCount = <?php echo json_encode($placed_count); ?>;
+                        const notPlacedCount = <?php echo json_encode($not_placed_count); ?>;
 
-// Get the canvas element by its ID
-var cty = document.getElementById('myDoubleBarChart').getContext('2d');
+                        const ctx = document.getElementById('myPieChart').getContext('2d');
+                        const myPieChart = new Chart(ctx, {
+                            type: 'pie',
+                            data: {
+                                labels: ['Placed', 'Not Placed'],
+                                datasets: [{
+                                    data: [placedCount, notPlacedCount],
+                                    backgroundColor: ['#FF6384', '#36A2EB'],
+                                    hoverBackgroundColor: ['#FF6384', '#36A2EB']
+                                }]
+                            },
+                            options: {
+                                maintainAspectRatio: false,
+                                responsive: true,
+                                plugins: {
+                                    legend: {
+                                        position: 'top',
+                                    },
+                                    tooltip: {
+                                        enabled: true,
+                                    },
+                                    // Enable DataLabels plugin to display values
+                                    datalabels: {
+                                        color: '#000', // Set label color
+                                        font: {
+                                            weight: 'bold',
+                                            size: 14 // You can adjust the size
+                                        },
+                                        formatter: (value, context) => {
+                                            return value; // Display the value directly
+                                        }
+                                    }
+                                },
+                                animation: {
+                                    animateScale: true,
+                                    animateRotate: true
+                                }
+                            },
+                            plugins: [ChartDataLabels] // Register the DataLabels plugin
+                        });
+                    </script>
+                    <script>
+                        // Get the PHP arrays into JavaScript
+                        var departments = <?php echo json_encode($departments); ?>;
+                        var highestSalaries = <?php echo json_encode($highestSalaries); ?>;
+                        var lowestSalaries = <?php echo json_encode($lowestSalaries); ?>;
+                        var averageSalaries = <?php echo json_encode($averageSalaries); ?>;
 
-var myDoubleBarChart = new Chart(cty, {
-    type: 'bar',
-    data: {
-        labels: departments, // X-axis labels
-        datasets: [{
-                label: 'Total Students Registered',
-                data: totalRegisteredStudents, // Use PHP data for the first dataset
-                backgroundColor: 'rgba(75, 192, 192, 0.7)',
-                borderColor: 'rgba(75, 192, 192, 1)',
-                borderWidth: 1
-            },
-            {
-                label: 'Total Students Placed',
-                data: totalPlacedStudents, // Use PHP data for the second dataset
-                backgroundColor: 'rgba(153, 102, 255, 0.7)',
-                borderColor: 'rgba(153, 102, 255, 1)',
-                borderWidth: 1
-            }
-        ]
-    },
-    options: {
-        responsive: true,
-        plugins: {
-            datalabels: {
-                color: '#000', // Set the label color to white
-                font: {
-                    weight: 'bold',
-                    size: 12 // Adjust font size
-                },
-                anchor: 'end', // Position the labels at the end of the bars
-                align: 'center', // Align labels to the top of the bars
-                rotation: 0, // Rotate labels by 90 degrees for vertical display
-                formatter: (value) => {
-                    return value; // Display the value on the bar
-                }
-            },
-            tooltip: {
-                enabled: true // Ensure tooltips are enabled
-            },
-            legend: {
-                position: 'top' // Position the legend at the top
-            }
-        },
-        scales: {
-            y: {
-                beginAtZero: true // Start the y-axis at zero
-            },
-            x: {
-                stacked: false // Bars will appear side-by-side
-            }
-        }
-    },
-    plugins: [ChartDataLabels] // Register the DataLabels plugin
-});
-</script>
+                        console.log(departments);
+                        console.log(highestSalaries);
+                        console.log(averageSalaries);
+                        console.log(lowestSalaries);
 
+                        // Get the canvas element by its ID
+                        var cta = document.getElementById('myBarChart').getContext('2d');
 
-                    </div>
-                    <div class="sections-1">
-                        <canvas id="mySidebarChart" style="width: 400px; height: 200px;"></canvas>
-                        <script>
-// PHP variable integration
-var femaleCount = <?php echo $femaleCount; ?>; // Count for Girls
-var maleCount = <?php echo $maleCount; ?>; // Count for Boys
-
-// Get the canvas element by its ID
-var ctz = document.getElementById('mySidebarChart').getContext('2d');
-
-// Create a new Chart instance
-var mySidebarChart = new Chart(ctz, {
-    type: 'bar', // Specify the chart type as bar
-    data: {
-        labels: ['Girls', 'Boys'], // Y-axis labels
-        datasets: [{
-            label: 'Total Students Placed',
-            data: [femaleCount, maleCount], // Use the fetched counts for Girls and Boys
-            backgroundColor: [
-                'rgba(255, 87, 51, 0.7)', // Color for Girls
-                'rgba(51, 196, 255, 0.7)' // Color for Boys
-            ],
-            borderColor: [
-                'rgba(255, 87, 51, 1)', // Border color for Girls
-                'rgba(51, 196, 255, 1)' // Border color for Boys
-            ],
-            borderWidth: 1
-        }]
-    },
-    options: {
-        maintainAspectRatio: false, // Prevents aspect ratio from shrinking the chart
-        responsive: true,
-        indexAxis: 'y', // Set the index axis to 'y' for a horizontal bar chart
-        plugins: {
-            datalabels: {
-                color: '#000', // Set the label color to white
-                font: {
-                    weight: 'bold',
-                    size: 12 // Adjust font size
-                },
-                anchor: 'end', // Position the labels at the end of each bar
-                align: 'right', // Align the labels to the right of the bars
-                formatter: (value) => {
-                    return value; // Display the value on the bar
-                }
-            },
-            tooltip: {
-                callbacks: {
-                    label: function(tooltipItem) {
-                        return tooltipItem.dataset.label + ': ' + tooltipItem.raw;
-                    }
-                }
-            },
-            legend: {
-                position: 'top' // Position the legend at the top
-            }
-        },
-        scales: {
-            x: {
-                beginAtZero: true // Start the x-axis at zero
-            }
-        }
-    },
-    plugins: [ChartDataLabels] // Register the DataLabels plugin
-});
-</script>
-
-
-
-
-                    </div>
-
+                        // Create a new Chart instance
+                        var salaryBarChart = new Chart(cta, {
+                            type: 'bar', // Specify the chart type as bar
+                            data: {
+                                labels: departments, // X-axis labels from PHP
+                                datasets: [{
+                                        label: 'Highest Salary',
+                                        data: highestSalaries, // Data for the highest salaries from PHP
+                                        backgroundColor: 'rgba(54, 162, 235, 0.7)', // Color for the highest salary bars
+                                        borderColor: 'rgba(54, 162, 235, 1)', // Border color for the highest salary bars
+                                        borderWidth: 1
+                                    },
+                                    {
+                                        label: 'Lowest Salary',
+                                        data: lowestSalaries, // Data for the lowest salaries from PHP
+                                        backgroundColor: 'rgba(255, 99, 132, 0.7)', // Color for the lowest salary bars
+                                        borderColor: 'rgba(255, 99, 132, 1)', // Border color for the lowest salary bars
+                                        borderWidth: 1
+                                    },
+                                    {
+                                        label: 'Average Salary',
+                                        data: averageSalaries, // Data for the average salaries from PHP
+                                        backgroundColor: 'rgba(255, 206, 86, 0.7)', // Color for the average salary bars
+                                        borderColor: 'rgba(255, 206, 86, 1)', // Border color for the average salary bars
+                                        borderWidth: 1
+                                    }
+                                ]
+                            },
+                            options: {
+                                responsive: true,
+                                plugins: {
+                                    datalabels: {
+                                        color: '#000', // Set label color to white
+                                        font: {
+                                            weight: 'bold',
+                                            size: 12 // Adjust font size
+                                        },
+                                        anchor: 'end', // Position the labels at the end of each bar
+                                        align: 'center', // Align labels to the top of the bars
+                                        rotation: 0, // Rotate the labels by 90 degrees for vertical display
+                                        formatter: (value, context) => {
+                                            return value; // Display the value directly on the bars
+                                        }
+                                    },
+                                    tooltip: {
+                                        enabled: true // Ensure tooltips are enabled
+                                    },
+                                    legend: {
+                                        position: 'top' // Position the legend at the top
+                                    }
+                                },
+                                scales: {
+                                    y: {
+                                        beginAtZero: true // Start the y-axis at zero
+                                    }
+                                }
+                            },
+                            plugins: [ChartDataLabels] // Register the DataLabels plugin
+                        });
+                    </script>
                 </div>
+
+
+                <div class="sections section-container">
+                    <div>
+                        <canvas id="myDoubleBarChart"></canvas>
+                    </div>
+                    <div>
+                        <canvas id="mySidebarChart"></canvas>
+                    </div>
+                    <script>
+                        // Convert PHP arrays to JavaScript arrays
+                        var departments = <?php echo json_encode($departments); ?>;
+                        var totalPlacedStudents = <?php echo json_encode($placed_students); ?>;
+                        var totalRegisteredStudents = <?php echo json_encode($registered_students); ?>;
+
+                        // Declare the chart variable globally
+                        var myDoubleBarChart;
+
+                        // Function to render the chart
+                        function renderChart() {
+                            // Get the canvas element by its ID
+                            var cty = document.getElementById('myDoubleBarChart').getContext('2d');
+
+                            // If chart exists, destroy it first to prevent flickering
+                            if (myDoubleBarChart) {
+                                myDoubleBarChart.destroy();
+                            }
+
+                            // Create the chart
+                            myDoubleBarChart = new Chart(cty, {
+                                type: 'bar',
+                                data: {
+                                    labels: departments, // X-axis labels
+                                    datasets: [{
+                                            label: 'Total Students Registered',
+                                            data: totalRegisteredStudents,
+                                            backgroundColor: 'rgba(75, 192, 192, 0.7)',
+                                            borderColor: 'rgba(75, 192, 192, 1)',
+                                            borderWidth: 1
+                                        },
+                                        {
+                                            label: 'Total Students Placed',
+                                            data: totalPlacedStudents,
+                                            backgroundColor: 'rgba(153, 102, 255, 0.7)',
+                                            borderColor: 'rgba(153, 102, 255, 1)',
+                                            borderWidth: 1
+                                        }
+                                    ]
+                                },
+                                options: {
+                                    responsive: true,
+                                    plugins: {
+                                        datalabels: {
+                                            color: '#000',
+                                            font: {
+                                                weight: 'bold',
+                                                size: 12
+                                            },
+                                            anchor: 'end',
+                                            align: 'center',
+                                            formatter: (value) => {
+                                                return value;
+                                            }
+                                        },
+                                        tooltip: {
+                                            enabled: true
+                                        },
+                                        legend: {
+                                            position: 'top'
+                                        }
+                                    },
+                                    scales: {
+                                        y: {
+                                            beginAtZero: true
+                                        },
+                                        x: {
+                                            stacked: false
+                                        }
+                                    }
+                                },
+                                plugins: [ChartDataLabels] // Register the DataLabels plugin
+                            });
+                        }
+
+                        // Call the function to render the chart
+                        renderChart();
+                    </script>
+                    <script>
+                        // PHP variable integration
+                        var femaleCount = <?php echo $femaleCount; ?>; // Count for Girls
+                        var maleCount = <?php echo $maleCount; ?>; // Count for Boys
+
+                        // Get the canvas element by its ID
+                        var ctz = document.getElementById('mySidebarChart').getContext('2d');
+
+                        // Create a new Chart instance
+                        var mySidebarChart = new Chart(ctz, {
+                            type: 'bar', // Specify the chart type as bar
+                            data: {
+                                labels: ['Girls', 'Boys'], // Y-axis labels
+                                datasets: [{
+                                    label: 'Total Students Placed',
+                                    data: [femaleCount, maleCount], // Use the fetched counts for Girls and Boys
+                                    backgroundColor: [
+                                        'rgba(255, 87, 51, 0.7)', // Color for Girls
+                                        'rgba(51, 196, 255, 0.7)' // Color for Boys
+                                    ],
+                                    borderColor: [
+                                        'rgba(255, 87, 51, 1)', // Border color for Girls
+                                        'rgba(51, 196, 255, 1)' // Border color for Boys
+                                    ],
+                                    borderWidth: 1
+                                }]
+                            },
+                            options: {
+                                maintainAspectRatio: false, // Prevents aspect ratio from shrinking the chart
+                                responsive: true,
+                                indexAxis: 'y', // Set the index axis to 'y' for a horizontal bar chart
+                                plugins: {
+                                    datalabels: {
+                                        color: '#000', // Set the label color to white
+                                        font: {
+                                            weight: 'bold',
+                                            size: 12 // Adjust font size
+                                        },
+                                        anchor: 'end', // Position the labels at the end of each bar
+                                        align: 'right', // Align the labels to the right of the bars
+                                        formatter: (value) => {
+                                            return value; // Display the value on the bar
+                                        }
+                                    },
+                                    tooltip: {
+                                        callbacks: {
+                                            label: function(tooltipItem) {
+                                                return tooltipItem.dataset.label + ': ' + tooltipItem.raw;
+                                            }
+                                        }
+                                    },
+                                    legend: {
+                                        position: 'top' // Position the legend at the top
+                                    }
+                                },
+                                scales: {
+                                    x: {
+                                        beginAtZero: true // Start the x-axis at zero
+                                    }
+                                }
+                            },
+                            plugins: [ChartDataLabels] // Register the DataLabels plugin
+                        });
+                    </script>
+                </div>
+                
                 <div class="sortby-container">
                     <h3><strong>Student Details</strong></h3>
                     <!-- <div>

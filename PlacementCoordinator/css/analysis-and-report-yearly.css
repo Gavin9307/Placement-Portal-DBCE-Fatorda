@@ -56,11 +56,10 @@
 }
 
 .section-container {
-    display:flex;
-    flex-direction:row;
-    flex-wrap:wrap;
-    justify-content: space-evenly;
+    display: grid;
+    grid-template-columns: repeat(2,1fr);
 }
+
 .sections-1 {
     width: 40%; 
     min-width: 300px; 
@@ -68,9 +67,8 @@
     flex: 1 1 auto; 
 }
 canvas {
-    
-    width: 80% !important; /* Force the canvas to take up the full width of the parent */
-    height: auto !important; /* Let the height adjust automatically */
+    max-width: 500px !important; /* Force the canvas to take up the full width of the parent */
+    max-height: 400px !important; /* Let the height adjust automatically */
 }
 
 .form-adjust {
@@ -186,4 +184,5 @@ canvas {
 .dropdown:hover .viewmore-button {
     background-color: #3e8e41; /* Change to match your existing button hover color */
 }
+
 

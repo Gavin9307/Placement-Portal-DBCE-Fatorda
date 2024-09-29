@@ -67,38 +67,47 @@ ORDER BY ND.Notification_Date DESC;";
     $fetchNotifications->execute();
     $result = $fetchNotifications->get_result();
 
-    while ($row = $result->fetch_assoc()) {
-        $timestamp = $row["notidate"];
-        $istTimeZone = new DateTimeZone('Asia/Kolkata');
-        $dateTime = new DateTime($timestamp);
-        $dateTime->setTimezone($istTimeZone);
-        $date = $dateTime->format('Y-m-d');
-        $time = $dateTime->format('h:i:s A');
+    if ($result->num_rows>0){
 
+        while ($row = $result->fetch_assoc()) {
+            $timestamp = $row["notidate"];
+            $istTimeZone = new DateTimeZone('Asia/Kolkata');
+            $dateTime = new DateTime($timestamp);
+            $dateTime->setTimezone($istTimeZone);
+            $date = $dateTime->format('Y-m-d');
+            $time = $dateTime->format('h:i:s A');
+    
+            echo '<div class="sections">
+                        <div class="company-container">
+                            <p><strong>Date:</strong> ' . $date . '</p>
+                            <p><strong>Time:</strong> ' . $time . '</p>
+                        </div>
+                        <p><strong>Due Date:</strong> ' . $row["duedate"] . '</p>
+                        <p class="subject"><strong>Subject:</strong> ' . $row["subject"] . '</p>
+                        <p class= "message"><strong>Message:</strong> ' . $row["message"] . '</p>';
+    
+            if ($row['attach1'] != NULL) {
+                echo '<a href="../Data/Notifications/' . $row['attach1'] . '" class="attachment-links">Attachment 1</a>';
+            }
+    
+            if ($row['attach2'] != NULL) {
+                echo '<a href="../Data/Notifications/' . $row['attach2'] . '" class="attachment-links">Attachment 2</a>';
+            }
+    
+            echo '</p>
+                        <a href="./notifications-edit.php?nid=' . $row["nid"] . '"><button class="edit-button">Edit</button></a>
+                        <form action="" method="post">
+                            <input type="number" value="' . $row["nid"] . '" hidden name="nid">
+                            <button name="delete_noti" class="delete-button">Delete</button>
+                        </form>
+                    </div>';
+        }
+    }
+    else {
         echo '<div class="sections">
-                    <div class="company-container">
-                        <p><strong>Date:</strong> ' . $date . '</p>
-                        <p><strong>Time:</strong> ' . $time . '</p>
-                    </div>
-                    <p><strong>Due Date:</strong> ' . $row["duedate"] . '</p>
-                    <p class="subject"><strong>Subject:</strong> ' . $row["subject"] . '</p>
-                    <p class= "message"><strong>Message:</strong> ' . $row["message"] . '</p>';
+            No Notifications
+        </div>';
 
-        if ($row['attach1'] != NULL) {
-            echo '<a href="../Data/Notifications/' . $row['attach1'] . '" class="attachment-links">Attachment 1</a>';
-        }
-
-        if ($row['attach2'] != NULL) {
-            echo '<a href="../Data/Notifications/' . $row['attach2'] . '" class="attachment-links">Attachment 2</a>';
-        }
-
-        echo '</p>
-                    <a href="./notifications-edit.php?nid=' . $row["nid"] . '"><button class="edit-button">Edit</button></a>
-                    <form action="" method="post">
-                        <input type="number" value="' . $row["nid"] . '" hidden name="nid">
-                        <button name="delete_noti" class="delete-button">Delete</button>
-                    </form>
-                </div>';
     }
 }
 
@@ -197,13 +206,18 @@ function getCompletedJobListings()
     $fetchJob = $conn->prepare($fetchJobQuery);
     $fetchJob->execute();
     $result = $fetchJob->get_result();
-    while ($row = $result->fetch_assoc()) {
-        echo '<tr>
-                        <td>' . $row["duedate"] . '</td>
-                        <td>' . $row["cname"] . '</td>
-                        <td>' . $row["totalplaced"] . '</td>
-                        <td><a href="./job-live-listing-analysis.php?jid=' . $row["jid"] . '">View more</a></td>
-                    </tr>';
+    if ($result->num_rows > 0 ){
+        while ($row = $result->fetch_assoc()) {
+            echo '<tr>
+                            <td>' . $row["duedate"] . '</td>
+                            <td>' . $row["cname"] . '</td>
+                            <td>' . $row["totalplaced"] . '</td>
+                            <td><a href="./job-live-listing-analysis.php?jid=' . $row["jid"] . '">View more</a></td>
+                        </tr>';
+        }
+    }
+    else {
+        echo '<tr><td colspan=4><br/> No Completed Listing <br/></td></tr>';
     }
 }
 
@@ -220,13 +234,18 @@ function getCompletedJobListingsAll()
     $fetchJob = $conn->prepare($fetchJobQuery);
     $fetchJob->execute();
     $result = $fetchJob->get_result();
-    while ($row = $result->fetch_assoc()) {
-        echo '<tr>
-                        <td>' . $row["duedate"] . '</td>
-                        <td>' . $row["cname"] . '</td>
-                        <td>' . $row["totalplaced"] . '</td>
-                        <td><a href="./job-live-listing-analysis.php?jid=' . $row["jid"] . '">View more</a></td>
-                    </tr>';
+    if ($result->num_rows>0){
+        while ($row = $result->fetch_assoc()) {
+            echo '<tr>
+                            <td>' . $row["duedate"] . '</td>
+                            <td>' . $row["cname"] . '</td>
+                            <td>' . $row["totalplaced"] . '</td>
+                            <td><a href="./job-live-listing-analysis.php?jid=' . $row["jid"] . '">View more</a></td>
+                        </tr>';
+        }    
+    }
+    else{
+        echo '<tr><td colspan=4><br/> No Completed Listing <br/></td></tr>';
     }
 }
 
@@ -607,11 +626,18 @@ function getQuestions(){
     $fetchQuestions = $conn->prepare($fetchQuestionsQuery);
     $fetchQuestions->execute();
     $result = $fetchQuestions->get_result();
-    while($row = $result->fetch_assoc()) {
-        echo ' <tr>
-                <td>'.$row["Question_Text"].'</td>
-                <td><a href="./job-post-questions.php?qid='.$row["Question_ID"].'&remove=1" class="remove-button">Remove</a></td>
-            </tr>';
+    if ($result->num_rows > 0){
+        while($row = $result->fetch_assoc()) {
+            echo ' <tr>
+                    <td>'.$row["Question_Text"].'</td>
+                    <td><a href="./job-post-questions.php?qid='.$row["Question_ID"].'&remove=1" class="remove-button">Remove</a></td>
+                </tr>';
+        }
+    }
+    else {
+        echo '<tr>
+        <td colspan=2><br/>No Questions<br/></td>
+    </tr>';
     }
 }
 

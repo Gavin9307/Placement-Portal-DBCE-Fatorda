@@ -18,7 +18,7 @@ if (isset($_POST["d_student-search-button"])) {
     $d_departments = !empty($_POST['d_departments']) ? $_POST['d_departments'] : [];
     $d_gender = !empty($_POST['d_gender']) ? $_POST['d_gender'] : null;
     $d_batch = !empty($_POST['d_batch_year']) ? $_POST['d_batch_year'] : null;
-    $d_studentsResult = fetchStudents(true, $d_sname, $d_departments, $d_gender,$d_batch);
+    $d_studentsResult = fetchStudents(true, $d_sname, $d_departments, $d_gender, $d_batch);
     $d_studentSearch = true;
 } else {
     $d_studentsResult = fetchStudents(true);
@@ -48,8 +48,8 @@ if (isset($_POST["d_student-search-button"])) {
                 </div>
                 <h3>Deleted Students</h3>
                 <div class="form-adjust">
-                <form action="" method="post">
-                    <div class="inputbox">
+                    <form action="" method="post">
+                        <div class="inputbox">
                             <label for="">Student Name:</label>
                             <input type="text" name="d_sname" placeholder="Enter Student Name">
                         </div>
@@ -72,7 +72,7 @@ if (isset($_POST["d_student-search-button"])) {
                                 ?>
                             </div>
                         </div>
-                                
+
                         <div class="inputbox">
                             <label for="batch_year">Batch Year:</label>
                             <select name="d_batch_year" id="batch_year">
@@ -110,17 +110,23 @@ if (isset($_POST["d_student-search-button"])) {
                             <th>Details</th>
                         </tr>
                         <?php
-                        while ($student = $d_studentsResult->fetch_assoc()) {
+                        if ($d_studentsResult->num_rows > 0) {
+                            while ($student = $d_studentsResult->fetch_assoc()) {
+                                echo '<tr>
+                                    <td>' . htmlspecialchars($student["fname"]) . ' ' . htmlspecialchars($student["lname"]) . '</td>
+                                    <td>' . (int) htmlspecialchars($student["yoa"]) + 4 . '</td>
+                                    <td>' . htmlspecialchars($student["dname"]) . '</td>
+                                    <td>' . htmlspecialchars($student["cgpa"]) . '</td>
+                                    <td><a href="student-management-view-student.php?semail=' . $student["semail"] . '">View more</a></td>
+                                    </tr>';
+                            }
+                        } else {
                             echo '<tr>
-                                <td>' . htmlspecialchars($student["fname"]) . ' ' . htmlspecialchars($student["lname"]) . '</td>
-                                <td>' . (int) htmlspecialchars($student["yoa"])+4 . '</td>
-                                <td>' . htmlspecialchars($student["dname"]) . '</td>
-                                <td>' . htmlspecialchars($student["cgpa"]) . '</td>
-                                <td><a href="student-management-view-student.php?semail='.$student["semail"].'">View more</a></td>
-                            </tr>';
+                            <td colspan=5><br/>No Students Found</td>
+                                </tr>';
                         }
                         ?>
-                       
+
                     </table>
                 </div>
 

@@ -205,7 +205,7 @@ $studentsResult = $conn->query($studentQuery);
     // Return the event details or success message
     
 
-            echo "Job successfully posted.";
+            // echo "Job successfully posted.";
         } else {
             $conn->rollback();
             echo $studentQuery;
@@ -342,7 +342,7 @@ $studentsResult = $conn->query($studentQuery);
                             </div>
                             <div class="inputbox">
                                 <label for="">Offered Salary:</label>
-                                <input type="text" name="offered-salary">
+                                <input type="number" name="offered-salary" min="0" max="10000000">
                             </div>
                             <div class="inputbox">
                                 <label for="">No. of Posts</label>

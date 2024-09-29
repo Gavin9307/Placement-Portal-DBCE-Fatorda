@@ -50,7 +50,7 @@ if (isset($_POST["subject"])) {
              $departments = !empty($_POST['departments']) ? $_POST['departments'] : [];
              $minCgpa = !empty($_POST['min_cgpa']) ? $_POST['min_cgpa'] : NULL;
              $maxCgpa = !empty($_POST['max_cgpa']) ? $_POST['max_cgpa'] : NULL;
-             $isPlaced = isset($_POST['is_placed']) ? $_POST['is_placed'] : NULL;
+             $isPlaced = !empty($_POST['is_placed']) ? $_POST['is_placed'] : NULL;
              $percentage10 = !empty($_POST['percentage_10']) ? $_POST['percentage_10'] : NULL;
              $percentage12 = !empty($_POST['percentage_12']) ? $_POST['percentage_12'] : NULL;
              $gender = !empty($_POST['gender']) ? $_POST['gender'] : NULL;
@@ -179,7 +179,7 @@ if (isset($_POST["subject"])) {
                             <div class="inputbox">
                                 <label for="">Placed</label>
                                 <select name="is_placed" id="">
-                                    <option value="" disabled selected>Select</option>
+                                    <option value="" selected>Select</option>
                                     <option value="1">Yes</option>
                                     <option value="0">No</option>
                                 </select>
@@ -202,7 +202,7 @@ if (isset($_POST["subject"])) {
                             </div>
                             <div class="inputbox">
                                 <label for="">Due Date</label>
-                                <input type="date" name="due_date">
+                                <input type="date" name="due_date" required>
                             </div>
                             <div class="inputbox">
                                 <label for="">Attachment 1</label>

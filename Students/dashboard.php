@@ -29,8 +29,6 @@
 
             <div class="main-container">
                 <h2 class="main-container-heading">Dashboard</h2>
-                <br>
-                <h3>Calendar</h3>
                 
 
 

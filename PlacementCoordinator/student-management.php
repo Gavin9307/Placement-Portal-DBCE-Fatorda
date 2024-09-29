@@ -19,7 +19,7 @@ if (isset($_POST["student-search-button"])) {
     $gender = !empty($_POST['gender']) ? $_POST['gender'] : null;
     $batch = !empty($_POST['batch_year']) ? $_POST['batch_year'] : null;
 
-    $studentsResult = fetchStudents(false, $sname, $departments, $gender,$batch);
+    $studentsResult = fetchStudents(false, $sname, $departments, $gender, $batch);
     $studentSearch = true;
 } else {
     $studentsResult = fetchStudents(false);
@@ -30,7 +30,7 @@ if (isset($_POST["d_student-search-button"])) {
     $d_departments = !empty($_POST['d_departments']) ? $_POST['d_departments'] : [];
     $d_gender = !empty($_POST['d_gender']) ? $_POST['d_gender'] : null;
     $d_batch = !empty($_POST['d_batch_year']) ? $_POST['d_batch_year'] : null;
-    $d_studentsResult = fetchStudents(true, $d_sname, $d_departments, $d_gender,$d_batch);
+    $d_studentsResult = fetchStudents(true, $d_sname, $d_departments, $d_gender, $d_batch);
     $d_studentSearch = true;
 } else {
     $d_studentsResult = fetchStudents(true);
@@ -128,13 +128,19 @@ if (isset($_POST["d_student-search-button"])) {
                             <th>Details</th>
                         </tr>
                         <?php
-                        while ($student = $studentsResult->fetch_assoc()) {
-                            echo '<tr>
+                        if ($studentsResult->num_rows > 0) {
+                            while ($student = $studentsResult->fetch_assoc()) {
+                                echo '<tr>
                                 <td>' . htmlspecialchars($student["fname"]) . ' ' . htmlspecialchars($student["lname"]) . '</td>
-                                <td>' . (int) htmlspecialchars($student["yoa"])+4 . '</td>
+                                <td>' . (int) htmlspecialchars($student["yoa"]) + 4 . '</td>
                                 <td>' . htmlspecialchars($student["dname"]) . '</td>
                                 <td>' . htmlspecialchars($student["cgpa"]) . '</td>
-                                <td><a href="student-management-view-student.php?semail='.$student["semail"].'">View more</a></td>
+                                <td><a href="student-management-view-student.php?semail=' . $student["semail"] . '">View more</a></td>
+                            </tr>';
+                            }
+                        } else {
+                            echo '<tr>
+                        <td colspan=5><br/>No Students Found</td>
                             </tr>';
                         }
                         ?>
@@ -147,7 +153,7 @@ if (isset($_POST["d_student-search-button"])) {
                 <h3>Deleted Students</h3>
                 <div class="form-adjust">
                     <form action="" method="post">
-                    <div class="inputbox">
+                        <div class="inputbox">
                             <label for="">Student Name:</label>
                             <input type="text" name="d_sname" placeholder="Enter Student Name">
                         </div>
@@ -207,14 +213,20 @@ if (isset($_POST["d_student-search-button"])) {
                             <th>Details</th>
                         </tr>
                         <?php
-                        while ($student = $d_studentsResult->fetch_assoc()) {
-                            echo '<tr>
+                        if ($d_studentsResult->num_rows > 0) {
+                            while ($student = $d_studentsResult->fetch_assoc()) {
+                                echo '<tr>
                                 <td>' . htmlspecialchars($student["fname"]) . ' ' . htmlspecialchars($student["lname"]) . '</td>
-                                <td>' . (int) htmlspecialchars($student["yoa"])+4 . '</td>
+                                <td>' . (int) htmlspecialchars($student["yoa"]) + 4 . '</td>
                                 <td>' . htmlspecialchars($student["dname"]) . '</td>
                                 <td>' . htmlspecialchars($student["cgpa"]) . '</td>
-                                <td><a href="student-management-view-student.php?semail='.$student["semail"].'">View more</a></td>
+                                <td><a href="student-management-view-student.php?semail=' . $student["semail"] . '">View more</a></td>
                             </tr>';
+                            }
+                        } else {
+                            echo '<tr>
+                    <td colspan=5><br/>No Students Found</td>
+                        </tr>';
                         }
                         ?>
                     </table>
@@ -228,4 +240,5 @@ if (isset($_POST["d_student-search-button"])) {
         <?php include './footer.php' ?>
     </div>
 </body>
+
 </html>

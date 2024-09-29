@@ -36,7 +36,7 @@ function getFeedbacks()
                     <p class="students-message">' . $FStudentMessage . '</p>
                 </div>';
     } else {
-        // No feedbacks
+        echo '<p class="students-message">No Reviews</p>';
     }
 }
 
@@ -55,19 +55,23 @@ function getJobOffers($email)
     $fetchJob->bind_param("s", $email);
     $fetchJob->execute();
     $result = $fetchJob->get_result();
-
-    while ($row = $result->fetch_assoc()) {
-        echo '<div class="sections">
-                    <div class="company-container">
-                        <div class="company-logo-container">
-                            <img src="../Data/Companies/Company_Logo/' . $row['clogo'] . '" alt="">
-                            <p>' . $row['cname'] . '</p>
+    if ($result->num_rows>0){
+        while ($row = $result->fetch_assoc()) {
+            echo '<div class="sections">
+                        <div class="company-container">
+                            <div class="company-logo-container">
+                                <img src="../Data/Companies/Company_Logo/' . $row['clogo'] . '" alt="">
+                                <p>' . $row['cname'] . '</p>
+                            </div>
+                            <p><strong>Due Date:</strong> ' . $row['duedate'] . '</p>
                         </div>
-                        <p><strong>Due Date:</strong> ' . $row['duedate'] . '</p>
-                    </div>
-                    <p class="position"><strong>Position:</strong> ' . $row['position'] . '</p>
-                    <a href="./job-opportunities-detail.php?jid=' . $row['jid'] . '" ?><button>View More</button></a>
-                </div>';
+                        <p class="position"><strong>Position:</strong> ' . $row['position'] . '</p>
+                        <a href="./job-opportunities-detail.php?jid=' . $row['jid'] . '" ?><button>View More</button></a>
+                    </div>';
+        }
+    }
+    else {
+        echo '<div class="sections">No Job Opportunities </div>';
     }
 }
 
@@ -87,19 +91,23 @@ WHERE A.Interest = ? AND A.S_College_Email = ?;";
     $fetchApplications->bind_param("is", $z, $_SESSION["user_email"]);
     $fetchApplications->execute();
     $result = $fetchApplications->get_result();
-
-    while ($row = $result->fetch_assoc()) {
-        echo '<div class="sections">
-                    <div class="company-container">
-                        <div class="company-logo-container">
-                            <img src="../Data/Companies/Company_Logo/' . $row['clogo'] . '" alt="">
-                            <p>' . $row['cname'] . '</p>
+    if ($result->num_rows > 0){
+        while ($row = $result->fetch_assoc()) {
+            echo '<div class="sections">
+                        <div class="company-container">
+                            <div class="company-logo-container">
+                                <img src="../Data/Companies/Company_Logo/' . $row['clogo'] . '" alt="">
+                                <p>' . $row['cname'] . '</p>
+                            </div>
+                            <p><strong>Apply Date:</strong> ' . $row['applydate'] . '</p>
                         </div>
-                        <p><strong>Apply Date:</strong> ' . $row['applydate'] . '</p>
-                    </div>
-                    <p class="position"><strong>Position:</strong> ' . $row['position'] . '</p>
-                    <a href="./my-applications-details.php?jid=' . $row['jid'] . '"><button>View More</button></a>
-                </div>';
+                        <p class="position"><strong>Position:</strong> ' . $row['position'] . '</p>
+                        <a href="./my-applications-details.php?jid=' . $row['jid'] . '"><button>View More</button></a>
+                    </div>';
+        }
+    }
+    else {
+        echo '<div class="sections">No Applications </div>';
     }
 }
 

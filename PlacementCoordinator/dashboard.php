@@ -61,14 +61,14 @@ if (!isset($_SESSION)) {
                         <p>Completed Opportunities : <?php echo getTotalCompletedJobs(); ?></p>
                     </div>
                 </div>
-                <div class="sections">
+                <!-- <div class="sections">
                     <h3>Placement Coordinators</h3>
                     <div class="sub-sections performance">
                         <div class="right1"><a href="./Placement-Coordinator.php"><i class=" fa-solid fa-chevron-right fa-2x" style="color: #000000;"></i></a>
                         </div>
-                        <p>Total Coordinators : <?php echo getTotalPlacementCoordinators(); ?></p>
+                        <p>Total Coordinators : <?php // echo getTotalPlacementCoordinators(); ?></p>
                     </div>
-                </div>
+                </div> -->
             </div>
 
 

@@ -18,8 +18,8 @@ if (isset($_SESSION["user_type"]) && isset($_SESSION["user_email"])) {
     $fetchStudent->bind_param("s", $_SESSION["user_email"]);
     $fetchStudent->execute();
     $result = $fetchStudent->get_result();
-
     if ($result->num_rows > 0) {
+        
         $StudentInfo = $result->fetch_assoc();
         $StudentFName = htmlspecialchars($StudentInfo['fname']);
         $StudentMName = htmlspecialchars($StudentInfo['mname']);

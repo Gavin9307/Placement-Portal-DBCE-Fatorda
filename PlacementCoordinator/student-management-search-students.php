@@ -114,14 +114,21 @@ if (isset($_POST["student-search-button"])) {
                             <th>Details</th>
                         </tr>
                         <?php
-                        while ($student = $studentsResult->fetch_assoc()) {
+                        if ($studentsResult->num_rows > 0){
+                            while ($student = $studentsResult->fetch_assoc()) {
+                                echo '<tr>
+                                    <td>' . htmlspecialchars($student["fname"]) . ' ' . htmlspecialchars($student["lname"]) . '</td>
+                                    <td>' . (int) htmlspecialchars($student["yoa"])+4 . '</td>
+                                    <td>' . htmlspecialchars($student["dname"]) . '</td>
+                                    <td>' . htmlspecialchars($student["cgpa"]) . '</td>
+                                    <td><a href="student-management-view-student.php?semail=' . $student["semail"] . '">View more</a></td>
+                                </tr>';
+                            }
+                        }
+                        else {
                             echo '<tr>
-                                <td>' . htmlspecialchars($student["fname"]) . ' ' . htmlspecialchars($student["lname"]) . '</td>
-                                <td>' . (int) htmlspecialchars($student["yoa"])+4 . '</td>
-                                <td>' . htmlspecialchars($student["dname"]) . '</td>
-                                <td>' . htmlspecialchars($student["cgpa"]) . '</td>
-                                <td><a href="student-management-view-student.php?semail=' . $student["semail"] . '">View more</a></td>
-                            </tr>';
+                            <td colspan=5><br/>No Students Found</td>
+                                </tr>';
                         }
                         ?>
                     </table>

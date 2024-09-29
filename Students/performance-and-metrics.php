@@ -188,7 +188,7 @@ $rejectedCount = $row_rejected['rejected_applications'];
 
                     </div>
                 </div>
-                <div class="sections">
+                <!-- <div class="sections">
                     <canvas id="myLineChart" style="width: 100%;height:300px;"></canvas>
                     <script>
                         const ctz = document.getElementById('myLineChart').getContext('2d');
@@ -242,7 +242,7 @@ $rejectedCount = $row_rejected['rejected_applications'];
                         });
                     </script>
 
-                </div>
+                </div> -->
             </div>
         </div>
     </div>

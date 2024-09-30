@@ -108,6 +108,7 @@ if (isset($_POST["get-filter-report"])) {
         $sqlMale .= " AND s.S_Year_of_Admission = '$batch_year'";
         $sql_placed .= " AND s.S_Year_of_Admission = '$batch_year' ";
         $sql_registered .= " AND s.S_Year_of_Admission = '$batch_year' ";
+        $sqlSalaries .= " AND s.S_Year_of_Admission = '$batch_year' ";
     }
 
     if (!empty($_POST['departments'])) {
@@ -211,14 +212,13 @@ if ($resultMale->num_rows > 0) {
 // SQL query to get the average, highest, and minimum salary
 
 $resultSalaries = $conn->query($sqlSalaries);
-
 $averageSalary = $highestSalary = $minimumSalary = 0; // Default values
 
 if ($resultSalaries->num_rows > 0) {
     $rowSalaries = $resultSalaries->fetch_assoc();
-    $averageSalary = $rowSalaries['Average_Salary'];
-    $highestSalary = $rowSalaries['Highest_Salary'];
-    $minimumSalary = $rowSalaries['Minimum_Salary'];
+    $averageSalary = is_null($rowSalaries['Average_Salary']) ? 0 : $rowSalaries['Average_Salary'] ;
+    $highestSalary = is_null($rowSalaries['Highest_Salary']) ? 0 : $rowSalaries['Highest_Salary'] ;
+    $minimumSalary = is_null($rowSalaries['Minimum_Salary']) ? 0 : $rowSalaries['Minimum_Salary'] ;
 }
 // SQL query to fetch salary data by department
 

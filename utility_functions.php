@@ -233,7 +233,7 @@ S.S_College_Email = ? AND R.J_id = ?;";
                     <div class="offer-letter-container">
                         <form method="post" action="./my-applications-details.php?jid=' . $_GET["jid"] . '">
                         <strong>Offer Letter: </strong>
-                        <input name="offer" type="text" value="' . $row["Offer_Letter"] . '">
+                        <input name="offer" type="text" value="' . $row["Offer_Letter"] . '"placeholder="Enter google drive link">
                         <button name="update-offer">Submit</button>
                         </form>
                     </div>
@@ -243,7 +243,7 @@ S.S_College_Email = ? AND R.J_id = ?;";
                     <div class="offer-letter-container">
                         <form method="post" action="./my-applications-details.php?jid=' . $_GET["jid"] . '>
                         <strong>Offer Letter: </strong>
-                        <input name="offer" type="text" value="">
+                        <input name="offer" type="text" value="" placeholder="Enter google drive link">
                         <button name="update-offer">Submit</button>
                         </form>
                     </div>

@@ -90,29 +90,29 @@ $report_Query = "SELECT
         c.C_Name AS 'Company Name',
         c.C_Location AS Location,
         jp.Job_Post_Date AS 'Interview Date',
-        COUNT(CASE WHEN d.Dept_name = 'CIVIL' THEN 1 END) as CIVIL,
-        COUNT(CASE WHEN d.Dept_name = 'MECH' THEN 1 END) as MECH,
-        COUNT(CASE WHEN d.Dept_name = 'ECS' THEN 1 END) as ECS,
-        COUNT(CASE WHEN d.Dept_name = 'COMP' THEN 1 END) as COMP,
-        COUNT(*) as Total,
+        COUNT(DISTINCT CASE WHEN d.Dept_name = 'CIVIL' THEN s.S_College_Email END) as CIVIL,
+        COUNT(DISTINCT CASE WHEN d.Dept_name = 'MECH' THEN s.S_College_Email END) as MECH,
+        COUNT(DISTINCT CASE WHEN d.Dept_name = 'ECS' THEN s.S_College_Email END) as ECS,
+        COUNT(DISTINCT CASE WHEN d.Dept_name = 'COMP' THEN s.S_College_Email END) as COMP,
+        COUNT(DISTINCT s.S_College_Email) as Total,
         jo.J_Offered_salary AS 'Offered Salary'
     FROM
-        company AS c
-    INNER JOIN
-        jobposting AS jp ON jp.C_id = c.C_id
-    INNER JOIN
-        jobplacements AS jo ON jo.J_id = jp.J_id
-    INNER JOIN
-        jobdepartments AS jd ON jd.J_id = jp.J_id
-    INNER JOIN
-        jobapplication AS ja ON ja.J_id = jp.J_id
-    INNER JOIN
-        student AS s ON s.S_College_Email = ja.S_College_Email
+        student AS s
     INNER JOIN
         class AS cl ON cl.Class_id = s.S_Class_id
     INNER JOIN
         department AS d ON cl.Dept_id = d.Dept_id
-    WHERE ja.placed = 1 AND jp.Job_Post_Date < CURRENT_DATE ";
+    INNER JOIN
+        jobapplication AS ja ON s.S_College_Email = ja.S_College_Email
+    INNER JOIN
+        jobposting AS jp ON jp.J_id = ja.J_id
+    INNER JOIN
+        company AS c ON c.C_id = jp.C_id
+    INNER JOIN
+        jobplacements AS jo ON jo.J_id = jp.J_id
+    INNER JOIN
+        jobdepartments AS jd ON jd.J_id = jp.J_id
+    WHERE s.PLACED = 1 AND jp.Job_Post_Date < CURRENT_DATE";
 
 $report_Query_1 = "SELECT 
             COUNT(DISTINCT CASE WHEN d.Dept_name = 'CIVIL' THEN s.S_College_Email END) AS CIVIL,
@@ -181,14 +181,10 @@ $report_Query_5 = "SELECT
     FROM
         student AS s
     INNER JOIN 
-        jobapplication AS ja ON ja.S_College_Email = s.S_College_Email
-    INNER JOIN 
         class AS c ON c.Class_id = s.S_Class_id
     INNER JOIN 
         department AS d ON c.Dept_id = d.Dept_id
-    INNER JOIN
-        jobplacements AS jp ON jp.J_id = ja.J_id
-    WHERE ja.placed = 1 AND jp.J_Due_date < CURRENT_DATE() ";
+    WHERE s.PLACED = 1";
 
 
 if (isset($_POST["get-filter-report"])) {

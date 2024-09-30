@@ -107,9 +107,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update-round-status']
                 </div> -->
                 <div class="sections">
                     <?php getInterestedStudentsDetails(); ?>
-
-
                 </div>
+                <?php
+                    $jid = (int) $_GET['jid'];
+                    $semail = (string) $_GET['semail'];
+                    $fetchResultQuery = 'SELECT ja.Offer_Letter as offer_letter FROM `jobapplication` AS ja WHERE ja.J_id = ? AND ja.S_College_Email = ?';
+                    $fetchResult = $conn->prepare($fetchResultQuery);
+                    $fetchResult->bind_param("is",$jid ,$semail);
+                    $fetchResult->execute();
+                    $result2 = $fetchResult->get_result();
+                    $row2 = $result2->fetch_assoc();    
+                    if ($row2['offer_letter']!= ''){
+                        echo ' <div class="sections">
+                    <span><strong>Offer Letter : </strong></span>
+                    <a style="margin-left:5px;" href="'.$row2['offer_letter'].'">'.$row2['offer_letter'].'</a>
+                </div>';
+                    }
+
+                ?>
+               
 
             </div>
         </div>

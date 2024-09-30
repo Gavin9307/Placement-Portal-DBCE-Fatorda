@@ -391,10 +391,6 @@ while ($row = $result_registered->fetch_assoc()) {
                         var lowestSalaries = <?php echo json_encode($lowestSalaries); ?>;
                         var averageSalaries = <?php echo json_encode($averageSalaries); ?>;
 
-                        console.log(departments);
-                        console.log(highestSalaries);
-                        console.log(averageSalaries);
-                        console.log(lowestSalaries);
 
                         // Get the canvas element by its ID
                         var cta = document.getElementById('myBarChart').getContext('2d');
@@ -585,8 +581,8 @@ while ($row = $result_registered->fetch_assoc()) {
                                             weight: 'bold',
                                             size: 12 // Adjust font size
                                         },
-                                        anchor: 'end', // Position the labels at the end of each bar
-                                        align: 'right', // Align the labels to the right of the bars
+                                        anchor: 'center', // Position the labels at the end of each bar
+                                        align: 'center', // Align the labels to the right of the bars
                                         formatter: (value) => {
                                             return value; // Display the value on the bar
                                         }

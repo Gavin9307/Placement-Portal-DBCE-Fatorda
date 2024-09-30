@@ -90,6 +90,15 @@
     justify-content: space-between;
     align-items: center;
 }
+.offer-letter-container input {
+    margin-left: 10px;
+    margin-right: 10px;
+    width: 400px;
+    padding: 7px;
+    border-radius: 5px;
+    outline: none;
+    border: 1px solid var(--secondary-grey);
+}
 .offer-letter-container button {
     margin-top: 0px;
     position: relative;

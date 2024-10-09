@@ -79,10 +79,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_GET["login"])) {
                     }
                     $_SESSION['user_email'] = $email;
                     $_SESSION['user_type'] = $usertype;
-
+                    $_SESSION["reg_complete"] = "pending";
                     if ($rememberMe) {
                         setcookie("user_email", $email, time() + 86400 * 30, "/");
                         setcookie("user_type", $usertype, time() + 86400 * 30, "/");
+                        setcookie("reg_complete","pending",  time() + 86400 * 30, "/");
                     }
                     switch ($usertype) {
                         case "stu":

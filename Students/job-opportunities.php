@@ -1,5 +1,6 @@
 <?php
 require "../conn.php";
+require "../restrict_incomplete_profile.php";
 require "../restrict.php";
 require "../restrict_placement_coordinator.php";
 include "../utility_functions.php";
@@ -29,9 +30,6 @@ if (!isset($_SESSION)) {
             <div class="main-container">
                 <h2 class="main-container-heading"><a href="./dashboard.php"><i class="fa-solid fa-arrow-left fa-lg" style="color: #000000;"></i></a>
                     Job Opportunities</h2>
-
-
-                
                 <?php
                     getJobOffers($_SESSION['user_email']);
                 ?>

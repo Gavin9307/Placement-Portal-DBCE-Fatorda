@@ -3,10 +3,10 @@ require "./conn.php";
 require "./restrict.php";
 include "./utility_functions.php";
 global $conn;
-
 if (!isset($_SESSION)) {
     session_start();
 }
+echo $_COOKIE['reg_complete'];
 
 if (isset($_POST["create_profile"])) {
     function handle_empty($input)
@@ -105,11 +105,11 @@ if (isset($_POST["create_profile"])) {
         $insertResultsQuery = "INSERT INTO result (S_College_Email, Sem1_SGPA, Sem2_SGPA, Sem3_SGPA, Sem4_SGPA, Sem5_SGPA, Sem6_SGPA, Sem7_SGPA, Sem8_SGPA, CGPA, has_backlogs) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         $stmt = $conn->prepare($insertResultsQuery);
         $stmt->bind_param("sdddddddddd", $_SESSION['user_email'], $semesters[0], $semesters[1], $semesters[2], $semesters[3], $semesters[4], $semesters[5], $semesters[6], $semesters[7], $StudentCGPA, $StudentBacks);
-        $stmt->execute();
-
-        // echo "Profile created successfully!";
-
-        header("Location: ./Students/dashboard.php");
+        if($stmt->execute()){
+            $_SESSION["reg_complete"] = "complete";
+            setcookie('reg_complete', 'complete', time() + 86400 * 30, '/');
+            header("Location: ./Students/dashboard.php");
+        }
         exit;
     } else {
         echo "Error: " . $stmt->error;
@@ -318,7 +318,7 @@ if (isset($_POST["create_profile"])) {
         
         // First Name validation (no digits allowed)
         let fname = document.querySelector("input[name='fname']").value;
-        let nameRegex = /^[A-Za-z]+$/;
+        let nameRegex = /^[A-Za-z]+(\s[A-Za-z]+)*$/;
         if (fname === "") {
             document.getElementById("fname_error").textContent = "First Name is required";
             isValid = false;

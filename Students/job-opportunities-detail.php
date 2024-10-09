@@ -1,4 +1,5 @@
 <?php
+require "../restrict_incomplete_profile.php";
 require "../restrict.php";
 require "../restrict_placement_coordinator.php";
 require "../utility_functions.php";

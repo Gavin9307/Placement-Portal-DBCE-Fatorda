@@ -1,5 +1,6 @@
 <?php
 require "../conn.php";
+require "../restrict_incomplete_profile.php";
 require "../restrict.php";
 require "../restrict_placement_coordinator.php";
 include "../utility_functions.php";

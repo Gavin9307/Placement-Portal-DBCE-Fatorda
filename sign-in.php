@@ -79,11 +79,30 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_GET["login"])) {
                     }
                     $_SESSION['user_email'] = $email;
                     $_SESSION['user_type'] = $usertype;
-                    $_SESSION["reg_complete"] = "pending";
+                    if($usertype=="stu"){
+                        $checkRegQuery = "SELECT student.registration_complete as reg FROM student WHERE student.S_College_Email = ?";
+                        $checkRegStmt = $conn->prepare($checkRegQuery);
+                        $checkRegStmt->bind_param("s", $email);
+                        $checkRegStmt->execute();
+                        $RegResult = $checkRegStmt->get_result();
+                        $RegRow = $RegResult->fetch_assoc();
+                        if($RegRow["reg"]==0){
+                            $_SESSION["reg_complete"] = "pending";
+                        }
+                        else{
+                            $_SESSION["reg_complete"] = "complete";
+                        }
+                    }
+                    
                     if ($rememberMe) {
                         setcookie("user_email", $email, time() + 86400 * 30, "/");
                         setcookie("user_type", $usertype, time() + 86400 * 30, "/");
-                        setcookie("reg_complete","pending",  time() + 86400 * 30, "/");
+                        if($RegRow["reg"]==0){
+                            setcookie("reg_complete","pending",  time() + 86400 * 30, "/");
+                        }
+                        else{
+                            setcookie("reg_complete","complete",  time() + 86400 * 30, "/");
+                        }
                     }
                     switch ($usertype) {
                         case "stu":

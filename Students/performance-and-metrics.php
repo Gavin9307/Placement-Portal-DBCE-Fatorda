@@ -10,10 +10,8 @@ if (!isset($_SESSION)) {
     session_start();
 }
 
-// Assuming the email is stored in the session
 $student_email = $_SESSION['user_email'];
 
-// Fetch the number of jobs the student was eligible for
 $query_eligible = "SELECT COUNT(jp.J_id) as eligible_count 
                    FROM jobplacements as jp
                    INNER JOIN jobdepartments as jd ON jd.J_id = jp.J_id

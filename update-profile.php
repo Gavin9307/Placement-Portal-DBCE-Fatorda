@@ -6,7 +6,6 @@ global $conn;
 if (!isset($_SESSION)) {
     session_start();
 }
-echo $_COOKIE['reg_complete'];
 
 if (isset($_POST["create_profile"])) {
     function handle_empty($input)

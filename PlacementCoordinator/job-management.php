@@ -8,9 +8,10 @@ if (!isset($_SESSION)) {
     session_start();
 }
 
+
 if (isset($_POST["delete-listing"])) {
     $jobId = $_POST["jid"];
-    
+
     // Begin transaction
     $conn->begin_transaction();
 
@@ -31,7 +32,7 @@ if (isset($_POST["delete-listing"])) {
             throw new Exception("Failed to delete from jobdepartments.");
         }
 
-        
+
         // Step 3: Delete from student responses
         $deletestudentresponsesQuery = "DELETE FROM studentresponses WHERE Job_ID = ?";
         $deletestudentresponses = $conn->prepare($deletestudentresponsesQuery);
@@ -39,7 +40,7 @@ if (isset($_POST["delete-listing"])) {
         if (!$deletestudentresponses->execute()) {
             throw new Exception("Failed to delete from studentresponses.");
         }
-        
+
         // Step 4: Delete from jobplacements
         $deleteJobPlacementsQuery = "DELETE FROM jobplacements WHERE J_id = ?";
         $deleteJobPlacements = $conn->prepare($deleteJobPlacementsQuery);
@@ -47,7 +48,7 @@ if (isset($_POST["delete-listing"])) {
         if (!$deleteJobPlacements->execute()) {
             throw new Exception("Failed to delete from jobplacements.");
         }
-        
+
         // Commit transaction
         $conn->commit();
         echo "Job listing successfully deleted.";
@@ -106,7 +107,7 @@ if (isset($_GET['responsestatus']) && isset($_GET['jid'])) {
 
 
                 <?php
-                    getLiveJobListings();
+                getLiveJobListings();
                 ?>
 
 
@@ -131,18 +132,76 @@ if (isset($_GET['responsestatus']) && isset($_GET['jid'])) {
 
         <?php include './footer.php' ?>
     </div>
+    <div id="error" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <p>There was an Error while posting the job</p>
+        </div>
+    </div>
 
+    <div id="no-match" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <p>No students matched the criteria</p>
+        </div>
+    </div>
+
+    <div id="successful" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <p>The Job has been posted successfully</p>
+        </div>
+    </div>
 </body>
 
 <script>
-function confirmAddRounds(jid) {
-    if (confirm("Warning: Once rounds are added, Addiotional rounds cant be created?")) {
-        window.location.href = './job-add-rounds.php?jid=' + jid;
-        return true;
-    } else {
-        return false;
+    function confirmAddRounds(jid) {
+        if (confirm("Warning: Once rounds are added, Addiotional rounds cant be created?")) {
+            window.location.href = './job-add-rounds.php?jid=' + jid;
+            return true;
+        } else {
+            return false;
+        }
     }
-}
+    // Get the modals
+    var errorModal = document.getElementById("error");
+    var nomatchModal = document.getElementById("no-match");
+    var successfulModal = document.getElementById("successful");
+
+    // Get the <span> elements that close the modals
+    var closeButtons = document.getElementsByClassName("close");
+
+    // Close the modal when the user clicks on <span> (x)
+    for (var i = 0; i < closeButtons.length; i++) {
+        closeButtons[i].onclick = function() {
+            errorModal.style.display = "none";
+            nomatchModal.style.display = "none";
+            successfulModal.style.display = "none";
+        }
+    }
+
+    // Close the modal when the user clicks anywhere outside of the modal
+    window.onclick = function(event) {
+        if (event.target == errorModal) {
+            errorModal.style.display = "none";
+        } else if (event.target == notmatchModal) {
+            nomatchModal.style.display = "none";
+        } else if (event.target == successfulModal) {
+            successfulModal.style.display = "none";
+        }
+    }
 </script>
+
+<?php if (isset($_GET['job-post'])): ?>
+    <script>
+        <?php if ($_GET['job-post'] == 3): ?>
+            errorModal.style.display = "block";
+        <?php elseif ($_GET['job-post'] == 1): ?>
+            successfulModal.style.display = "block";
+        <?php elseif ($_GET['job-post'] == 2): ?>
+            nomatchModal.style.display = "block";
+        <?php endif; ?>
+    </script>
+<?php endif; ?>
 
 </html>

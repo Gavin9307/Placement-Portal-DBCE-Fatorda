@@ -31,7 +31,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST["post-job"])) {
     $percentage12 = !empty($_POST['percentage_12']) ? (float) $_POST['percentage_12'] : 0;
     $gender = !empty($_POST['gender']) ? $_POST['gender'] : NULL;
     $isPlaced = !empty($_POST['is_placed']) ? ($_POST['is_placed'] === 'Y' ? 1 : 0) : NULL;
-    $batch = !empty($_POST['d_batch_year'])? $_POST['d_batch_year']-4 : NULL;
+    $batch = !empty($_POST['d_batch_year']) ? $_POST['d_batch_year'] - 4 : NULL;
     $conn->begin_transaction();
 
     try {
@@ -99,44 +99,44 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST["post-job"])) {
             INNER JOIN department D ON D.Dept_id = C.Dept_id
         WHERE 1=1";
 
-if (!empty($selectedDepartments)) {
-    $departmentConditions = array_map(function ($dept) use ($conn) {
-        return "D.Dept_name = '" . $conn->real_escape_string($dept) . "'";
-    }, $selectedDepartments);
-    $studentQuery .= " AND (" . implode(" OR ", $departmentConditions) . ")";
-}
+        if (!empty($selectedDepartments)) {
+            $departmentConditions = array_map(function ($dept) use ($conn) {
+                return "D.Dept_name = '" . $conn->real_escape_string($dept) . "'";
+            }, $selectedDepartments);
+            $studentQuery .= " AND (" . implode(" OR ", $departmentConditions) . ")";
+        }
 
-if (!is_null($batch)) {
-    $studentQuery .= " AND S.S_Year_of_Admission = '" . $conn->real_escape_string($batch) . "'";
-}
-if (!is_null($minCgpa)) {
-    $studentQuery .= " AND cgpa >= " . $conn->real_escape_string($minCgpa);
-}
-if (!is_null($maxCgpa)) {
-    $studentQuery .= " AND cgpa <= " . $conn->real_escape_string($maxCgpa);
-}
-if (!is_null($isPlaced)) {
-    $studentQuery .= " AND placed = '" . $conn->real_escape_string($isPlaced) . "'";
-}
-if (!is_null($percentage10)) {
-    $studentQuery .= " AND S.S_10th_Perc >= " . $conn->real_escape_string($percentage10);
-}
-if (!is_null($percentage12)) {
-    $studentQuery .= " AND S.S_12th_Perc >= " . $conn->real_escape_string($percentage12);
-}
-if (!is_null($gender)) {
-    $studentQuery .= " AND gender = '" . $conn->real_escape_string($gender) . "'";
-}
-if (!is_null($backAllowed)) {
-    if ($backAllowed == 0) {
-        $studentQuery .= " AND R.has_backlogs = 0";
-    } else {
-        $studentQuery .= " AND R.has_backlogs IN (0, 1)";
-    }
-}
+        if (!is_null($batch)) {
+            $studentQuery .= " AND S.S_Year_of_Admission = '" . $conn->real_escape_string($batch) . "'";
+        }
+        if (!is_null($minCgpa)) {
+            $studentQuery .= " AND cgpa >= " . $conn->real_escape_string($minCgpa);
+        }
+        if (!is_null($maxCgpa)) {
+            $studentQuery .= " AND cgpa <= " . $conn->real_escape_string($maxCgpa);
+        }
+        if (!is_null($isPlaced)) {
+            $studentQuery .= " AND placed = '" . $conn->real_escape_string($isPlaced) . "'";
+        }
+        if (!is_null($percentage10)) {
+            $studentQuery .= " AND S.S_10th_Perc >= " . $conn->real_escape_string($percentage10);
+        }
+        if (!is_null($percentage12)) {
+            $studentQuery .= " AND S.S_12th_Perc >= " . $conn->real_escape_string($percentage12);
+        }
+        if (!is_null($gender)) {
+            $studentQuery .= " AND gender = '" . $conn->real_escape_string($gender) . "'";
+        }
+        if (!is_null($backAllowed)) {
+            if ($backAllowed == 0) {
+                $studentQuery .= " AND R.has_backlogs = 0";
+            } else {
+                $studentQuery .= " AND R.has_backlogs IN (0, 1)";
+            }
+        }
 
 
-$studentsResult = $conn->query($studentQuery);
+        $studentsResult = $conn->query($studentQuery);
 
 
         if ($studentsResult->num_rows > 0) {
@@ -153,73 +153,79 @@ $studentsResult = $conn->query($studentQuery);
             $conn->commit();
             $addError = 2;
             global $conn, $client;
-    
-    // Fetch company details
-        $fetchQuery = "SELECT * FROM company WHERE C_id = ?";
-        $fetch = $conn->prepare($fetchQuery);
-        $fetch->bind_param("i", $companyId);
-        $fetch->execute();
-        $result = $fetch->get_result();
-        $row = $result->fetch_assoc();
-        $cname = $row["C_Name"]; 
-        
-        // Create an instance of the Google Calendar Service
-        $service = new Google\Service\Calendar($client);
-        
-        $startDateTimeObj = new DateTime($dueDate);
-        $startDateTimeObj->modify('-1 day'); // Subtract 1 day
-        $startDateTime = $startDateTimeObj->format('Y-m-d') . 'T10:00:00+05:30'; // One day before due date
-        $endDateTime = $startDateTimeObj->format('Y-m-d') . 'T11:00:00+05:30';   // End time (1 hour later)
 
-        // Create event data
-        $event = new Google\Service\Calendar\Event([
-            'summary' => $cname . ' Job Posting Due Date',
-            'description' => 'Departments: ' . $departments,
-            'start' => [
-                'dateTime' => $startDateTime,
-                'timeZone' => 'Asia/Kolkata', // Set to Indian time
-            ],
-            'end' => [
-                'dateTime' => $endDateTime,
-                'timeZone' => 'Asia/Kolkata', // Set to Indian time
-            ],
-            'recurrence' => [
-                'RRULE:FREQ=DAILY;COUNT=2' // Event repeats for 2 days (if required)
-            ],
-            'attendees' => [
-                ['email' => 'fernandespierson03@gmail.com'], // Add more attendees if needed
-            ],
-            'reminders' => [
-                'useDefault' => false,
-                'overrides' => [
-                    ['method' => 'email', 'minutes' => 24 * 60],  // Email reminder 1 day before
-                    ['method' => 'popup', 'minutes' => 10],       // Popup reminder 10 minutes before the event
+            // Fetch company details
+            $fetchQuery = "SELECT * FROM company WHERE C_id = ?";
+            $fetch = $conn->prepare($fetchQuery);
+            $fetch->bind_param("i", $companyId);
+            $fetch->execute();
+            $result = $fetch->get_result();
+            $row = $result->fetch_assoc();
+            $cname = $row["C_Name"];
+
+            // Create an instance of the Google Calendar Service
+            $service = new Google\Service\Calendar($client);
+
+            $startDateTimeObj = new DateTime($dueDate);
+            $startDateTimeObj->modify('-1 day'); // Subtract 1 day
+            $startDateTime = $startDateTimeObj->format('Y-m-d') . 'T10:00:00+05:30'; // One day before due date
+            $endDateTime = $startDateTimeObj->format('Y-m-d') . 'T11:00:00+05:30';   // End time (1 hour later)
+
+            // Create event data
+            $event = new Google\Service\Calendar\Event([
+                'summary' => $cname . ' Job Posting Due Date',
+                'description' => 'Departments: ' . $departments,
+                'start' => [
+                    'dateTime' => $startDateTime,
+                    'timeZone' => 'Asia/Kolkata', // Set to Indian time
                 ],
-            ],
-        ]);
+                'end' => [
+                    'dateTime' => $endDateTime,
+                    'timeZone' => 'Asia/Kolkata', // Set to Indian time
+                ],
+                'recurrence' => [
+                    'RRULE:FREQ=DAILY;COUNT=2' // Event repeats for 2 days (if required)
+                ],
+                'attendees' => [
+                    ['email' => 'fernandespierson03@gmail.com'], // Add more attendees if needed
+                ],
+                'reminders' => [
+                    'useDefault' => false,
+                    'overrides' => [
+                        ['method' => 'email', 'minutes' => 24 * 60],  // Email reminder 1 day before
+                        ['method' => 'popup', 'minutes' => 10],       // Popup reminder 10 minutes before the event
+                    ],
+                ],
+            ]);
 
-    
-    // Insert the event into the calendar
-    $calendarId = 'primary';
-    $event = $service->events->insert($calendarId, $event);
-    
-    // Return the event details or success message
-    
 
+            // Insert the event into the calendar
+            $calendarId = 'primary';
+            $event = $service->events->insert($calendarId, $event);
+
+            // Return the event details or success message
+
+            header("Location: ./job-management.php?job-post=1");
+            exit();
             // echo "Job successfully posted.";
         } else {
             $conn->rollback();
             // echo $studentQuery;
             $addError = 3;
+            header("Location: ./job-management.php?job-post=2");
+            exit();
         }
     } catch (Exception $e) {
         $conn->rollback();
         $addError = 1;
+
         // Output or log the exception details
-    
-    echo "Exception caught: " . $e->getMessage() . "<br>";
-    echo "Stack Trace: " . nl2br($e->getTraceAsString()) . "<br>";
+
+        echo "Exception caught: " . $e->getMessage() . "<br>";
+        echo "Stack Trace: " . nl2br($e->getTraceAsString()) . "<br>";
     }
+    header("Location: ./job-management.php?job-post=3");
+    exit();
 }
 
 ?>
@@ -374,88 +380,7 @@ $studentsResult = $conn->query($studentQuery);
 
         <?php include './footer.php' ?>
     </div>
-    <!-- Modals -->
-    <div id="error" class="modal">
-        <div class="modal-content">
-            <span class="close">&times;</span>
-            <p>There was an Error while posting the job</p>
-        </div>
-    </div>
-
-    <div id="no-match" class="modal">
-        <div class="modal-content">
-            <span class="close">&times;</span>
-            <p>No students matched the criteria</p>
-        </div>
-    </div>
-
-    <div id="successful" class="modal">
-        <div class="modal-content">
-            <span class="close">&times;</span>
-            <p>The Job has been posted successfully</p>
-        </div>
-    </div>
-    <script>
-        // Get the modals
-        var errorModal = document.getElementById("error");
-        var nomatchModal = document.getElementById("no-match");
-        var successfulModal = document.getElementById("successful");
-
-        // Get the <span> elements that close the modals
-        var closeButtons = document.getElementsByClassName("close");
-
-        // Close the modal when the user clicks on <span> (x)
-        for (var i = 0; i < closeButtons.length; i++) {
-            closeButtons[i].onclick = function() {
-                errorModal.style.display = "none";
-                nomatchModal.style.display = "none";
-                successfulModal.style.display = "none";
-            }
-        }
-
-        // Close the modal when the user clicks anywhere outside of the modal
-        window.onclick = function(event) {
-            if (event.target == errorModal) {
-                errorModal.style.display = "none";
-            } else if (event.target == notmatchModal) {
-                nomatchModal.style.display = "none";
-            }
-            else if (event.target == successfulModal) {
-                successfulModal.style.display = "none";
-            }
-        }
-
-        // Trigger the appropriate modal based on PHP variable
-        <?php if ($addError == 1) : ?>
-            errorModal.style.display = "block";
-        <?php elseif ($addError == 2) : ?>
-            successfulModal.style.display = "block";
-            <?php elseif ($addError == 3) : ?>
-                nomatchModal.style.display = "block";
-        <?php endif; ?>
-    </script>
-
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Function to check if at least one checkbox is selected
-            function validateCheckboxes() {
-                const checkboxes = document.querySelectorAll('input[name="departments[]"]');
-                for (const checkbox of checkboxes) {
-                    if (checkbox.checked) {
-                        return true;
-                    }
-                }
-                return false;
-            }
-
-            document.querySelector('form').addEventListener('submit', function(event) {
-                if (!validateCheckboxes()) {
-                    alert('Please select at least one department.');
-                    event.preventDefault();
-                }
-            });
-        });
-    </script>
+    
 </body>
 
 </html>

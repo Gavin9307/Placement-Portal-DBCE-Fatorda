@@ -275,7 +275,7 @@ WHERE ja.J_id = ? LIMIT 5;";
         }
 
         echo '<td><a href="job-eligible-students-details.php?jid=' . $jid . '&semail=' . $row["semail"] . '">View More</a></td>
-                <td><button class="remove-button">Remove</button></td>
+                <td><a  href="job-live-listing-analysis.php?remove=1&jid=' . $jid . '&semail=' . $row["semail"] . '"><button class="remove-button">Remove</button></a></td>
             </tr>';
     }
 }
@@ -315,7 +315,7 @@ WHERE ja.J_id = ? AND ja.Interest = ? LIMIT 5;";
         }
 
         echo '<td><a href="job-interested-students-details.php?jid=' . $jid . '&semail=' . $row["semail"] . '">View More</a></td>
-                <td><button class="remove-button">Remove</button></td>
+                <td><a  href="job-live-listing-analysis.php?remove=1&jid=' . $jid . '&semail=' . $row["semail"] . '"><button class="remove-button">Remove</button></a></td>
             </tr>';
     }
 }
@@ -345,7 +345,7 @@ WHERE ja.J_id = ?;";
         }
 
         echo '<td><a href="job-interested-students-details.php?jid=' . $jid . '&semail=' . $row["semail"] . '">View More</a></td>
-                <td><button class="remove-button">Remove</button></td>
+                 <td><a  href="job-eligible-students.php?remove=1&jid=' . $jid . '&semail=' . $row["semail"] . '"><button class="remove-button">Remove</button></a></td>
             </tr>';
     }
 }
@@ -385,7 +385,7 @@ WHERE ja.J_id = ? AND ja.Interest = ?;";
         }
 
         echo '<td><a href="job-interested-students-details.php?jid=' . $jid . '&semail=' . $row["semail"] . '">View More</a></td>
-                <td><button class="remove-button">Remove</button></td>
+                <td><a  href="job-interested-students.php?remove=1&jid=' . $jid . '&semail=' . $row["semail"] . '"><button class="remove-button">Remove</button></a></td>
             </tr>';
     }
 }

@@ -408,7 +408,4 @@ if (isset($_POST["create_profile"])) {
         return isValid;
     }
 </script>
-
-
-
 </html>

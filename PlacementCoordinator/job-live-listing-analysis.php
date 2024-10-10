@@ -13,6 +13,28 @@ if (!isset($_GET["jid"])) {
     exit();
 }
 
+if (isset($_GET['remove']) && isset($_GET['semail']) && isset($_GET['jid'])) {
+    $semail = $_GET['semail']; // Ensure you capture the email
+    $jjid = (int) $_GET['jid']; // Safely cast the job ID to an integer
+
+    // Prepare the DELETE query
+    $studentJobDeleteQuery = "DELETE FROM jobapplication WHERE S_College_Email = ? AND J_id = ?";
+    $studentJobDelete = $conn->prepare($studentJobDeleteQuery);
+
+    if ($studentJobDelete) {
+        // Bind parameters and execute the query
+        $studentJobDelete->bind_param("si", $semail, $jjid);
+
+        if ($studentJobDelete->execute()) {
+            echo 'Student deleted successfully';
+        } else {
+            echo 'Student deletion unsuccessful: ' . $conn->error; 
+        }
+    } else {
+        echo 'Query preparation failed: ' . $conn->error; 
+    }
+}
+
 ?>
 
 <!DOCTYPE html>

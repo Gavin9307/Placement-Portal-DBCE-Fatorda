@@ -11,6 +11,7 @@ if (!isset($_SESSION)) {
 }
 
 
+
 // 0-pending 1-error 2-success 3-no match
 $addError = 0;
 
@@ -24,13 +25,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST["post-job"])) {
     $offeredSalary = !empty($_POST['offered-salary']) ? $_POST['offered-salary'] : 0;
     $companyId = !empty($_POST['company']) ? (int) $_POST['company'] : NULL;
     $dueDate = !empty($_POST['due-date']) ? $_POST['due-date'] : NULL;
-    $backAllowed = !empty($_POST['has_backlogs']) ? (int) $_POST['has_backlogs'] : NULL;
+    $backAllowed = isset($_POST['has_backlogs']) ? ($_POST['has_backlogs'] === 'Y' ? NULL : 0) : NULL;
+
     $percentage10 = !empty($_POST['percentage_10']) ? (float) $_POST['percentage_10'] : 0;
     $percentage12 = !empty($_POST['percentage_12']) ? (float) $_POST['percentage_12'] : 0;
     $gender = !empty($_POST['gender']) ? $_POST['gender'] : NULL;
-    $isPlaced = !empty($_POST['is_placed'])? $_POST['is_placed'] : NULL;
+    $isPlaced = isset($_POST['is_placed']) ? ($_POST['is_placed'] === 'Y' ? 1 : 0) : NULL;
     $batch = !empty($_POST['d_batch_year'])? $_POST['d_batch_year']-4 : NULL;
-
     $conn->begin_transaction();
 
     try {
@@ -208,17 +209,19 @@ $studentsResult = $conn->query($studentQuery);
             // echo "Job successfully posted.";
         } else {
             $conn->rollback();
-            echo $studentQuery;
+            // echo $studentQuery;
             $addError = 3;
         }
     } catch (Exception $e) {
         $conn->rollback();
         $addError = 1;
         // Output or log the exception details
+    
     echo "Exception caught: " . $e->getMessage() . "<br>";
     echo "Stack Trace: " . nl2br($e->getTraceAsString()) . "<br>";
     }
 }
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -277,8 +280,8 @@ $studentsResult = $conn->query($studentQuery);
                                 <label for="">Placed</label>
                                 <select name="is_placed">
                                     <option value="" selected>Select</option>
-                                    <option value="1">Yes</option>
-                                    <option value="0">No</option>
+                                    <option value="Y">Yes</option>
+                                    <option value="N">No</option>
                                 </select>
                             </div>
                             <div class="inputbox">
@@ -297,8 +300,8 @@ $studentsResult = $conn->query($studentQuery);
                                 <label for="">Backlogs</label>
                                 <select name="has_backlogs">
                                     <option value="" selected>Select</option>
-                                    <option value="1">Allowed</option>
-                                    <option value="0">Not Allowed</option>
+                                    <option value="Y">Allowed</option>
+                                    <option value="N">Not Allowed</option>
                                 </select>
                             </div>
                             <div class="inputbox">

@@ -7,6 +7,8 @@ global $conn;
 if (!isset($_SESSION)) {
     session_start();
 }
+// 0-pending 1-success 2-error
+$student = 0;
 
 if (!isset($_GET["jid"])) {
     header("Location: ./job-management.php");
@@ -26,9 +28,9 @@ if (isset($_GET['remove']) && isset($_GET['semail']) && isset($_GET['jid'])) {
         $studentJobDelete->bind_param("si", $semail, $jjid);
 
         if ($studentJobDelete->execute()) {
-            echo 'Student deleted successfully';
+            $student=1 ;
         } else {
-            echo 'Student deletion unsuccessful: ' . $conn->error; 
+            $student=2 ; 
         }
     } else {
         echo 'Query preparation failed: ' . $conn->error; 
@@ -87,7 +89,51 @@ if (isset($_GET['remove']) && isset($_GET['semail']) && isset($_GET['jid'])) {
 
         <?php include './footer.php' ?>
     </div>
+    <div id="successful" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <p>The Student has been removed successfully</p>
+        </div>
+    </div>
+    <div id="unsuccessful" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <p>There was an error while removing the Student</p>
+        </div>
+    </div>
+    <script>
+        // Get the modals
+        var errorModal = document.getElementById("unsuccessful");
+        var successfulModal = document.getElementById("successful");
 
+        // Get the <span> elements that close the modals
+        var closeButtons = document.getElementsByClassName("close");
+
+        // Close the modal when the user clicks on <span> (x)
+        for (var i = 0; i < closeButtons.length; i++) {
+            closeButtons[i].onclick = function() {
+                errorModal.style.display = "none";
+                successfulModal.style.display = "none";
+            }
+        }
+
+        // Close the modal when the user clicks anywhere outside of the modal
+        window.onclick = function(event) {
+            if (event.target == errorModal) {
+                errorModal.style.display = "none";
+            } 
+            else if (event.target == successfulModal) {
+                successfulModal.style.display = "none";
+            }
+        }
+
+        // Trigger the appropriate modal based on PHP variable
+        <?php if ($student == 2) : ?>
+            errorModal.style.display = "block";
+        <?php elseif ($student == 1) : ?>
+            successfulModal.style.display = "block";
+            <?php endif; ?>
+    </script>
 </body>
 
 </html>

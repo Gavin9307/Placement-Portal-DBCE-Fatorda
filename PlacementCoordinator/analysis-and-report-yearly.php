@@ -315,8 +315,8 @@ while ($row = $result_registered->fetch_assoc()) {
 
                                     while ($row = $result->fetch_assoc()) {
                                         echo '<div>
-                                            <input name="departments[]" value="' . htmlspecialchars($row["dname"]) . '" type="checkbox">
-                                            <label for="">' . htmlspecialchars($row["dname"]) . '</label>
+                                            <input id="' . htmlspecialchars($row["dname"]) . '"name="departments[]" value="' . htmlspecialchars($row["dname"]) . '" type="checkbox">
+                                            <label for="' . htmlspecialchars($row["dname"]) . '">' . htmlspecialchars($row["dname"]) . '</label>
                                         </div>';
                                     }
                                     ?>

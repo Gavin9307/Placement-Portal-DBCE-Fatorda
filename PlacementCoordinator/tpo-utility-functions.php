@@ -1,6 +1,7 @@
 <?php
 
-function getTotalCompanies(){
+function getTotalCompanies()
+{
     global $conn;
 
     $fetchQuery = "SELECT COUNT(*) AS total FROM company";
@@ -12,7 +13,8 @@ function getTotalCompanies(){
     return $row["total"];
 }
 
-function getTotalLiveJobs(){
+function getTotalLiveJobs()
+{
     global $conn;
     $fetchQuery = "SELECT count(*) as total
         from jobplacements as P
@@ -25,7 +27,8 @@ function getTotalLiveJobs(){
     return $row["total"];
 }
 
-function getTotalCompletedJobs(){
+function getTotalCompletedJobs()
+{
     global $conn;
     $fetchQuery = "SELECT count(*) as total
         from jobplacements as P
@@ -38,7 +41,8 @@ function getTotalCompletedJobs(){
     return $row["total"];
 }
 
-function getTotalPlacementCoordinators(){
+function getTotalPlacementCoordinators()
+{
     global $conn;
     $fetchQuery = "SELECT count(*) as total
         from placementcoordinator as p
@@ -46,7 +50,7 @@ function getTotalPlacementCoordinators(){
         WHERE PC_Status = ?";
     $fetch = $conn->prepare($fetchQuery);
     $status = "active";
-    $fetch->bind_param("s",$status);
+    $fetch->bind_param("s", $status);
     $fetch->execute();
     $result = $fetch->get_result();
 
@@ -67,7 +71,7 @@ ORDER BY ND.Notification_Date DESC;";
     $fetchNotifications->execute();
     $result = $fetchNotifications->get_result();
 
-    if ($result->num_rows>0){
+    if ($result->num_rows > 0) {
 
         while ($row = $result->fetch_assoc()) {
             $timestamp = $row["notidate"];
@@ -76,7 +80,7 @@ ORDER BY ND.Notification_Date DESC;";
             $dateTime->setTimezone($istTimeZone);
             $date = $dateTime->format('Y-m-d');
             $time = $dateTime->format('h:i:s A');
-    
+
             echo '<div class="sections">
                         <div class="company-container">
                             <p><strong>Date:</strong> ' . $date . '</p>
@@ -85,15 +89,15 @@ ORDER BY ND.Notification_Date DESC;";
                         <p><strong>Due Date:</strong> ' . $row["duedate"] . '</p>
                         <p class="subject"><strong>Subject:</strong> ' . $row["subject"] . '</p>
                         <p class= "message"><strong>Message:</strong> ' . $row["message"] . '</p>';
-    
+
             if ($row['attach1'] != NULL) {
                 echo '<a href="../Data/Notifications/' . $row['attach1'] . '" class="attachment-links">Attachment 1</a>';
             }
-    
+
             if ($row['attach2'] != NULL) {
                 echo '<a href="../Data/Notifications/' . $row['attach2'] . '" class="attachment-links">Attachment 2</a>';
             }
-    
+
             echo '</p>
                         <a href="./notifications-edit.php?nid=' . $row["nid"] . '"><button class="edit-button">Edit</button></a>
                         <form action="" method="post">
@@ -102,12 +106,10 @@ ORDER BY ND.Notification_Date DESC;";
                         </form>
                     </div>';
         }
-    }
-    else {
+    } else {
         echo '<div class="sections">
             No Notifications
         </div>';
-
     }
 }
 
@@ -206,7 +208,7 @@ function getCompletedJobListings()
     $fetchJob = $conn->prepare($fetchJobQuery);
     $fetchJob->execute();
     $result = $fetchJob->get_result();
-    if ($result->num_rows > 0 ){
+    if ($result->num_rows > 0) {
         while ($row = $result->fetch_assoc()) {
             echo '<tr>
                             <td>' . $row["duedate"] . '</td>
@@ -215,8 +217,7 @@ function getCompletedJobListings()
                             <td><a href="./job-live-listing-analysis.php?jid=' . $row["jid"] . '">View more</a></td>
                         </tr>';
         }
-    }
-    else {
+    } else {
         echo '<tr><td colspan=4><br/> No Completed Listing <br/></td></tr>';
     }
 }
@@ -234,7 +235,7 @@ function getCompletedJobListingsAll()
     $fetchJob = $conn->prepare($fetchJobQuery);
     $fetchJob->execute();
     $result = $fetchJob->get_result();
-    if ($result->num_rows>0){
+    if ($result->num_rows > 0) {
         while ($row = $result->fetch_assoc()) {
             echo '<tr>
                             <td>' . $row["duedate"] . '</td>
@@ -242,9 +243,8 @@ function getCompletedJobListingsAll()
                             <td>' . $row["totalplaced"] . '</td>
                             <td><a href="./job-live-listing-analysis.php?jid=' . $row["jid"] . '">View more</a></td>
                         </tr>';
-        }    
-    }
-    else{
+        }
+    } else {
         echo '<tr><td colspan=4><br/> No Completed Listing <br/></td></tr>';
     }
 }
@@ -263,20 +263,24 @@ WHERE ja.J_id = ? LIMIT 5;";
     $fetchJobEligible->bind_param("i", $jid);
     $fetchJobEligible->execute();
     $result = $fetchJobEligible->get_result();
-    while ($row = $result->fetch_assoc()) {
-        echo '<tr>
+    if ($result->num_rows > 0) {
+        while ($row = $result->fetch_assoc()) {
+            echo '<tr>
                 <td>' . $row["sfname"] . ' ' . $row["lfname"] . '</td>
                 <td>' . $row["dname"] . '</td>
-                <td>' . $row["yoa"]+4 . '</td>';
-        if ($row['interest'] == 0) {
-            echo  '<td>Not Applied</td>';
-        } else {
-            echo '<td>Applied</td>';
-        }
+                <td>' . $row["yoa"] + 4 . '</td>';
+            if ($row['interest'] == 0) {
+                echo  '<td>Not Applied</td>';
+            } else {
+                echo '<td>Applied</td>';
+            }
 
-        echo '<td><a href="job-eligible-students-details.php?jid=' . $jid . '&semail=' . $row["semail"] . '">View More</a></td>
+            echo '<td><a href="job-eligible-students-details.php?jid=' . $jid . '&semail=' . $row["semail"] . '">View More</a></td>
                 <td><a  href="job-live-listing-analysis.php?remove=1&jid=' . $jid . '&semail=' . $row["semail"] . '"><button class="remove-button">Remove</button></a></td>
             </tr>';
+        }
+    } else {
+        echo '<tr><td colspan=6><br/> No Eligible Students <br/></td></tr>';
     }
 }
 
@@ -296,27 +300,31 @@ WHERE ja.J_id = ? AND ja.Interest = ? LIMIT 5;";
     $fetchJobEligible->bind_param("ii", $jid, $inte);
     $fetchJobEligible->execute();
     $result = $fetchJobEligible->get_result();
-    while ($row = $result->fetch_assoc()) {
-        echo '<tr>
+    if ($result->num_rows > 0) {
+        while ($row = $result->fetch_assoc()) {
+            echo '<tr>
                 <td>' . $row["sfname"] . ' ' . $row["lfname"] . '</td>
                 <td>' . $row["dname"] . '</td>
-                <td>' . $row["yoa"]+4 . '</td>';
-        if ($row['placed'] == 0) {
-            $retrieved_date = $row['duedate'];
-            $date_from_db = new DateTime($retrieved_date);
-            $current_date = new DateTime();
-            if ($date_from_db > $current_date) {
-                echo '<td  style="color:#ebaf0c">Pending</td>';
+                <td>' . $row["yoa"] + 4 . '</td>';
+            if ($row['placed'] == 0) {
+                $retrieved_date = $row['duedate'];
+                $date_from_db = new DateTime($retrieved_date);
+                $current_date = new DateTime();
+                if ($date_from_db > $current_date) {
+                    echo '<td  style="color:#ebaf0c">Pending</td>';
+                } else {
+                    echo '<td  style="color:red">Rejected</td>';
+                }
             } else {
-                echo '<td  style="color:red">Rejected</td>';
+                echo '<td  style="color:green">Placed</td>';
             }
-        } else {
-            echo '<td  style="color:green">Placed</td>';
-        }
 
-        echo '<td><a href="job-interested-students-details.php?jid=' . $jid . '&semail=' . $row["semail"] . '">View More</a></td>
+            echo '<td><a href="job-interested-students-details.php?jid=' . $jid . '&semail=' . $row["semail"] . '">View More</a></td>
                 <td><a  href="job-live-listing-analysis.php?remove=1&jid=' . $jid . '&semail=' . $row["semail"] . '"><button class="remove-button">Remove</button></a></td>
             </tr>';
+        }
+    } else {
+        echo '<tr><td colspan=6><br/> No Interested Students <br/></td></tr>';
     }
 }
 
@@ -333,20 +341,24 @@ WHERE ja.J_id = ?;";
     $fetchJobEligible->bind_param("i", $jid);
     $fetchJobEligible->execute();
     $result = $fetchJobEligible->get_result();
-    while ($row = $result->fetch_assoc()) {
-        echo '<tr>
+    if ($result->num_rows > 0) {
+        while ($row = $result->fetch_assoc()) {
+            echo '<tr>
                 <td>' . $row["sfname"] . ' ' . $row["lfname"] . '</td>
                 <td>' . $row["dname"] . '</td>
-                <td>' . $row["yoa"]+4 . '</td>';
-        if ($row['interest'] == 0) {
-            echo  '<td>Not Applied</td>';
-        } else {
-            echo '<td>Applied</td>';
-        }
+                <td>' . $row["yoa"] + 4 . '</td>';
+            if ($row['interest'] == 0) {
+                echo  '<td>Not Applied</td>';
+            } else {
+                echo '<td>Applied</td>';
+            }
 
-        echo '<td><a href="job-interested-students-details.php?jid=' . $jid . '&semail=' . $row["semail"] . '">View More</a></td>
+            echo '<td><a href="job-interested-students-details.php?jid=' . $jid . '&semail=' . $row["semail"] . '">View More</a></td>
                  <td><a  href="job-eligible-students.php?remove=1&jid=' . $jid . '&semail=' . $row["semail"] . '"><button class="remove-button">Remove</button></a></td>
             </tr>';
+        }
+    } else {
+        echo '<tr><td colspan=6><br/> No Eligible Students <br/></td></tr>';
     }
 }
 
@@ -366,27 +378,31 @@ WHERE ja.J_id = ? AND ja.Interest = ?;";
     $fetchJobEligible->bind_param("ii", $jid, $inte);
     $fetchJobEligible->execute();
     $result = $fetchJobEligible->get_result();
-    while ($row = $result->fetch_assoc()) {
-        echo '<tr>
+    if ($result->num_rows > 0) {
+        while ($row = $result->fetch_assoc()) {
+            echo '<tr>
                 <td>' . $row["sfname"] . ' ' . $row["lfname"] . '</td>
                 <td>' . $row["dname"] . '</td>
-                <td>' . $row["yoa"]+4 . '</td>';
-        if ($row['placed'] == 0) {
-            $retrieved_date = $row['duedate'];
-            $date_from_db = new DateTime($retrieved_date);
-            $current_date = new DateTime();
-            if ($date_from_db > $current_date) {
-                echo '<td  style="color:#ebaf0c">Pending</td>';
+                <td>' . $row["yoa"] + 4 . '</td>';
+            if ($row['placed'] == 0) {
+                $retrieved_date = $row['duedate'];
+                $date_from_db = new DateTime($retrieved_date);
+                $current_date = new DateTime();
+                if ($date_from_db > $current_date) {
+                    echo '<td  style="color:#ebaf0c">Pending</td>';
+                } else {
+                    echo '<td  style="color:red">Rejected</td>';
+                }
             } else {
-                echo '<td  style="color:red">Rejected</td>';
+                echo '<td  style="color:green">Placed</td>';
             }
-        } else {
-            echo '<td  style="color:green">Placed</td>';
-        }
 
-        echo '<td><a href="job-interested-students-details.php?jid=' . $jid . '&semail=' . $row["semail"] . '">View More</a></td>
+            echo '<td><a href="job-interested-students-details.php?jid=' . $jid . '&semail=' . $row["semail"] . '">View More</a></td>
                 <td><a  href="job-interested-students.php?remove=1&jid=' . $jid . '&semail=' . $row["semail"] . '"><button class="remove-button">Remove</button></a></td>
             </tr>';
+        }
+    } else {
+        echo '<tr><td colspan=6><br/> No Interested Students <br/></td></tr>';
     }
 }
 
@@ -420,7 +436,7 @@ function getEligibleStudentsDetails()
                     <div class="section-img">
                         <img src="../Data/Students/Profile_Images/' . $row["logo"] . '" alt="">
                         <div class="button-container">
-                            <a href="./notification-post-solo.php?semail='.$semail.'&sname='.$row["fname"].'"><button class="send-message-button">Send Message</button></a>
+                            <a href="./notification-post-solo.php?semail=' . $semail . '&sname=' . $row["fname"] . '"><button class="send-message-button">Send Message</button></a>
                         </div>
                     </div>';
 }
@@ -482,7 +498,7 @@ WHERE r.J_id = ? AND sr.S_College_Email= ?;';
                     <div class="section-img">
                         <img src="../Data/Students/Profile_Images/' . $row1["logo"] . '" alt="">
                         <div class="button-container">
-                            <a href="./notification-post-solo.php?semail='.$semail.'&sname='.$row1["fname"].'"><button class="send-message-button">Send Message</button></a>
+                            <a href="./notification-post-solo.php?semail=' . $semail . '&sname=' . $row1["fname"] . '"><button class="send-message-button">Send Message</button></a>
                         </div>
                     </div>';
 }
@@ -620,21 +636,21 @@ function getPlacementCoordinators()
 }
 
 
-function getQuestions(){
+function getQuestions()
+{
     global $conn;
     $fetchQuestionsQuery = 'SELECT * from questions WHERE Is_Deleted = FALSE';
     $fetchQuestions = $conn->prepare($fetchQuestionsQuery);
     $fetchQuestions->execute();
     $result = $fetchQuestions->get_result();
-    if ($result->num_rows > 0){
-        while($row = $result->fetch_assoc()) {
+    if ($result->num_rows > 0) {
+        while ($row = $result->fetch_assoc()) {
             echo ' <tr>
-                    <td>'.$row["Question_Text"].'</td>
-                    <td><a href="./job-post-questions.php?qid='.$row["Question_ID"].'&remove=1" class="remove-button">Remove</a></td>
+                    <td>' . $row["Question_Text"] . '</td>
+                    <td><a href="./job-post-questions.php?qid=' . $row["Question_ID"] . '&remove=1" class="remove-button">Remove</a></td>
                 </tr>';
         }
-    }
-    else {
+    } else {
         echo '<tr>
         <td colspan=2><br/>No Questions<br/></td>
     </tr>';
@@ -642,7 +658,8 @@ function getQuestions(){
 }
 
 
-function getQuestionsToPost(){
+function getQuestionsToPost()
+{
     global $conn;
     $fetchQuestionsQuery = 'SELECT * FROM Questions WHERE Is_Deleted = FALSE';
     $fetchQuestions = $conn->prepare($fetchQuestionsQuery);

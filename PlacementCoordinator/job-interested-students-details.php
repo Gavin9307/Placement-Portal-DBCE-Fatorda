@@ -49,7 +49,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update-round-status']
         $updatePlacedStudentStatus = $conn->prepare($updatePlacedStudentStatusQuery);
         $updatePlacedStudentStatus->bind_param("s", $semail);
         $updatePlacedStudentStatus->execute();
-    }else {
+    } else {
         $updatePlacedStatusQuery = "UPDATE jobapplication SET placed = 0 WHERE J_id = ? AND S_College_Email = ?";
         $updatePlacedStatus = $conn->prepare($updatePlacedStatusQuery);
         $updatePlacedStatus->bind_param("is", $jid, $semail);
@@ -99,33 +99,42 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update-round-status']
                         </button>
                         Interested Students
                     </h2>
+                    <?php
+                    $jjid = (int) $_GET['jid'];
+                    $companyQuery = "SELECT c.C_Name as company_name,c.C_Logo as company_logo FROM company as c INNER JOIN jobposting as jp on jp.C_id=c.C_id WHERE jp.J_id= ?";
+                    $company = $conn->prepare($companyQuery);
+                    $company->bind_param("i", $jjid);
+                    $company->execute();
+                    $result = $company->get_result();
+                    $row = $result->fetch_assoc();
+                    echo '<div class="company-container">
+                        
+                        <img width="100px" height="100px" src="../Data/Companies/Company_Logo/' . $row['company_logo'] . '" alt="' . $row['company_name'] . '">
+                    </div>'
+                    ?>
                 </div>
-                <!-- <div class="eligible-company">
-                    <div class="company-container">
-                        <p>Google</p>
-                    </div>
-                </div> -->
+
                 <div class="sections">
                     <?php getInterestedStudentsDetails(); ?>
                 </div>
                 <?php
-                    $jid = (int) $_GET['jid'];
-                    $semail = (string) $_GET['semail'];
-                    $fetchResultQuery = 'SELECT ja.Offer_Letter as offer_letter FROM `jobapplication` AS ja WHERE ja.J_id = ? AND ja.S_College_Email = ?';
-                    $fetchResult = $conn->prepare($fetchResultQuery);
-                    $fetchResult->bind_param("is",$jid ,$semail);
-                    $fetchResult->execute();
-                    $result2 = $fetchResult->get_result();
-                    $row2 = $result2->fetch_assoc();    
-                    if ($row2['offer_letter']!= ''){
-                        echo ' <div class="sections">
+                $jid = (int) $_GET['jid'];
+                $semail = (string) $_GET['semail'];
+                $fetchResultQuery = 'SELECT ja.Offer_Letter as offer_letter FROM `jobapplication` AS ja WHERE ja.J_id = ? AND ja.S_College_Email = ?';
+                $fetchResult = $conn->prepare($fetchResultQuery);
+                $fetchResult->bind_param("is", $jid, $semail);
+                $fetchResult->execute();
+                $result2 = $fetchResult->get_result();
+                $row2 = $result2->fetch_assoc();
+                if ($row2['offer_letter'] != '') {
+                    echo ' <div class="sections">
                     <span><strong>Offer Letter : </strong></span>
-                    <a style="margin-left:5px;" href="'.$row2['offer_letter'].'">'.$row2['offer_letter'].'</a>
+                    <a style="margin-left:5px;" href="' . $row2['offer_letter'] . '">' . $row2['offer_letter'] . '</a>
                 </div>';
-                    }
+                }
 
                 ?>
-               
+
 
             </div>
         </div>

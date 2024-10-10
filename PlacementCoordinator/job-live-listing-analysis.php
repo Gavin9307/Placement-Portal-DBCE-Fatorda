@@ -57,9 +57,19 @@ if (isset($_GET['remove']) && isset($_GET['semail']) && isset($_GET['jid'])) {
                 <div class="main-container-header">
                     <h2 class="main-container-heading"><a href="<?php echo './job-management.php?jid='.$_GET["jid"]; ?>"><i class="fa-solid fa-arrow-left fa-lg" style="color: #000000;"></i></a>
                         Details</h2>
-                    <!-- <div class="company-container">
-                        <p>Google</p>
-                    </div> -->
+                        <?php
+                                $jjid = (int) $_GET['jid'];
+                                $companyQuery = "SELECT c.C_Name as company_name,c.C_Logo as company_logo FROM company as c INNER JOIN jobposting as jp on jp.C_id=c.C_id WHERE jp.J_id= ?";
+                                $company = $conn->prepare($companyQuery);
+                                $company->bind_param("i",$jjid);
+                                $company->execute();
+                                $result = $company->get_result();
+                                $row=$result->fetch_assoc();
+                                echo '<div class="company-container">
+                        
+                        <img width="100px" height="100px" src="../Data/Companies/Company_Logo/' . $row['company_logo'] . '" alt="' . $row['company_name'] . '">
+                    </div>'
+                        ?>
 
                 </div>
 

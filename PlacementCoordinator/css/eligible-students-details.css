@@ -91,9 +91,6 @@
     display:flex;
     justify-content: space-between;
 }
-.company-container{
-    border: 2px solid red;
-}
 .section-details{
     width:100%;
     margin-top:15px;

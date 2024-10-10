@@ -65,8 +65,8 @@ if (isset($_POST["d_student-search-button"])) {
 
                                 while ($row = $result->fetch_assoc()) {
                                     echo '<div>
-                                            <input name="d_departments[]" value="' . htmlspecialchars($row["dname"]) . '" type="checkbox">
-                                            <label for="">' . htmlspecialchars($row["dname"]) . '</label>
+                                            <input id="' . htmlspecialchars($row["dname"]) . '" name="d_departments[]" value="' . htmlspecialchars($row["dname"]) . '" type="checkbox">
+                                            <label for="' . htmlspecialchars($row["dname"]) . '">' . htmlspecialchars($row["dname"]) . '</label>
                                           </div>';
                                 }
                                 ?>

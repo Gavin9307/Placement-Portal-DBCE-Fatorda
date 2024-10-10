@@ -14,10 +14,7 @@ $student_email = $_SESSION['user_email'];
 
 $query_eligible = "SELECT COUNT(jp.J_id) as eligible_count 
                    FROM jobplacements as jp
-                   INNER JOIN jobdepartments as jd ON jd.J_id = jp.J_id
-                   INNER JOIN jobapplication as ja ON ja.J_id = jp.J_id
-                   WHERE jd.Dept_id = 1 
-                   AND ja.S_College_Email = ?";
+                   INNER JOIN jobapplication as ja ON ja.J_id = jp.J_id WHERE ja.S_College_Email = ?";
 $stmt_eligible = $conn->prepare($query_eligible);
 $stmt_eligible->bind_param("s", $student_email);
 $stmt_eligible->execute();
@@ -27,9 +24,7 @@ $was_eligible_count = $row_eligible['eligible_count'];
 
 // Fetch the total number of jobs available in the department
 $query_total = "SELECT COUNT(jp.J_id) as total_jobs 
-                FROM jobplacements as jp
-                INNER JOIN jobdepartments as jd ON jd.J_id = jp.J_id
-                WHERE jd.Dept_id = 1";
+                FROM jobplacements as jp";
 $result_total = mysqli_query($conn, $query_total);
 $row_total = mysqli_fetch_assoc($result_total);
 $total_jobs = $row_total['total_jobs'];
@@ -49,7 +44,7 @@ $sql_pending = "SELECT COUNT(*) AS pending_applications
                 INNER JOIN jobplacements as jp ON jp.J_id = ja.J_id
                 WHERE s.S_College_Email = ? 
                   AND ja.placed = 0 
-                  AND jp.J_Due_date <= CURRENT_DATE";
+                  AND jp.J_Due_date >= CURRENT_DATE";
 
 $sql_accepted = "SELECT COUNT(*) AS accepted_applications
                  FROM jobapplication AS ja
@@ -63,7 +58,7 @@ $sql_rejected = "SELECT COUNT(*) AS rejected_applications
                  INNER JOIN jobplacements as jp ON jp.J_id = ja.J_id
                  WHERE s.S_College_Email = ? 
                    AND ja.placed = 0 
-                   AND jp.J_Due_date > CURRENT_DATE";
+                   AND jp.J_Due_date < CURRENT_DATE";
 
 // Prepare and execute the pending applications query
 $stmt_pending = $conn->prepare($sql_pending);
@@ -127,8 +122,8 @@ $rejectedCount = $row_rejected['rejected_applications'];
                                     labels: ['Pending', 'Cleared', 'Rejected'],
                                     datasets: [{
                                         data: [pendingCount, acceptedCount, rejectedCount],
-                                        backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56'],
-                                        hoverBackgroundColor: ['#FF6384', '#36A2EB', '#FFCE56']
+                                        backgroundColor: ['#f5f520', '#1ded36', '#f90808'],
+                                        hoverBackgroundColor: ['#f5f520', '#1ded36', '#f90808']
                                     }]
                                 },
                                 options: {

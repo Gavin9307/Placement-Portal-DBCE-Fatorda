@@ -25,12 +25,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST["post-job"])) {
     $offeredSalary = !empty($_POST['offered-salary']) ? $_POST['offered-salary'] : 0;
     $companyId = !empty($_POST['company']) ? (int) $_POST['company'] : NULL;
     $dueDate = !empty($_POST['due-date']) ? $_POST['due-date'] : NULL;
-    $backAllowed = isset($_POST['has_backlogs']) ? ($_POST['has_backlogs'] === 'Y' ? NULL : 0) : NULL;
+    $backAllowed = !empty($_POST['has_backlogs']) ? ($_POST['has_backlogs'] === 'Y' ? NULL : 0) : NULL;
 
     $percentage10 = !empty($_POST['percentage_10']) ? (float) $_POST['percentage_10'] : 0;
     $percentage12 = !empty($_POST['percentage_12']) ? (float) $_POST['percentage_12'] : 0;
     $gender = !empty($_POST['gender']) ? $_POST['gender'] : NULL;
-    $isPlaced = isset($_POST['is_placed']) ? ($_POST['is_placed'] === 'Y' ? 1 : 0) : NULL;
+    $isPlaced = !empty($_POST['is_placed']) ? ($_POST['is_placed'] === 'Y' ? 1 : 0) : NULL;
     $batch = !empty($_POST['d_batch_year'])? $_POST['d_batch_year']-4 : NULL;
     $conn->begin_transaction();
 
@@ -135,7 +135,7 @@ if (!is_null($backAllowed)) {
     }
 }
 
-// Execute query using $conn->query
+
 $studentsResult = $conn->query($studentQuery);
 
 

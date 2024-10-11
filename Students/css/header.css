@@ -1,5 +1,4 @@
 /* Header */
-
 header {
     padding: 10px 20px;
     background-color: var(--primary-grey);
@@ -8,6 +7,7 @@ header {
 .header-container {
     display: flex;
     justify-content: space-between;
+    align-items: center;
 }
 
 .left-part {
@@ -16,18 +16,21 @@ header {
     gap: 5px;
     user-select: none;
 }
-.notifications{
+
+.notifications {
     position: relative;
     cursor: pointer;
 }
+
 .dot {
-    font-size:55px;
+    font-size: 55px;
     position: absolute;
     top: -55px;
     left: 7px;
     color: red;
     cursor: pointer;
 }
+
 .left-part > img {
     width: 68px;
 }
@@ -43,7 +46,7 @@ header {
     gap: 35px;
 }
 
-.right-part  li {
+.right-part li {
     cursor: pointer;
 }
 
@@ -54,7 +57,96 @@ header {
 }
 
 .profile-container > img {
-    width:50px;
+    width: 50px;
     height: 50px;
     border-radius: 50%;
+}
+
+/* Media query for tablets */
+@media (max-width: 1024px) {
+    .left-part > h2 {
+        font-size: 22px;
+    }
+    
+    .right-part {
+        gap: 20px;
+    }
+
+    .profile-container > img {
+        width: 45px;
+        height: 45px;
+    }
+}
+
+/* Media query for mobile */
+/* Hide the hamburger menu on larger screens */
+.hamburger {
+    display: none;
+}
+
+/* Media query for mobile screens */
+@media (max-width: 768px) {
+    /* Show the hamburger menu on mobile screens */
+    .hamburger {
+        display: block;
+        cursor: pointer;
+    }
+
+    /* Align hamburger icon with the dashboard button */
+    .hamburger i {
+        font-size: 25px;
+        margin-right: 10px;
+    }
+
+    /* Adjust flex for mobile */
+    .header-container {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .right-part {
+        display: flex;
+        justify-content: space-between;
+        gap: 15px;
+        margin-top: 10px;
+        width: 100%;
+    }
+
+    .right-part li {
+        font-size: 16px;
+    }
+}
+
+
+/* Media query for small mobile */
+@media (max-width: 480px) {
+    .header-container {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .left-part > img {
+        width: 50px;
+    }
+
+    .left-part > h2 {
+        font-size: 18px;
+    }
+
+    .right-part {
+        display: flex;
+        justify-content: space-between;
+        gap: 15px;
+        margin-top: 10px;
+        width: 100%;
+    }
+
+    .right-part li {
+        font-size: 14px;
+    }
+
+    .profile-container > img {
+        width: 35px;
+        height: 35px;
+    }
 }

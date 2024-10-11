@@ -78,3 +78,31 @@ hr {
     margin-left: 200px;
     width: 200px;
 }
+
+
+@media (max-width: 768px) {
+    .main-container {
+        width: 100%;
+        padding: 20px;
+        margin-bottom: 50px;
+    }
+    .sub-table-row {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        margin: 2px;
+    }
+    hr {
+        width: 95%;
+    }
+    
+    .sub-table-row img {
+        width: 50px;
+        height: 50px;
+        margin-right: 5px;
+    }
+    .sub-table-row p {
+        margin: 5px;
+        width: fit-content;
+    }
+}

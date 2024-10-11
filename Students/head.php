@@ -8,3 +8,4 @@
 <link rel="stylesheet" href="./css/footer.css">
 <link rel="stylesheet" href="./css/sidebar.css">
 <link rel="stylesheet" href="../root.css">
+<script src="./responsive.js" defer></script>

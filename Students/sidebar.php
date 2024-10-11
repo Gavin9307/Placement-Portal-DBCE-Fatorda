@@ -22,6 +22,9 @@ if (isset($_SESSION["user_type"]) && isset($_SESSION["user_email"])) {
         $userEmail = htmlspecialchars($useremail);
 
         echo '<div class="side-bar-container">
+                            <button class="close-btn">
+                            <i class="fa-solid fa-times"></i>
+                        </button>
                         <div class="fixed-container">
                             <div class="top-container">
                                 <img src="../Data/Students/Profile_Images/'. $userProfilePic . '" alt="'.$userProfilePic.'">

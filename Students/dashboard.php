@@ -78,7 +78,7 @@
                                     }
                                 }else{
                                     echo '<div>
-                                            No Job Opportunities
+                                            No Applications
                                         </div>';
                                 }
                             ?>

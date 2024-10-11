@@ -106,3 +106,21 @@
     bottom: 20px;
 } 
 
+@media (max-width: 768px) {
+    .company-container {
+        display: flex;
+        flex-wrap: wrap;   
+        justify-content: space-between;
+        align-items: center;
+    }
+    .main-container {
+        width: 100%;
+        padding: 20px;
+        margin-bottom: 50vh;
+    }
+    .message {
+        margin-bottom: 55px;
+    }
+}
+
+

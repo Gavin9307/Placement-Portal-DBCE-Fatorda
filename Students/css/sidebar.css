@@ -2,14 +2,32 @@
     width: 25%;
     background-color: var(--primary-blue);
     padding-bottom: 50px;
+    display: block; /* Visible by default on larger screens */
+    z-index: 1000; /* Make sure it's on top */
 }
 
+/* Sticky positioning for the sidebar */
 .fixed-container {
     position: -webkit-sticky;
     position: sticky;
     top: 30px;
 }
 
+/* Close button for mobile */
+.close-btn {
+    display: none; /* Hidden on larger screens */
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: none;
+    border: none;
+    font-size: 30px;
+    color: var(--primary-white);
+    cursor: pointer;
+    z-index: 1001; /* Higher than the sidebar */
+}
+
+/* Top section of the sidebar */
 .top-container {
     margin-top: 30px;
     display: flex;
@@ -17,7 +35,7 @@
     align-items: center;
 }
 
-.top-container img{
+.top-container img {
     width: 150px;
     height: 150px;
     border-radius: 50%;
@@ -41,7 +59,7 @@
     color: red;
 }
 
-
+/* Bottom section of the sidebar */
 .bottom-container {
     margin-top: 50px;
     display: flex;
@@ -59,4 +77,28 @@
     cursor: pointer;
     color: var(--primary-white);
     background-color: var(--primary-blue);
+}
+
+/* Mobile behavior */
+@media (max-width: 768px) {
+    .side-bar-container {
+        position: fixed;
+        top: 0;
+        left: 0;
+        height: 100%;
+        width: 100%; /* Full width for mobile */
+        z-index: 1000; /* Sidebar will be on top of everything */
+        transition: transform 0.3s ease-in-out; /* Smooth transition for the transform */
+        background-color: var(--primary-blue);
+        transform: translateX(-100%); /* Start off-screen to the left */
+    }
+
+    .side-bar-container.active {
+        transform: translateX(0); /* Slide into view */
+    }
+
+    /* Show close button only on mobile */
+    .close-btn {
+        display: block;
+    }
 }

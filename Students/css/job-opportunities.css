@@ -54,6 +54,7 @@
 
 .company-container {
     display: flex;
+    
     justify-content: space-between;
     align-items: center;
 }
@@ -80,3 +81,22 @@
     right: 25px;
     bottom: 20px;
 } 
+
+@media (max-width: 768px) {
+    .company-container {
+        display: flex;
+        flex-wrap: wrap;   
+        justify-content: space-between;
+        align-items: center;
+    }
+    .main-container {
+        width: 100%;
+        padding: 20px;
+        margin-bottom: 50vh;
+    }
+    .position {
+        margin-top: 10px;
+        margin-bottom: 50px;
+    }
+}
+

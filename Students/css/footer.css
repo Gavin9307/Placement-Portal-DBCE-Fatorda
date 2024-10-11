@@ -1,4 +1,3 @@
-
 footer {
     z-index: 99;
     padding: 20px;
@@ -10,6 +9,44 @@ footer {
     margin: 0 auto;
     display: flex;
     gap: 200px;
+}
+
+/* Media query for tablet */
+@media (max-width: 1024px) {
+    .footer-container {
+        flex-direction: column;
+        align-items: center;
+        gap: 50px;
+    }
+}
+
+/* Media query for mobile */
+@media (max-width: 768px) {
+    .footer-container {
+        max-width: 90%;
+        gap: 30px;
+        align-items: start;
+    }
+    
+    .social-icons-list {
+        gap: 30px;
+    }
+}
+
+/* Media query for small mobile */
+@media (max-width: 480px) {
+    .footer-container {
+        gap: 20px;
+        align-items: start;
+    }
+    
+    .social-icons-list {
+        gap: 15px;
+    }
+
+    footer {
+        padding: 10px;
+    }
 }
 
 .social-icons-list {

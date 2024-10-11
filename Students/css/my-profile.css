@@ -107,6 +107,7 @@ form h3 {
 
 .form-adjust {
     display: flex;
+    flex-wrap: nowrap;
     justify-content: space-between;
     gap: 20px;
 }
@@ -200,3 +201,43 @@ form h3 {
     text-decoration: none;
     cursor: pointer;
   }
+
+  @media (max-width: 768px) {
+    .main-container {
+        width: 100%;
+        padding: 20px;
+        margin-bottom: 5vh;
+    }
+    .section-1 {
+        display:flex;
+        flex-direction: column;
+    }
+    .section {
+        position: relative;
+        margin-top: 30px;
+        box-shadow: 5px 10px 12.3px 5px rgba(0, 0, 0, .25);
+        padding: 20px;
+        margin-bottom: 0px;
+        width:100%;
+    }
+    .form-adjust > div {
+        width: 100%;
+    }
+    .form-adjust {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        gap: 20px;
+    }
+    .cgpa {
+        width: 100%;
+        margin-bottom: 60px;
+    }
+    .upload-button-container input {
+        width:150px;
+        padding: 7px;
+        border-radius: 5px;
+        outline: none;
+        border: 1px solid var(--secondary-grey);
+    }
+}

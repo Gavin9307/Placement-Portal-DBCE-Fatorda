@@ -41,7 +41,7 @@ if (!isset($_SESSION)) {
             }
         }
         else {
-            echo '<div style="margin-top:20px;padding: 20px;background-color: #fcdb03;color: white;border-radius:5px;">
+            echo '<div id="no-company">
                         <strong>No Company Found !</strong>
                     </div>';
         }

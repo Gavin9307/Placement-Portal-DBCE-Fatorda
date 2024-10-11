@@ -91,3 +91,11 @@
 .checked {
     color:orange;
 }
+
+@media (max-width: 768px) {
+    .main-container {
+        width: 100%;
+        padding: 20px;
+        margin-bottom: 10vh;
+    }
+}

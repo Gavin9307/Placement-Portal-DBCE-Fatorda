@@ -30,7 +30,8 @@ if (isset($_POST["create_profile"])) {
     $StudentPercentage_12 = handle_empty($_POST['per12']);
     $StudentPEmail = handle_empty($_POST['pemail']);
     $StudentClass = handle_empty($_POST['class']);
-    $StudentYOA = handle_empty($_POST['yoa']);  // Check if this is set correctly
+    $StudentYOA = empty($_POST['yoa']) ? NULL : (int)$_POST['yoa']-4;
+
     $StudentImage = "Default_Profile_Pic.jpg";
     $StudentRollNo = handle_empty($_POST['rollno']);
     $StudentPhoneNo = handle_empty($_POST['phno']);
@@ -193,7 +194,7 @@ if (isset($_POST["create_profile"])) {
                                 <input type="text" name="pemail" placeholder="Enter your personal email" required>
                             </div>
                             <div>
-                                <label for="yoa">Year of Admission<span style="color:red">*</span><span style="color:red" id="yoa_error"></span></label><br>
+                                <label for="yoa">Batch<span style="color:red">*</span><span style="color:red" id="yoa_error"></span></label><br>
                                 <input type="number" name="yoa" min="2020" max="2035" step="1" value="2024" required />
                             </div>
                         </div>

@@ -69,7 +69,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_GET["validate-otp"])) {
                     <a href="./sign-in.php">
                         <li>Sign in</li>
                     </a>
-                    <a href="./student-support.phpang">
+                    <a href="./student-support.php">
                         <li>Contact Us</li>
                     </a>
                 </ul>

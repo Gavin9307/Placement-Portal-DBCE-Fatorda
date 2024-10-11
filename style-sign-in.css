@@ -35,11 +35,12 @@ main {
 .main-container-1 > img {
     width: 630px;
     user-select: none;
-    z-index: 1; 
+    z-index: 1;
+    display: block; 
 }
 .right-column{
     display: flex;
-    
+    margin: 0px;
 }
 .right-column h2{
     margin-bottom: 15px;
@@ -95,4 +96,24 @@ main {
 #remember-me {
     width: 15px;
     height: 15px; 
+}
+
+@media (max-width: 768px) {
+    .right-column{
+        display: flex;
+        margin: 0px auto;
+    }
+    .main-container {
+        padding-left: 15px;
+        max-width: 500px;
+        margin: 0 auto;
+        position: relative;
+        min-height:700px;
+    }
+    .main-container-1 > img {
+        display: none;
+        width: 630px;
+        user-select: none;
+        z-index: 1; 
+    }
 }

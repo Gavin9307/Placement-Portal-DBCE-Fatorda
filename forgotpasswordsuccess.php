@@ -15,9 +15,9 @@
                     <h2>Placement Portal - Don Bosco College of Engineering</h2>
                 </div>
                 <ul class="right-part">
-                   <a href="./student-support.html"><li>Contact Us</li></a> 
-                   <a href="./sign-in.html"><li>Sign in</li></a> 
-                   <a href="./sign-up.html"><li>Sign up</li></a> 
+                   <a href="./student-support.php"><li>Contact Us</li></a> 
+                   <a href="./sign-in.php"><li>Sign in</li></a> 
+                   <a href="./sign-up.php"><li>Sign up</li></a> 
                 </ul>
             </div>
         </header>

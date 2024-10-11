@@ -1,6 +1,5 @@
 <?php
 require "./conn.php";
-require "./restrict.php";
 include "./utility_functions.php";
 global $conn;
 if (!isset($_SESSION)) {
@@ -29,7 +28,6 @@ if (!isset($_SESSION)) {
                 </div>
                 <ul class="right-part">
                     <a href="./index.php"><li>Home</li></a>
-                    <a href="./Students/dashboard.php"><li>Dashboard</li></a>
                 </ul>
             </div>
         </header>
@@ -43,7 +41,7 @@ if (!isset($_SESSION)) {
                         <label for="name">Name</label><br>
                         <input class="user-input" placeholder="Student" type="text" id="name" required><br><br>
 
-                        <input hidden class="user-input" type="email" id="email" value="<?php echo $_SESSION["user_email"] ?>" >
+                        <input hidden class="user-input" type="email" id="email" value="" >
                         
                         <label for="message">Message</label><br>
                         <textarea class="user-input-message" placeholder="Enter your message" cols="30" rows="5" id="message" required></textarea><br><br>

@@ -35,6 +35,7 @@ main {
     width: 630px;
     user-select: none;
     z-index: 1;
+    display: block;
 }
 
 .main-right-container h2{
@@ -91,3 +92,21 @@ form > button {
 }
 
 
+@media (max-width: 768px) {
+    .main-container {
+        padding: 40px;
+        max-width: 500px;
+        margin: 0 auto;
+        position: relative;
+        min-height:500px;
+    }
+    .main-container > img {
+        width: 630px;
+        user-select: none;
+        z-index: 1;
+        display: none;
+    }
+    main {
+        margin-bottom:100px;
+    }
+}

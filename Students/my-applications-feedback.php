@@ -8,6 +8,9 @@ global $conn;
 if (!isset($_SESSION)) {
     session_start();
 } 
+//0-pending, 1-success, 2-error
+$status=0;
+
 if (!(isset($_GET["jid"])&&isset($_GET["cid"]))){
     header("Location: my-applications-details.php");
     exit();
@@ -26,11 +29,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit_feedback'])) {
     $insertFeedback = $conn->prepare($insertFeedbackQuery);
     $insertFeedback->bind_param("iississ", $jid,$cid,$userEmail,$message, $rating,$message, $rating);
     if ($insertFeedback->execute()) {
-        echo "Success";
+        $status=1;
         // Feedback submitted successfully!
     } else {
         // Error handling
-        echo "Error: " . $conn->error;
+        $status=2 . $conn->error;
     }
 }
 
@@ -130,10 +133,56 @@ else {
 
         <?php include './footer.php' ?>
     </div>
+    <!-- Modals -->
+    <div id="error" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <p>There was an Error while recording the feedback</p>
+        </div>
+    </div>
 
+    <div id="successful" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <p>Your feedback has been recorded successfully</p>
+        </div>
+    </div>
+
+    <script>
+        // Get the modals
+        var errorModal = document.getElementById("error");
+        var successfulModal = document.getElementById("successful");
+
+        // Get the <span> elements that close the modals
+        var closeButtons = document.getElementsByClassName("close");
+
+        // Close the modal when the user clicks on <span> (x)
+        for (var i = 0; i < closeButtons.length; i++) {
+            closeButtons[i].onclick = function() {
+                errorModal.style.display = "none";
+                successfulModal.style.display = "none";
+
+            }
+        }
+
+        // Close the modal when the user clicks anywhere outside of the modal
+        window.onclick = function(event) {
+            if (event.target == errorModal) {
+                errorModal.style.display = "none";
+            } 
+            else if (event.target == successfulModal) {
+                successfulModal.style.display = "none";
+            }
+        }
+
+        // Trigger the appropriate modal based on PHP variable
+        <?php if ($status == 2) : ?>
+            errorModal.style.display = "block";
+        <?php elseif ($status == 1) : ?>
+            successfulModal.style.display = "block";
+        <?php endif; ?>
+    </script>
     
-
-</body>
 <script>
     const stars = document.querySelectorAll('.star');
 const ratingInput = document.getElementById('ratingInput');
@@ -163,4 +212,7 @@ function updateStars(value) {
 }
 
   </script>
+
+  </body>
+
 </html>

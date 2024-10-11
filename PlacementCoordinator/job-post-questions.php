@@ -8,13 +8,24 @@ global $conn;
 if (!isset($_SESSION)) {
     session_start();
 }
-
+//0- pending, 1-successful, 2-error
+$question = 0;
+if (isset($_GET["questionsuccess"]) && $_GET["questionsuccess"]==1) {
+    $question = 1;
+}
+if (isset($_GET["questionerror"]) && $_GET["questionerror"]==1) {
+    $question = 2;
+}
 if (isset($_POST["question-add-button"])) {
     $addQuestionQuery = "INSERT INTO questions(Question_Text) VALUES (?)";
     $addQuestion = $conn->prepare($addQuestionQuery);
     $addQuestion->bind_param("s", $_POST["qname"]);
-    $addQuestion->execute();
-    header("Location: ./job-post-questions.php");
+   if( $addQuestion->execute()){
+        header("Location: ./job-post-questions.php?questionsuccess=1");
+    }
+    else{
+        header("Location: ./job-post-questions.php?questionerror=1");
+    }
     exit();
 }
 
@@ -87,5 +98,51 @@ if (isset($_GET["remove"])) {
 
         <?php include './footer.php' ?>
     </div>
+    
+    <div id="successful" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <p>The Question has been added successfully</p>
+        </div>
+    </div>
+    <div id="error" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <p>There was an error while adding the question</p>
+        </div>
+    </div>
 </body>
+
+<script>
+   
+    // Get the modals
+    var successfulModal = document.getElementById("successful");
+    var errorModal = document.getElementById("error");
+    // Get the <span> elements that close the modals
+    var closeButtons = document.getElementsByClassName("close");
+
+    // Close the modal when the user clicks on <span> (x)
+    for (var i = 0; i < closeButtons.length; i++) {
+        closeButtons[i].onclick = function() {
+            successfulModal.style.display = "none";
+            errorModal.style.display = "none";
+        }
+    }
+
+    // Close the modal when the user clicks anywhere outside of the modal
+    window.onclick = function(event) {
+         if (event.target == successfulModal) {
+            successfulModal.style.display = "none";
+            errorModal.style.display = "none";
+        }
+    }
+    
+        // Trigger the appropriate modal based on PHP variable
+        <?php if ($question == 1) : ?>
+            successfulModal.style.display = "block";
+        <?php elseif ($question == 2) : ?>
+                errorModal.style.display = "block";
+            <?php endif; ?>
+</script>
+
 </html>

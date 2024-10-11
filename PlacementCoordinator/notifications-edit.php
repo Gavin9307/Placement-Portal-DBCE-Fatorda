@@ -10,6 +10,13 @@ if (!isset($_SESSION)) {
 }
 // 0-pending  1-error  2-success
 $addError = 0 ;
+if (isset($_GET["updated"]) && $_GET["updated"]==1) {
+    $addError = 2;
+}
+if (isset($_GET["updatederror"]) && $_GET["updatederror"]==1) {
+    $addError = 1;
+}
+
 if (!isset($_GET["nid"])) {
     header("Location: ./notifications.php");
     exit();
@@ -75,8 +82,12 @@ if (isset($_POST["update-button"])) {
                         WHERE Notification_ID = ?";
     $result = $conn->prepare($updateNotiQuery);
     $result->bind_param("sssssi", $subject, $message, $attachment1, $attachment2, $due_date, $nid);
-    $result->execute();
-    header("Location: ./notifications-edit.php?nid=".$nid);
+    if($result->execute()){
+        header("Location: ./notifications-edit.php?nid=".$nid."&updated=1");
+    }
+    else{
+        header("Location: ./notifications-edit.php?nid=".$nid."&updatederror=1");
+    }
     exit();
 }
 ?>

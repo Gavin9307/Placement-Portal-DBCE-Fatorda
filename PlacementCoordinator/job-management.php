@@ -7,7 +7,8 @@ global $conn;
 if (!isset($_SESSION)) {
     session_start();
 }
-
+//0- pending, 1- delete-successful 
+$options = 0;
 
 if (isset($_POST["delete-listing"])) {
     $jobId = $_POST["jid"];
@@ -51,7 +52,7 @@ if (isset($_POST["delete-listing"])) {
 
         // Commit transaction
         $conn->commit();
-        echo "Job listing successfully deleted.";
+        $options = 1;
     } catch (Exception $e) {
         // Rollback transaction
         $conn->rollback();
@@ -132,6 +133,13 @@ if (isset($_GET['responsestatus']) && isset($_GET['jid'])) {
 
         <?php include './footer.php' ?>
     </div>
+    
+    <div id="delete" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <p>Job listing successfully deleted</p>
+        </div>
+    </div>
     <div id="error" class="modal">
         <div class="modal-content">
             <span class="close">&times;</span>
@@ -167,6 +175,7 @@ if (isset($_GET['responsestatus']) && isset($_GET['jid'])) {
     var errorModal = document.getElementById("error");
     var nomatchModal = document.getElementById("no-match");
     var successfulModal = document.getElementById("successful");
+    var deleteModal = document.getElementById("delete");
 
     // Get the <span> elements that close the modals
     var closeButtons = document.getElementsByClassName("close");
@@ -177,6 +186,7 @@ if (isset($_GET['responsestatus']) && isset($_GET['jid'])) {
             errorModal.style.display = "none";
             nomatchModal.style.display = "none";
             successfulModal.style.display = "none";
+            deleteModal.style.display = "none";
         }
     }
 
@@ -188,8 +198,11 @@ if (isset($_GET['responsestatus']) && isset($_GET['jid'])) {
             nomatchModal.style.display = "none";
         } else if (event.target == successfulModal) {
             successfulModal.style.display = "none";
+        }else if (event.target == deleteModal) {
+            deleteModal.style.display = "none";
         }
     }
+    
 </script>
 
 <?php if (isset($_GET['job-post'])): ?>
@@ -200,6 +213,8 @@ if (isset($_GET['responsestatus']) && isset($_GET['jid'])) {
             successfulModal.style.display = "block";
         <?php elseif ($_GET['job-post'] == 2): ?>
             nomatchModal.style.display = "block";
+            <?php elseif ($options == 1): ?>
+                deleteModal.style.display = "block";
         <?php endif; ?>
     </script>
 <?php endif; ?>

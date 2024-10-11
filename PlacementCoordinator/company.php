@@ -1,13 +1,21 @@
 <?php
-if (!isset($_SESSION)) {
-    session_start();
-}
-?>
-<?php
-
 require "../conn.php";
 require "../restrict.php";
 require "../restrict_student.php";
+
+if (!isset($_SESSION)) {
+    session_start();
+}
+// 0-pending  1-error  2-success
+$addError = 0 ;
+
+
+if (isset($_GET["deletesuccess"]) && $_GET["deletesuccess"]==1) {
+    $addError = 2;
+}
+if (isset($_GET["deleteerror"]) && $_GET["deleteerror"]==1) {
+    $addError = 1;
+}
 function get_companies()
 {
     global $conn;
@@ -87,7 +95,52 @@ function get_companies()
 
         <?php include './footer.php' ?>
     </div>
-
+    
+    <div id="delete" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <p>The Company has been deleted successfully</p>
+        </div>
+    </div>
+    <div id="error" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <p>There was an Error while deleting the company</p>
+        </div>
+    </div>
 </body>
+<script>
+        // Get the modals
+        var errorModal = document.getElementById("error");
+        var deleteModal = document.getElementById("delete");
 
+        // Get the <span> elements that close the modals
+        var closeButtons = document.getElementsByClassName("close");
+
+        // Close the modal when the user clicks on <span> (x)
+        for (var i = 0; i < closeButtons.length; i++) {
+            closeButtons[i].onclick = function() {
+                errorModal.style.display = "none";
+                deleteModal.style.display = "none";
+
+            }
+        }
+
+        // Close the modal when the user clicks anywhere outside of the modal
+        window.onclick = function(event) {
+            if (event.target == errorModal) {
+                errorModal.style.display = "none";
+            } 
+            else if (event.target == successfulModal) {
+                deleteModal.style.display = "none";
+            }
+        }
+
+        // Trigger the appropriate modal based on PHP variable
+        <?php if ($addError == 1) : ?>
+            errorModal.style.display = "block";
+        <?php elseif ($addError == 2) : ?>
+            deleteModal.style.display = "block";
+        <?php endif; ?>
+    </script>
 </html>
